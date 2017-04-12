@@ -1,0 +1,44 @@
+{
+    "olddynamodbmaptable": [
+        {
+            "PutRequest": {
+                "Item": {
+				   "Target_Attribute": {"S": "provider_id"}, 
+				    "Table_Name": {"S": "patient"}, 
+				    "Target_Table": {"S": "patient"}, 
+				    "Source_Attribute": {"S": "insurance_provider"}
+				}
+			}
+		},
+		{
+            "PutRequest": {
+                "Item": {
+				   "Target_Attribute": {"S": "physician_id"}, 
+				    "Table_Name": {"S": "patient"}, 
+				    "Target_Table": {"S": "physician"}, 
+				    "Source_Attribute": {"S": "primary_physician_id"}
+				}
+			}
+		},
+		{
+            "PutRequest": {
+                "Item": {
+				    "Target_Attribute": {"S": "None"}, 
+		            "Table_Name": {"S": "provider"}, 
+		            "Target_Table": {"S": "None"}, 
+		            "Source_Attribute": {"S": "None"}
+				}
+			}
+		},
+		{
+            "PutRequest": {
+                "Item": {
+				    "Target_Attribute": {"S": "None"}, 
+		            "Table_Name": {"S": "billing"}, 
+		            "Target_Table": {"S": "None"}, 
+		            "Source_Attribute": {"S": "None"}
+				}
+			}
+		}
+	]
+}

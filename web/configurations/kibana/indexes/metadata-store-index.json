@@ -1,0 +1,7 @@
+{
+	"index_pattern": {
+	  "id": "edi-271",
+	  "title": "edi-271",
+	  "time_field_name": "createdDate "
+	}
+}

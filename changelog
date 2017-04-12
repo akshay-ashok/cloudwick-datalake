@@ -1,0 +1,9 @@
+1. Redacted emailid,accountid
+2. Added placeholder _SOURCE_LOCATION_ for s3 bucket 
+(in files: configure.sh, CloudFormation.json,
+and web/data-management/index.php -lines 154,186
+3. Added placeholder _ACCOUNTID_ in
+scripts/s3-put-bucket-notification-configuration.ph -lines 15
+
+
+###############################################

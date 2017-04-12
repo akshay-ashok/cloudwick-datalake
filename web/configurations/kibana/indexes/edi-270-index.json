@@ -1,0 +1,7 @@
+{
+	"index_pattern": {
+	  "id": "edi-270",
+	  "title": "edi-270",
+	  "time_field_name": "record_ts"
+	}
+}
