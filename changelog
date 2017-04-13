@@ -7,3 +7,9 @@ scripts/s3-put-bucket-notification-configuration.ph -lines 15
 
 
 ###############################################
+
+1. Created input parameters for pre-existing s3 buckets for catalogging in
+elasticsearch (passes as an array - ["s3_a,s3_b,..."])
+2. Need to fix passing this array to configure.sh and break the array to fetch
+individual s3 bucket names
+3. Capturing this shell parameter in $PREEXISTS3  

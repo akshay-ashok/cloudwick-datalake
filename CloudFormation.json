@@ -86,6 +86,11 @@
                   "Description"                 : "The number of compute nodes in the cluster.",
                   "Type"                        : "Number",
                   "Default"                     : "1"
+                },
+                "PreexistingS3" : {
+                  "Description"                 : "Provide your existing S3 buckets for catalogging: s3_bucket1,s3_bucket2,...",
+                  "Type"                        : "CommaDelimitedList",
+                  "Default"                     : ["None"]
                 }
   },
 
@@ -107,6 +112,10 @@
       {
         "Label" : { "default":"RedShift Configuration" },
         "Parameters" : [ "RedshiftClusterType" , "RedshiftNodeType" ]
+      },
+      {
+        "Label" : { "default":"Pre-existing datasource" },
+        "Parameters" : [ "PreexistingS3" ]
       }
     ],
     "ParameterLabels" : {
@@ -917,7 +926,7 @@
             {"Fn::GetAtt" : ["ElasticsearchDomain","DomainEndpoint"]}," ",
             {"Ref":"DLS3Bucket"}," ",{"Ref":"AWS::StackId"}," ",{"Fn::Select": ["4",{"Fn::Split": ["-",{"Fn::Select" : [ "2",{"Fn::Split": ["/",{"Ref": "AWS::StackId"}]}]}]}]}," ",
             {"Ref":"AWS::StackName"}," ",
-            {"Ref":"KinesisStreams"}," ",{"Ref":"DatapipelineFL1"}," ",{"Ref":"DatapipelineFL2"}," ",{"Ref":"DatapipelineFL3"}," ",{"Ref":"DatapipelineFL4"}," \n",
+            {"Ref":"KinesisStreams"}," ",{"Ref":"DatapipelineFL1"}," ",{"Ref":"DatapipelineFL2"}," ",{"Ref":"DatapipelineFL3"}," ",{"Ref":"DatapipelineFL4"},"'",{"Ref":"PreexistingS3"},"'"," \n",
             "/opt/aws/bin/cfn-signal ",
             "         -e 0",
             "        ",{"Fn::Base64":{"Ref" : "WebserverWaitHandle"}},"\n"
