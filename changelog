@@ -34,3 +34,13 @@ params passed at ${23}, ${24}
 
 4.  Additions in configure.sh -
 Parameters handled - but need to parse ${PreexistingS3} and pass to conf.ini file
+
+###############################################
+1. Removals - Map/Mask lambda removed from Catalogging lambda
+  Extra parameters from User-Data
+
+2. Additions -
+  config.ini file : ${PreexistingS3} parameter added in [s3]
+
+3. Fixed Catalog Lambda - working
+ 

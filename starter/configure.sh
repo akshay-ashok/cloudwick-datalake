@@ -18,22 +18,12 @@ BUCKET="${14}"
 STACKID="${15}"
 STACKPART="${16}"
 STACKNAME="${17}"
-STREAMNAME="${18}"
-PIPELINEID_1="${19}"
-PIPELINEID_2="${20}"
-PIPELINEID_3="${21}"
-PIPELINEID_4="${22}"
-PREEXISTS3="${23}"
-SOURCELOCATION="${24}"
-DYNAMOMAPTABLE="cloudwick-datalake-map-${1}-${16}"
-DYNAMOMASKTABLE="cloudwick-datalake-mask-${1}-${16}"
-DYNAMOSTREAMTABLE="cloudwick-datalake-stream-${1}-${16}"
-DYNAMODBEP="https://dynamodb.${REGION}.amazonaws.com"
+PREEXISTS3="${18}"
+SOURCELOCATION="${19}"
 REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTERIDENTIFIER}"
 TAG_KEY="solution"
 TAG_VALUE="cloudwick.datalake.${ACCOUNT_ID}"
-WORKERGROUP="datalakeworkergroup-${ACCOUNT_ID}-${STACKPART}"
-TASKRUNNER="datalaketaskrunner-${ACCOUNT_ID}-${STACKPART}"
+
 
 mkdir -p /var/www/html; chown -R apache:apache /var/www/html;
 aws configure set default.region ${REGION};
@@ -131,20 +121,14 @@ database="${REDSHIFT_DATABASE}"
 kibana="https://${ELASTICSEARCHEP}/_plugin/kibana/"
 elasticsearch="${ELASTICSEARCHEP}"
 
-[dynamodb]
-masktable="${DYNAMOMAPTABLE}"
-maptable="${DYNAMOMASKTABLE}"
-streamtable="${DYNAMOSTREAMTABLE}"
-
 [s3]
 bucket="${BUCKET}"
 arn="arn:aws:s3:${REGION}:${ACCOUNT_ID}:${BUCKET}"
+pres3="${PREEXISTS3}"
 
 [kinesis]
 streamname="${STREAMNAME}"
 
-[taskrunner]
-taskrunnerpid="${TaskRunnerPID}"
 EOT
 
 #Sending out email to the Administrator
