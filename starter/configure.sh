@@ -23,7 +23,8 @@ SOURCELOCATION="${19}"
 REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTERIDENTIFIER}"
 TAG_KEY="solution"
 TAG_VALUE="cloudwick.datalake.${ACCOUNT_ID}"
-
+WORKERGROUP="datalakeworkergroup-${ACCOUNT_ID}-${STACKPART}"
+TASKRUNNER="datalaketaskrunner-${ACCOUNT_ID}-${STACKPART}"
 
 mkdir -p /var/www/html; chown -R apache:apache /var/www/html;
 aws configure set default.region ${REGION};
@@ -50,6 +51,9 @@ cd /var/www/html/sparkflows/fire-1.4.0/; ./create-h2-db.sh; ./run-fire-server.sh
 EOF
 
 cd
+
+######TaskRunner#######################################################
+mkdir -p /home/ec2-user/TaskRunner; wget -A.jar https://s3.amazonaws.com/datapipeline-us-east-1/us-east-1/software/latest/TaskRunner/TaskRunner-1.0.jar; mv TaskRunner-1.0.jar /home/ec2-user/TaskRunner/.; cd /home/ec2-user/TaskRunner; java -jar TaskRunner-1.0.jar --workerGroup=${WORKERGROUP} --region=${REGION} --logUri=s3://${BUCKET}/TaskRunnerLogs --taskrunnerId ${TASKRUNNER} > TaskRunner.out 2>&1 < /dev/null &
 
 ##########Populate RDS Database#########################################
 
