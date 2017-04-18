@@ -327,7 +327,7 @@
                                      "DedicatedMasterEnabled"      : "false",
                                      "InstanceCount"               : "1",
                                       "ZoneAwarenessEnabled"        : false,
-                                     "InstanceType"                : "t2.small.elasticsearch"
+                                     "InstanceType"                : "t2.medium.elasticsearch"
                                        },
          "EBSOptions"                : {
                                      "EBSEnabled": true,
@@ -356,18 +356,6 @@
        }
      },
 
-
-              "LambdaInvokePermission": {
-                                    "Type"      : "AWS::Lambda::Permission",
-                                    "Properties": {
-                                                      "FunctionName"        : { "Fn::GetAtt" : ["LambdafunctionES", "Arn"] },
-                                                      "Action"              : "lambda:InvokeFunction",
-                                                      "Principal"           : "s3.amazonaws.com",
-                                                      "SourceAccount"       : { "Ref" : "AWS::AccountId" },
-                                                      "SourceArn"           : {"Fn::Join": ["",["arn:aws:s3:::",{"Ref":"DLS3Bucket"}]]}
-                                                  }
-                                                },
-
               "LambdaExecutionRole" : {
                                     "Type"        : "AWS::IAM::Role",
                                     "DependsOn"   : "RedshiftSecondaryRole",
@@ -393,7 +381,7 @@
                                                                                    {
                                                                                         "Effect": "Allow",
                                                                                         "Action": "s3:*",
-                                                                                        "Resource": {"Fn::Join" : [ "", ["arn:aws:s3:::cloudwick-datalake-", { "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },"/*"]]}
+                                                                                        "Resource": "*"
                                                                                     },
                                                                                     {
                                                                                          "Effect": "Allow",
