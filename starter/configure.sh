@@ -90,6 +90,7 @@ EOF
 mysql -u root -p${PASSWORD} -e "CREATE DATABASE datalake;"
 mysql -u root -p${PASSWORD} -e "CREATE USER ${ADMIN_ID}@localhost IDENTIFIED BY '${PASSWORD}';"
 mysql -u root -p${PASSWORD} -e "CREATE table datalake.user(username varchar(200),password varchar(200));"
+mysql -u root -p${PASSWORD} -e "CREATE table datalake.buckets(bucketname varchar(200),statementid varchar(200), PRIMARY KEY (bucketname));" 
 mysql -u root -p${PASSWORD} -e "INSERT INTO datalake.user(username,password) VALUES ('${ADMIN_ID}',MD5('${PASSWORD}'));"
 mysql -u root -p${PASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO '${ADMIN_ID}'@'localhost';"
 mysql -u root -p${PASSWORD} -e "FLUSH PRIVILEGES;"
