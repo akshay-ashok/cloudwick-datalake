@@ -14,57 +14,28 @@
     var timer = null;
     var interval = 1000;
     var invokes = 0;
-    $.when($.get("../data-management/streamGenerator.php",function(data){
-        eval(data.toString());
-    })).then(function(){
-        //after array load operations if any
-        alert(myarray.length);
-    }).then(function(){
-        $("#start").bind("click", function(){
-            start();
-            var $btn = $(this).button("loading");
-            $("#stop").removeClass("disabled");
-            $(".legend").removeClass("hidden");
-        });
-        $("#stop").bind("click", function(){
-            stop();
-            $("#start").button("loading").button("reset");
-            $("#stop").addClass("disabled");
-        });
-        $("#clean").bind("click", clean);
-    });
 
-    function clean() {
-        $(".streamresult2").html("");
-    }
-
-    function start() {
-        timer = setTimeout(writeToConsole, interval);
-    }
-
-    function stop() {
-        clearTimeout(timer);
-        alert("Invoked : "+invokes);
-    }
 
     function writeToConsole(){
-        if (timer == null) return;
+        //if (timer == null) return;
         //var randomElement = myarray[Math.floor(Math.random()*myarray.length)];
-        var datax = JSON.stringify(randomElement);
+        var datax = JSON.stringify('{"name":"NASH", "type":"HEALTHCARE", "change":-0.05, "price":84.51}');
         $.ajax({
             url: "../scripts/kinesis-firehose-writer.php",
             data: { data: datax },
             async: true,
             error: function(datar){
                 $(".streamresult2").append( datar + "<br><br>");
+                alert("not sent");
             },
             success: function(datar){
                 $(".streamresult2").append( datar + "<br><br>");
+                alert("sent");
             },
             type: 'GET'
         });
         invokes++;
         //$(".streamresult2").append( datax + "<br>");
-        start();
+        writeToConsole();
     }
 </script>

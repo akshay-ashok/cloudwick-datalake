@@ -74,6 +74,7 @@ use Aws\S3\Exception\S3Exception;
         } else {
             $url = "../s3/index.php?action=listObjects&bucket=".$bucket."";
             print '
+                <li><a href="../s3/index.php?action=listBuckets">s3</a></li>
                 <li><a href="'.$url.'">'.$bucket.'</a></li>';
 
             if(substr_count($prefix, "/") > 0){

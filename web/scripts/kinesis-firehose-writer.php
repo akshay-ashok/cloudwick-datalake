@@ -4,7 +4,7 @@
     $aws = new AwsFactory();
     $client = $aws->getFirehoseClient();
 
-    $data = $_GET["data"];
+    $data = json_encode($_GET["data"]);
 
     $result = $client->putRecord([
         'DeliveryStreamName' => "DatalakeFirehoseStream-123",

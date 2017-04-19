@@ -156,7 +156,7 @@
                                             ';
                                     }
                                 } else {
-                                    print '<option value="">No Tables in RDS</option>';
+                                    //print '<option value="">No Tables in RDS</option>';
                                 }
                             } catch (PDOException $ex) {
                                 printException($ex);
