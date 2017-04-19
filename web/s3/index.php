@@ -7,9 +7,14 @@ use Aws\S3\Exception\S3Exception;
 
     $aws = new AwsFactory();
     $s3Client = $aws->getS3Client();
+    $action = (isset($_GET["bucket"])) ? sanitizeParameter($_GET["action"]) : "listBuckets";
     $bucket = (isset($_GET["bucket"])) ? sanitizeParameter($_GET["bucket"]) : _BUCKET;
+    $buckets_list = getCatalogedBuckets();
     $prefix = '';
-    $error = null;
+    $list_object_error = null;
+    $bucket_lifecycle_error = null;
+    $objects = null;
+    $no_objects = true;
 
     if(isset($_GET["prefix"])){
         if(isset($_GET["source"])){
@@ -20,7 +25,6 @@ use Aws\S3\Exception\S3Exception;
             $prefix = sanitizeParameter($_GET["prefix"]) . '/';
         }
     }
-    $objects = null;
 
     print '<div class="clearfix"></div><br>
     <div class="col-lg-1 col-md-1"></div>
@@ -43,19 +47,29 @@ use Aws\S3\Exception\S3Exception;
             <b>Status</b> : '.$result["Rules"][0]["Status"].'<br>';
 
         print '
-            <a tabindex="0" id="BLCpolicy" class="pull-right" data-toggle="popover" data-trigger="focus" title="Bucket Life Cycle Policy" data-content="'.$lifecyclepolicy.'">Bucket Life Cycle Policy</a><br>
+            <a tabindex="0" id="BLCpolicy" class="pull-right '.(($action=="listBuckets") ? 'hidden' : '').'" 
+                data-toggle="popover" data-trigger="focus" 
+                title="Bucket Life Cycle Policy" 
+                data-content="'.$lifecyclepolicy.'">
+                Bucket Life Cycle Policy
+            </a>
+            <br>
             ';
     } catch (S3Exception $ex) {
-        $lifecyclepolicy = $ex->getAwsErrorCode();
+        $bucket_lifecycle_error = $ex->getAwsErrorCode();
     } catch (Exception $ex){
-        $lifecyclepolicy = $ex->getMessage();
+        $bucket_lifecycle_error = $ex->getMessage();
     }
 
     print '
         <ol class="breadcrumb">
     ';
-        if(!isset($_GET["prefix"])){
+        if($action == "listBuckets"){
             print '
+                <li class="active">Simple Storage Service</li>';
+        } else if($action == "listObjects" && !isset($_GET["prefix"])){
+            print '
+                <li><a href="../s3/index.php?action=listBuckets">s3</a></li>
                 <li class="active">'.$bucket.'</li>';
         } else {
             $url = "../s3/index.php?bucket=".$bucket."";
@@ -82,15 +96,82 @@ use Aws\S3\Exception\S3Exception;
     print '
         </ol>';
 
-    if($bucket === _BUCKET) {
+    if($action == "listBuckets"){
         print '
         <div class="s3UtilitiesBar">
-            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#uploadObjectModal"  title="Upload Object to this folder"><span class="glyphicon glyphicon-cloud-upload"></span> Upload</a> &nbsp;
-            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#createFolderModal" title="Create a folder here"><span class="glyphicon glyphicon-plus"></span> Create Folder</a> &nbsp;
-            '.( ($prefix == "uploads/original/") ?
-              '<a href="#" class="btn btn-warning" data-toggle="modal" data-target="#instructionsModal" title="Instructions to upload files"><span class="glyphicon glyphicon-info-sign"></span> instructions</a> &nbsp;'
-                : ''
-            ).'
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#subscribeBucketModal"  title="Add bucket for cataloging">
+                <i class="fa fa-sitemap"></i> Add bucket for cataloging
+            </a> &nbsp;
+        </div>
+        <!-- Start createFolder Modal -->
+        <div class="modal fade" id="subscribeBucketModal" tabindex="-1" role="dialog" aria-labelledby="subscribeBucketLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-primary" id="subscribeBucketTitle">Add bucket for cataloging</h4>
+              </div>
+              <div class="modal-body" style="margin-top:1em;">
+                <span id="subscribeBucketMessage"></span>
+                <form id="subscribeBucketForm" action="../s3/s3Catalog.php" method="post">
+                    <div class="form-group">
+                        <label for="bucketname">Select Bucket:</label>
+                        <select name="bucketname" id="bucketname" class="form-control" placeholder="Select a Bucket" required>
+                            <option value=""></option>';
+                        try{
+                            $buckets = $s3Client->listBuckets([]);
+                            foreach ($buckets["Buckets"] as $bucket_item) {
+                                $bucket_region = $s3Client->getBucketLocation([
+                                    'Bucket' => $bucket_item["Name"]
+                                ]);
+                                if($bucket_region["LocationConstraint"] == _REGION && !in_array($bucket_item["Name"],$buckets_list)){
+                                    print '<option value="'.$bucket_item["Name"].'">'.$bucket_item["Name"].'</option>
+                                    ';
+                                }
+                            }
+                        } catch (S3Exception $ex){
+
+                        } catch (Exception $ex){
+
+                        }
+        print '
+                        </select>
+                        <small class="pull-right"><i>List of buckets in <b class="text-danger">'._REGION.'</b> region</i></small>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Add to Catalog" class="btn btn-success btn-lg" id="subscribeBucketSubmit">
+                    </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <a href="#" type="button" class="btn btn-default" id="subscribeBucketClose" data-dismiss="modal">Close</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End createFolder Modal -->
+        <br>
+            <ul class="list-group">';
+        foreach ($buckets_list as $bucket_item) {
+            print '
+                <li class="list-group-item">
+                    <a href="../s3/index.php?action=listObjects&bucket=' . $bucket_item . '" class="s3Bucket">
+                        <img src="../resources/images/s3Bucket.png" alt="s3Bucket"/> &nbsp;' . $bucket_item . '
+                    </a>
+                </li>';
+        }
+        print '
+           </ul>';
+
+    } else if($action == "listObjects" && in_array($bucket,$buckets_list)) {
+        print '
+        <div class="s3UtilitiesBar">
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#uploadObjectModal"  title="Upload Object to this folder">
+                <span class="glyphicon glyphicon-cloud-upload"></span> Upload
+            </a> &nbsp;
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#createFolderModal" title="Create a folder here">
+                <span class="glyphicon glyphicon-plus"></span> Create Folder
+            </a>
         </div>
         <!-- Start createFolder Modal -->
         <div class="modal fade" id="createFolderModal" tabindex="-1" role="dialog" aria-labelledby="createFolderLabel">
@@ -158,33 +239,9 @@ use Aws\S3\Exception\S3Exception;
           </div>
         </div>
         <!-- End uploadObject Modal -->
-        '.
-        (($prefix == "uploads/original/") ? '
-        <!-- Start instructionsModal Modal -->
-        <div class="modal fade" id="instructionsModal" tabindex="-1" role="dialog" aria-labelledby="instructionsModalLabel">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title text-primary" id="instructionsModalTitle">Instructions</h4>
-              </div>
-              <div class="modal-body" style="margin-top:1em;">
-                <span id="instructionsModalMessage"></span>
-                some instructions here
-              </div>
-              <div class="modal-footer">
-                <a href="#" type="button" class="btn btn-default" id="instructionsModalClose" data-dismiss="modal">Close</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- End instructionsModal Modal -->
-        ' : '').'';
-    }
-
+        ';
     print '<br>
         <ul class="list-group">';
-    if($bucket === _BUCKET) {
         try {
             $objects = $s3Client->listObjects([
                 'Bucket' => $bucket,
@@ -192,25 +249,13 @@ use Aws\S3\Exception\S3Exception;
                 'Prefix' => $prefix,
             ]);
         } catch (S3Exception $ex) {
-            $error = $ex->getAwsErrorCode();
+            $list_object_error = $ex->getAwsErrorCode();
         } catch (Exception $ex){
-            $error = $ex->getMessage();
+            $list_object_error = $ex->getMessage();
         }
 
-        try{
-            $lifecyclepolicy = $s3Client->getBucketLifecycleConfiguration([
-                'Bucket' => $bucket
-            ]);
-
-        } catch (S3Exception $ex) {
-            $error = $ex->getAwsErrorCode();
-        } catch (Exception $ex){
-            $error = $ex->getMessage();
-        }
-
-        $min_list = 0;
         if (count($objects["CommonPrefixes"]) > 0) {
-            //print_r($objects["CommonPrefixes"]);
+            $no_objects = false;
             foreach ($objects["CommonPrefixes"] as $folder) {
                 $foldername = rtrim($folder["Prefix"], '/');
                 if (strlen($foldername) > 0) {
@@ -220,23 +265,27 @@ use Aws\S3\Exception\S3Exception;
                             <span class="glyphicon glyphicon-folder-close"></span> &nbsp;' . str_ireplace($prefix, "", $foldername) . '
                         </a>
                     </li>';
-                    $min_list++;
                 }
             }
         }
 
         if (count($objects["Contents"]) > 0) {
+            $no_objects = false;
             foreach ($objects["Contents"] as $file) {
                 $filename = $file["Key"];
                 $filesize = $file["Size"];
                 if ($filesize > 0) {
+                    $fileType = fileTypeIcon($filename);
+                    $fileTitle = explode("-",$fileType);
                     print '
                     <li class="list-group-item">
-                        <a href="#" data-toggle="modal" data-target="#downloadObject" data-bucket="'.$bucket.'" data-key="'.$filename.'" class="s3Object" title="Click to download '.str_ireplace($prefix, "", $filename).'">
-                            <i class="fa fa-'.fileTypeIcon($filename).' fa-border text-primary "></i> &nbsp;' . str_ireplace($prefix, "", $filename) . '
+                        <i class="fa fa-'.$fileType.' text-primary " title="'.(isset($fileTitle[1]) ? $fileTitle[1] : $fileTitle[0]).' type"></i> &nbsp;
+                        <a href="#" data-toggle="modal" data-target="#downloadObject" 
+                            data-bucket="'.$bucket.'" data-key="'.$filename.'" class="s3Object" 
+                            title="Click to generate pre-signed URI for '.str_ireplace($prefix, "", $filename).'">
+                            ' . str_ireplace($prefix, "", $filename) . '
                         </a>
                     </li>';
-                    $min_list++;
                 }
             }
             print '           
@@ -256,7 +305,9 @@ use Aws\S3\Exception\S3Exception;
                       </div>
                     </form>                    
                     <button type="button" class="btn btn-success copylink" data-copytarget="#object-name">Copy Link</button>
-                    <a href="#" type="button" class="btn btn-primary openlink" target="_blank" data-copytarget="#object-name">Download Object
+                    <a href="#" type="button" class="btn btn-primary openlink" 
+                        target="_blank" data-copytarget="#object-name">
+                        Download Object
                     </a>
                   </div>
                   <div class="modal-footer">
@@ -267,17 +318,27 @@ use Aws\S3\Exception\S3Exception;
             </div>';
         }
 
-        if ($min_list == 0) {
-            print '<li class="list-group-item text-danger">There are no objects under this path.</li>';
+        if ($no_objects) {
+            print '<li class="list-group-item text-danger">
+                There are no objects under this path (or) you do not have required permissions to list Objects under this bucket
+            </li>';
         }
-        if ($error != null) {
-            print '<li class="list-group-item text-danger">' . $error . '</li>';
+        if ($list_object_error != null) {
+            print '<li class="list-group-item text-danger">' . $list_object_error . '</li>';
         }
+        if ($bucket_lifecycle_error != null) {
+            // print '<li class="list-group-item text-danger">' . $bucket_lifecycle_error . '</li>';
+            // un prettified aws error-code, ignore noSuchLifeCyclePolicy exception
+            // --susheel 04/17/2017
+        }
+        print '
+        </ul>';
     } else {
-        print '<li class="list-group-item alert-danger">Unauthorized access request for the Bucket \''.$bucket.'\'</li>';
+        print '<ul class="list-group">
+                <li class="list-group-item alert-danger">Unauthorized access request for the Bucket \''.$bucket.'\'</li>
+               </ul>';
     }
     print '
-        </ul>
     </div>
     <div class="col-lg-1 col-md-1"></div>
     ';

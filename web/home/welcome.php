@@ -193,7 +193,9 @@
                     }
                 });
                 $.ajax({
-                    url: "../scripts/catlog-lambda-trigger.php",
+                    url: "../s3/s3Catalog.php",
+                    type: "POST",
+                    data: {bucketname: "<?php print _BUCKET; ?>"},
                     success: function(){
                         updateBar();
                     }

@@ -20,11 +20,24 @@
                   <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a href="../aws-resources/rds.php?explore=schema&schema=patient">Patient Table</a></li>
-                  <li><a href="../aws-resources/rds.php?explore=schema&schema=physician">Physician Table</a></li>
-                  <li><a href="../aws-resources/rds.php?explore=schema&schema=provider">Provider Table</a></li>
-                  <li><a href="../aws-resources/rds.php?explore=schema&schema=billing">Billing Table</a></li>
-                </ul>
+                ';
+                try {
+                    $query = "show tables";
+                    $result = $rdsConnector->query($query);
+                    if ($result->rowCount() > 0) {
+                        while ($row = $result->fetch(PDO::FETCH_ASSOC) ){
+                            print '<li>
+                                <a href="../aws-resources/rds.php?explore=schema&schema='.$row["Tables_in_datalake"].'"><i class="fa fa-table"></i> '.$row["Tables_in_datalake"].'</a>
+                            </li>
+                            ';
+                        }
+                    } else {
+                        print '<li class="text-danger"> &nbsp;No tables found !!</li>';
+                    }
+                } catch (PDOException $ex) {
+                    printException($ex);
+                }
+    print '    </ul>
             </div>
         </div><br><br>';
 
@@ -34,7 +47,12 @@
                     if(!is_null($get_schema)) {
                         $query = "desc ".$get_schema."";
                     } else {
-                        $query = "SELECT * FROM pg_table_def WHERE schemaname = 'public' ORDER BY tablename";
+                        $query = "SELECT * 
+                                  FROM pg_table_def 
+                                  WHERE 
+                                  schemaname = 'public' 
+                                  ORDER BY tablename
+                                  ";
                     }
                     $result = $rdsConnector->query($query);
                     if ($result->rowCount() > 0) {
@@ -58,11 +76,14 @@
                                 <td>' . $row["Field"] . '</td>
                                 <td>' . $row["Type"] . '</td>
                                 <td>' . $row["Null"] . '</td>
-                            </tr>';
+                            </tr>
+                            ';
                         }
                         print '</table>';
                     } else {
-                        print '<div class="alert alert-danger">No Tables/schemas found</div>';
+                        print '<div class="alert alert-danger">
+                                No Tables/schemas found
+                               </div>';
                     }
                 } catch (PDOException $ex) {
                     printException($ex);
@@ -106,19 +127,24 @@
                                 print '<tr>
                                     <td>'._RDS_DATABASE.'</td>
                                     <td><a href="../aws-resources/rds.php?explore=table&table='.$row["Tables_in_datalake"].'">'.$row["Tables_in_datalake"].'</a></td>
-                                </tr>';
+                                </tr>
+                                ';
                             }
                             print '</table>';
                         }
                     } else {
-                        print '<div class="alert alert-danger">No data found !!</div>';
+                        print '<div class="alert alert-danger">
+                                  No data found !!
+                               </div>';
                     }
                 } catch (PDOException $ex) {
                     printException($ex);
                 }
             }
         } else {
-            print '<div class="alert alert-info"><h3>Please Choose from above menu</h3></div>';
+            print '<div class="alert alert-info">
+                    <h3>Please Choose from above menu</h3>
+                   </div>';
         }
 
 

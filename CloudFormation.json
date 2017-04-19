@@ -621,7 +621,7 @@
 
          "Repset"  :{
                      "commands" : {
-                                   "repoinstall" : {"command" : {"Fn::Join":["",["rpm -Uvh https://s3.us-east-2.amazonaws.com/",{"Ref":"SourceLocation"},"/configuration/repo/latest.rpm"]]}}
+                                   "repoinstall" : {"command" : "rpm -Uvh https://github.com/pogaku9/cloudwick-datalake/raw/datalake-customize/repo/latest.rpm"}
                                    }
                    },
          "Install" : {
@@ -663,7 +663,7 @@
             "         --resource WebServerInstance ",
             "         --configsets Install ",
             "         --region ", { "Ref" : "AWS::Region" }, "\n",
-            "wget https://s3.us-east-2.amazonaws.com/",{"Ref":"SourceLocation"},"/configuration/starter/configure.sh;cat configure.sh | tr -d '\r' > configure_l.sh;chmod 777 configure_l.sh;./configure_l.sh ",
+            "wget https://raw.githubusercontent.com/pogaku9/cloudwick-datalake/datalake-customize/starter/configure.sh;cat configure.sh | tr -d '\r' > configure_l.sh;chmod 777 configure_l.sh;./configure_l.sh ",
             {"Ref":"AWS::AccountId"}," ",{"Ref":"AWS::Region"}," ",{"Ref":"DatabaseUserName"}," ",{"Ref":"DatabaseUserPassword"}," ",{"Ref":"AdminEmailID"}," ",
             { "Fn::GetAtt": [ "RDSDB", "Endpoint.Address" ] }," ",
             { "Fn::GetAtt" : [ "RedshiftCluster", "Endpoint.Address" ] }," ",

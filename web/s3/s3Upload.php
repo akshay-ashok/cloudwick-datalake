@@ -29,7 +29,6 @@ if(!is_null($bucket)){
                 } else {
                     if ($_FILES['objectname']['error'][$key] == UPLOAD_ERR_OK && is_uploaded_file($tmpfile)) {
                         try {
-                            //$upload = $s3->upload(_BUCKET, $prefix.$_FILES['objectname']['name'], fopen($_FILES['objectname']['tmp_name'], 'rb'), 'public-read');
                             $result = $s3->putObject([
                                 'Bucket' => $bucket,
                                 'Key' => $prefix . $filename,
@@ -40,12 +39,12 @@ if(!is_null($bucket)){
                                 print '<p class="text-success">' . $filename . ' upload successful</a></p>';
                             }
                         } catch (\Aws\S3\Exception\S3Exception $ex) {
-                            print '<p class="text-danger">' . $filename . ' upload Failed to ' . $bucket . '. ' . $ex->getAwsErrorCode() . '</p>';
+                            print '<p class="text-danger">' . $filename . ' upload failed. ' . $ex->getAwsErrorCode() . '</p>';
                         } catch (Exception $ex) {
-                            print '<p class="text-danger">' . $filename . ' upload Failed to ' . $bucket . '. ' . $ex->getMessage() . '</p>';
+                            print '<p class="text-danger">' . $filename . ' upload failed. ' . $ex->getMessage() . '</p>';
                         }
                     } else {
-                        print '<p class="text-danger">' . $filename . ' upload Failed to ' . $bucket . '. ' . $file_errors[$_FILES['objectname']['error'][$key]] . '</p>';
+                        print '<p class="text-danger">' . $filename . ' upload failed to. ' . $file_errors[$_FILES['objectname']['error'][$key]] . '</p>';
                     }
                 }
             }

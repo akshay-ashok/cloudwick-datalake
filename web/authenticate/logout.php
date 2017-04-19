@@ -2,8 +2,9 @@
     include_once("../root/header.php");
     session_unset();
     session_destroy();
-    sleep(1);
-    //rename("../home/welcome_copy.php","../home/welcome.php");
+
+    sleep(1); // give time for script to work in the background before redirecting
+
     print '
     <div class="clearfix"></div><br>
     <div class="col-lg-1 col-md-1"></div>
@@ -17,8 +18,10 @@
     </div>
     <div class="col-lg-1 col-md-1"></div>
     ';
-    print '<script>
-        setTimeout(function(){location.href="../home/"} , 2000);
+
+    print '
+    <script type="text/javascript">
+        setTimeout(function(){location.href="../home/"} , 2000); // give time for script to work in the background before redirecting
     </script>';
     include_once("../root/footer.php");
 ?>

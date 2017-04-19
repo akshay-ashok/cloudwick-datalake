@@ -12,7 +12,7 @@
                 [
                     'Events' => ['s3:ObjectCreated:*'], // REQUIRED
                     'Id' => md5(microtime()),
-                    'LambdaFunctionArn' => 'arn:aws:lambda:us-east-2:_ACCOUNTID_:function:dynamic-lambda-trigger-test', // REQUIRED
+                    'LambdaFunctionArn' => 'arn:aws:lambda:us-east-2:167270772459:function:dynamic-lambda-trigger-test', // REQUIRED
                 ]
             ],
         ],
