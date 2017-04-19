@@ -33,7 +33,7 @@ REDSHIFTHOST=(${REDSHIFT_ENDPOINT//:/ })
 wget -A.zip https://github.com/pogaku9/cloudwick-datalake/raw/datalake-customize/lambdas/writetoES.zip; mkdir -p /var/www/html/lambes; unzip writetoES.zip -d /var/www/html/lambes; sed -ie "s|oldelasticsearchep|${ELASTICSEARCHEP}|g" /var/www/html/lambes/writetoES/lambda_function.py; sed -ie "s|oldawsregion|${REGION}|g;s|olddynamodbep|${DYNAMODBEP}|g;s|olddynamodbmasktable|${DYNAMOMASKTABLE}|g;s|olddynamodbmaptable|${DYNAMOMAPTABLE}|g;s|oldredshiftdbname|${REDSHIFT_DATABASE}|g;s|oldredshiftadmin|${ADMIN_ID}|g;s|oldredshiftpassword|${PASSWORD}|g;s|oldredshiftep|${REDSHIFTHOST[0]}|g;s|oldredshiftiamarn|${REDSHIFT_IAM_ARN}|g;" /var/www/html/lambes/writetoES/lambdas3dynamo.py; rm -rf writetoES.zip;cd /var/www/html/lambes/writetoES;zip -r writetoESX.zip *;aws s3 cp writetoESX.zip s3://$BUCKET/lambdas/writetoESX.zip --region $REGION --sse AES256;
 
 ##########WebApp configuration########################################
-wget -A.zip https://github.com/pogaku9/cloudwick-datalake/blob/datalake-customize/web/datalake.zip; unzip datalake.zip -d /var/www/html; chmod 777 /var/www/html/home/welcome*;
+wget -A.zip https://github.com/pogaku9/cloudwick-datalake/raw/datalake-customize/web/datalake.zip; unzip datalake.zip -d /var/www/html; chmod 777 /var/www/html/home/welcome*;
 rm -rf /etc/php.ini; mv /var/www/html/configurations/php.ini /etc/php.ini;chown apache:apache /etc/php.ini; chown -R apache:apache /var/www/html;service httpd restart;
 
 #Zeppelin configuration
