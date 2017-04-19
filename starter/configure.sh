@@ -18,8 +18,6 @@ BUCKET="${14}"
 STACKID="${15}"
 STACKPART="${16}"
 STACKNAME="${17}"
-PREEXISTS3="${18}"
-SOURCELOCATION="${19}"
 REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTERIDENTIFIER}"
 TAG_KEY="solution"
 TAG_VALUE="cloudwick.datalake.${ACCOUNT_ID}"
@@ -129,7 +127,6 @@ elasticsearch="${ELASTICSEARCHEP}"
 [s3]
 bucket="${BUCKET}"
 arn="arn:aws:s3:${REGION}:${ACCOUNT_ID}:${BUCKET}"
-pres3="${PREEXISTS3}"
 
 [kinesis]
 streamname="${STREAMNAME}"
