@@ -66,10 +66,12 @@ mkdir -p /home/ec2-user/TaskRunner; wget -A.jar https://s3.amazonaws.com/datapip
 
 #Create ElasticSearch Indices
 curl -XPUT https://${ELASTICSEARCHEP}/metadata-store -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/metadata-store-mapping.json;
+curl -XPUT https://${ELASTICSEARCHEP}/cloudtraillogs -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/cloudtraillogs-mapping.json;
 
 #Create kibana index patterns
 curl -XPUT https://${ELASTICSEARCHEP}/.kibana/index-pattern/metadata-store -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/indexes/metadata-store-index.json;
-PUT https://${ELASTICSEARCHEP}/.kibana/config/5.1.1 -H "Content-Type: application/json" -d '{"defaultIndex" : "metadata-store"}';
+curl -XPUT https://${ELASTICSEARCHEP}/.kibana/index-pattern/cloudtraillogs -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/indexes/cloudtraillogs-index.json;
+curl -XPUT https://${ELASTICSEARCHEP}/.kibana/config/5.1.1 -H "Content-Type: application/json" -d '{"defaultIndex" : "metadata-store"}';
 
 
 #Mysql configuration
@@ -95,7 +97,7 @@ mysql -u root -p${PASSWORD} -e "FLUSH PRIVILEGES;"
 
 
 
-cat <<EOT >> /var/www/html/root/cloudwick.datalake.ini
+cat <<EOT >> /var/www/html/root/datalake.ini
 [defaults]
 version="latest"
 region="${REGION}"
@@ -132,6 +134,9 @@ arn="arn:aws:s3:${REGION}:${ACCOUNT_ID}:${BUCKET}"
 streamname="${STREAMNAME}"
 
 EOT
+
+#wait for lambdas to be created
+sleep 5m
 
 #Sending out email to the Administrator
 curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}"
