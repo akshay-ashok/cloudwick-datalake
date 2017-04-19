@@ -2,6 +2,9 @@
 a{
     text-decoration: none;
 }
+a,label,.pointer{
+    cursor: pointer;
+}
 ::selection {
     background: #fbf95b; /* Safari */
 }
@@ -240,7 +243,7 @@ hr{
     padding-left: 5rem;
 }
 
-.dropdown-menu > li > a > span::after{
+.dropdown-menu > li > a > span::after,.dropdown-menu > li > a > i::after{
     content: "\00a0";
 }
 

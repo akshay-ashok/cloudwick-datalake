@@ -21,7 +21,9 @@ class DBConnector extends PDO
         }
         catch(PDOException $ex)
         {
-            print ('<div class="alert alert-danger">Error Connecting to '.$name.' Database !! <br>'.$ex->getMessage().'<br>'.$url.'</div>');
+            print '<div class="alert alert-danger">
+                Error Connecting to '.$name.' Database !! <br>'.$ex->getMessage().'<br>'.$url.'
+            </div>';
         }
     }
 }

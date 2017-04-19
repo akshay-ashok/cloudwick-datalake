@@ -1,7 +1,8 @@
 $(function() {
     var initpage = "../home/welcome.php";
     $(this).bind("contextmenu", function(e) {
-       // e.preventDefault(); // do not allow right-click
+        // update: allowed right-click 04/14/2017
+        // e.preventDefault();
     });
 
     $('.headerLogo').on("click",function(e){

@@ -165,6 +165,12 @@
             function stop() {
                 clearTimeout(timer);
                 op.hide();
+                $.ajax({
+                    url: "../home/cleanup.php",
+                    success: function(){
+                        updateBar();
+                    }
+                });
                 setTimeout(redirect, interval*8);
             }
 
@@ -187,25 +193,21 @@
 
             setTimeout(function(){
                 $.ajax({
-                    url: "../home/cleanup.php",
-                    success: function(){
-                        updateBar();
-                    }
-                });
-                $.ajax({
-                    url: "../scripts/catlog-lambda-trigger.php",
-                    success: function(){
-                        updateBar();
-                    }
-                });
-                $.ajax({
-                    url: "../scripts/stream-lambda-trigger.php",
+                    url: "../s3/s3Catalog.php",
+                    type: "POST",
+                    data: {bucketname: "<?php print _BUCKET; ?>"},
                     success: function(){
                         updateBar();
                     }
                 });
                 $.ajax({
                     url: "../scripts/attach-iam-role-to-redshift.php",
+                    success: function(){
+                        updateBar();
+                    }
+                });
+                $.ajax({
+                    url: "../scripts/kibana-visualizations.php",
                     success: function(){
                         updateBar();
                     }
