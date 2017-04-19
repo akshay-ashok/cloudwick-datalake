@@ -1,5 +1,5 @@
 
-# AWS Datalake quickstart
+# [AWS Datalake quickstart](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=CWDLQuickstart&templateURL=https://s3-us-west-2.amazonaws.com/aws-cloudwick-susheel/datalake-quickstart/CloudFormation.json)
 
 ### Contents:
 1. Cloudformation template for one-click datalake deployment on AWS
