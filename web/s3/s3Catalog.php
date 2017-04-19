@@ -44,7 +44,8 @@
                     'LambdaFunctionConfigurations' => [
                         [
                             'Events' => ['s3:ObjectCreated:*'],
-                            'LambdaFunctionArn' => _CATLOG_LAMBDA_ARN,
+                            'Id' => $statementId,
+                            'LambdaFunctionArn' => _CATLOG_LAMBDA_ARN
                         ]
                     ]
                 ]

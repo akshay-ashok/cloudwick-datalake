@@ -7,7 +7,7 @@ use Aws\S3\Exception\S3Exception;
 
     $aws = new AwsFactory();
     $s3Client = $aws->getS3Client();
-    $action = (isset($_GET["bucket"])) ? sanitizeParameter($_GET["action"]) : "listBuckets";
+    $action = (isset($_GET["action"])) ? sanitizeParameter($_GET["action"]) : "listBuckets";
     $bucket = (isset($_GET["bucket"])) ? sanitizeParameter($_GET["bucket"]) : _BUCKET;
     $buckets_list = getCatalogedBuckets();
     $prefix = '';
@@ -72,7 +72,7 @@ use Aws\S3\Exception\S3Exception;
                 <li><a href="../s3/index.php?action=listBuckets">s3</a></li>
                 <li class="active">'.$bucket.'</li>';
         } else {
-            $url = "../s3/index.php?bucket=".$bucket."";
+            $url = "../s3/index.php?action=listObjects&bucket=".$bucket."";
             print '
                 <li><a href="'.$url.'">'.$bucket.'</a></li>';
 
@@ -261,7 +261,7 @@ use Aws\S3\Exception\S3Exception;
                 if (strlen($foldername) > 0) {
                     print '
                     <li class="list-group-item">
-                        <a href="../s3/index.php?bucket=' . $bucket . '&prefix=' . $foldername . '" class="s3Folder">
+                        <a href="../s3/index.php?action=listObjects&bucket=' . $bucket . '&prefix=' . $foldername . '" class="s3Folder">
                             <span class="glyphicon glyphicon-folder-close"></span> &nbsp;' . str_ireplace($prefix, "", $foldername) . '
                         </a>
                     </li>';

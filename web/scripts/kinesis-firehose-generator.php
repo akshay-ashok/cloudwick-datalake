@@ -49,7 +49,7 @@
 
     function writeToConsole(){
         if (timer == null) return;
-        var randomElement = myarray[Math.floor(Math.random()*myarray.length)];
+        //var randomElement = myarray[Math.floor(Math.random()*myarray.length)];
         var datax = JSON.stringify(randomElement);
         $.ajax({
             url: "../scripts/kinesis-firehose-writer.php",

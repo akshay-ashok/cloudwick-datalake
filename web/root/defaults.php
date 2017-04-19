@@ -29,6 +29,7 @@ define("_REDSHIFT_ROLE_ARN",$resourceInfo["redshift"]["iamrolearn"]);
 define("_REDSHIFT_DATABASE",$resourceInfo["redshift"]["database"]);
 
 define("_KIBANA_URL",$resourceInfo["elasticsearch"]["kibana"]);
+define("_ELASTIC_SEARCH_URL",$resourceInfo["elasticsearch"]["elasticsearch"]);
 
 define("_BUCKET",$resourceInfo["s3"]["bucket"]);
 define("_BUCKET_ARN",$resourceInfo["s3"]["arn"]);
