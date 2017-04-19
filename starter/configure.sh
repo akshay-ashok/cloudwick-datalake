@@ -136,7 +136,7 @@ streamname="${STREAMNAME}"
 EOT
 
 #wait for lambdas to be created
-sleep 5m
+#sleep 5m
 
 #Sending out email to the Administrator
 curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}"
