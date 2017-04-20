@@ -96,7 +96,7 @@
     "ParameterGroups" : [
       {
         "Label" : { "default" : "Adminstrator Configuration" },
-        "Parameters" : [ "AdministratorName", "AdminEmailID" ]
+        "Parameters" : [ "AdministratorName", "AdminEmailID", "KeyName" ]
       },
       {
         "Label" : { "default":"Database Configuration" },
@@ -447,28 +447,28 @@
                                    }
                                  },
 
-                               "DLS3Bucket" : {
-                                 "Type" : "AWS::S3::Bucket",
-                                 "DeletionPolicy" : "Delete",
-                                 "Properties": {
-                                       "AccessControl" : "PublicReadWrite",
-                                       "BucketName"    : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
-                                       "VersioningConfiguration": {
-                                                           "Status": "Enabled"
-                                                         },
-                                       "LifecycleConfiguration" : {
-                                         "Rules" : [{
-                                             "ExpirationInDays" : 45,
-                                             "Status" : "Enabled",
-                                             "Id" : "DatalakeLCP",
-                                             "Transitions" : [{
-                                                 "TransitionInDays": 30,
-                                                 "StorageClass": "GLACIER"
-                                             }]
-                                         }]
-                                      }
-                                     }
-                                   },
+                 "DLS3Bucket" : {
+                   "Type" : "AWS::S3::Bucket",
+                   "DeletionPolicy" : "Delete",
+                   "Properties": {
+                         "AccessControl" : "PublicReadWrite",
+                         "BucketName"    : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                         "VersioningConfiguration": {
+                                             "Status": "Enabled"
+                                           },
+                         "LifecycleConfiguration" : {
+                           "Rules" : [{
+                               "ExpirationInDays" : 45,
+                               "Status" : "Enabled",
+                               "Id" : "DatalakeLCP",
+                               "Transitions" : [{
+                                   "TransitionInDays": 30,
+                                   "StorageClass": "GLACIER"
+                               }]
+                           }]
+                        }
+                       }
+                     },
 
                  "s3Interimbucketpolicy" : {
                        "Type"        : "AWS::S3::BucketPolicy",
@@ -499,11 +499,7 @@
                                                                               "s3:x-amz-acl": "bucket-owner-full-control"
                                                                           }
                                                                       }
-                                                                   }
-
-
-
-                                                                       ]
+                                                                   }]
                                        }
                                      }
                        },

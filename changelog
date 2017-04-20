@@ -43,4 +43,19 @@ Parameters handled - but need to parse ${PreexistingS3} and pass to conf.ini fil
   config.ini file : ${PreexistingS3} parameter added in [s3]
 
 3. Fixed Catalog Lambda - working
- 
+
+##############################################
+Merged changes -
+commit 425fa168ef4557fa02a0c9baa7e8b5a6739f9fe3 -PullRequest
+commit b417f1e9af3173c0b083d237643045a684ee8a6c
+commit 095b215c8d49c13d3e535f86e36c3248ecba6c3f
+commit bd32552d953fd5b9d740529b8467b8f40b10e90f
+commit c2de1cbaefd024c506b7323d4b3a4016a55caebc
+commit 736cb7b80ea59c21ba97bae38748e5d9233e928e
+commit 19655a3085a092c75c02c0f24ebc3919f5a1ec61
+commit 27b292a76e68bf5459dae06bf4a9fdba63d3a60b
+commit bc98ab32d1cdfdc9369c6a6d76777324121fe7a0
+commit ba7b3aa68e1b26f39ef772fa4e1f41ae26ec0859
+commit 181406e70fae3d957c6f5761a12931eb949425c9
+
+###############################################
