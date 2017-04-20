@@ -63,3 +63,11 @@ commit 181406e70fae3d957c6f5761a12931eb949425c9
 
 1. Added Kinesis Firehose and FireHoseRole resources in CF template
 2. Passing WebserverWaitHandle Base64 to the configure.sh script to send out signal from inside the script
+
+###
+Merged pull-request #6
+---
+###############################################
+1. Added few more outputs
+2. Standard logical resource naming convention
+3. Changes in  web/scripts/send-completion-email.php

@@ -9,7 +9,7 @@
 
         $subject = "Data lake portal setup complete";
         $message = "Hello " . $username . ",<br>
-    Thank you for your interest in Data Lake Quick Start Implementation. We've setup you Data Lake portal successfully.
+    Thank you for your interest in Data Lake Quick Start Implementation. We've setup your Data Lake portal successfully.
     please visit <a href='http://" . $url . "/home/'>http://" . $url . "/home/</a> to access the portal.
     
     <br><br>--Data Lake Quick Start Portal";

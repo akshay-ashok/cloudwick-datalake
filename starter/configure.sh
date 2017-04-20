@@ -83,7 +83,7 @@ EOF
 mysql -u root -p${PASSWORD} -e "CREATE DATABASE datalake;"
 mysql -u root -p${PASSWORD} -e "CREATE USER ${ADMIN_ID}@localhost IDENTIFIED BY '${PASSWORD}';"
 mysql -u root -p${PASSWORD} -e "CREATE table datalake.user(username varchar(200),password varchar(200));"
-mysql -u root -p${PASSWORD} -e "CREATE table datalake.buckets(bucketname varchar(200),statementid varchar(200), PRIMARY KEY (bucketname));" 
+mysql -u root -p${PASSWORD} -e "CREATE table datalake.buckets(bucketname varchar(200),statementid varchar(200), PRIMARY KEY (bucketname));"
 mysql -u root -p${PASSWORD} -e "INSERT INTO datalake.user(username,password) VALUES ('${ADMIN_ID}',MD5('${PASSWORD}'));"
 mysql -u root -p${PASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO '${ADMIN_ID}'@'localhost';"
 mysql -u root -p${PASSWORD} -e "FLUSH PRIVILEGES;"
@@ -140,4 +140,3 @@ curl http://${IPADDRESS}/scripts/kibana-visualizations.php;
 
 #Sending out email to the Administrator
 curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}";
-
