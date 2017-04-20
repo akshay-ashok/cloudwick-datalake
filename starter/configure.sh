@@ -20,8 +20,6 @@ STACKPART="${16}"
 STACKNAME="${17}"
 WAITCONDITION="${18}"
 REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTERIDENTIFIER}"
-TAG_KEY="solution"
-TAG_VALUE="cloudwick.datalake.${ACCOUNT_ID}"
 WORKERGROUP="datalakeworkergroup-${ACCOUNT_ID}-${STACKPART}"
 TASKRUNNER="datalaketaskrunner-${ACCOUNT_ID}-${STACKPART}"
 
