@@ -200,18 +200,6 @@
                         updateBar();
                     }
                 });
-                $.ajax({
-                    url: "../scripts/attach-iam-role-to-redshift.php",
-                    success: function(){
-                        updateBar();
-                    }
-                });
-                $.ajax({
-                    url: "../scripts/kibana-visualizations.php",
-                    success: function(){
-                        updateBar();
-                    }
-                });
             }, interval);
 
             function redirect(){
