@@ -4,7 +4,7 @@
         $sw = htmlspecialchars($_GET["sw"], ENT_QUOTES);
         $no_affiliation = '
                 <br><br>
-                <small class="text-danger pull-right">* Cloudwick Inc., has no affiliation nor does endorses the said company/software in any manner </small>
+                <small class="text-danger pull-right">* we have no affiliation nor do we endorse the said company/software in any manner </small>
                 <br>
                 ';
 

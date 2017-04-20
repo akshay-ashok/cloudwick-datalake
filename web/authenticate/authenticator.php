@@ -76,7 +76,7 @@
                                 New password is <b><u>".$newpass."</u></b>
                                 
                                 <br><br>
-                                --Cloudwick Datalake Quickstart Portal
+                                --Data Lake Quick Start Portal
                                 ";
                     $headers[] = 'MIME-Version: 1.0';
                     $headers[] = 'Content-type: text/html; charset=UTF-8';

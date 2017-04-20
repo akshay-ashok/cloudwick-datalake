@@ -14,7 +14,7 @@
 	<meta content="data lake,quick start" name="keywords" />
     <meta content="data lake quick start" name="description" />
 
-    <title>Cloudwick Technologies - Data Lake Quick Start Solution</title>
+    <title>Data Lake Quick Start Solution</title>
     <link rel="icon" type="image/ico" href="../resources/images/favicon.ico"/>
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600" type="text/css" media="all">
 	<link rel="stylesheet" href="../resources/css/bootstrap.min.css">

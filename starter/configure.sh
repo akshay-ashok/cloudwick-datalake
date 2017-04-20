@@ -55,8 +55,6 @@ mkdir -p /home/ec2-user/TaskRunner; wget -A.jar https://s3.amazonaws.com/datapip
 
 
 #Create ElasticSearch Indices
-curl -XDELETE https://${ELASTICSEARCHEP}/.kibana;
-curl -XPUT https://${ELASTICSEARCHEP}/.kibana -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/kibana-mapping.json;
 curl -XPUT https://${ELASTICSEARCHEP}/metadata-store -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/metadata-store-mapping.json;
 curl -XPUT https://${ELASTICSEARCHEP}/cloudtraillogs -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/cloudtraillogs-mapping.json;
 

@@ -3,7 +3,7 @@ include_once "../root/header.php";
 include_once "../root/defaults.php";
 checkSession();
 
-    $cloudtrail_cont = "app/kibana#/dashboard/datalake-quick-start-cloudtraillogs-dashboard?_g=(refreshInterval%3A(display%3A'5%20seconds'%2Cpause%3A!f%2Csection%3A1%2Cvalue%3A5000)%2Ctime%3A(from%3Anow-24h%2Cmode%3Aquick%2Cto%3Anow))";
+    $cloudtrail_cont = "app/kibana#/dashboard/datalake-quickstart-cloudtraillogs-dashboard?_g=(refreshInterval%3A(display%3A'5%20seconds'%2Cpause%3A!f%2Csection%3A1%2Cvalue%3A5000)%2Ctime%3A(from%3Anow-24h%2Cmode%3Aquick%2Cto%3Anow))";
 
 print '
     <div class="clearfix"></div><br>
