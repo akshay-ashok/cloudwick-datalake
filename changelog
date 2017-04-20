@@ -71,3 +71,8 @@ Merged pull-request #6
 1. Added few more outputs
 2. Standard logical resource naming convention
 3. Changes in  web/scripts/send-completion-email.php
+
+##############################################
+1. Changes in parameter section
+2. Template deployment for us-east-1 region  - passed (performed without ec2 key)
+##############################################

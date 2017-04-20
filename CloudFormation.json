@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion"  : "2010-09-09",
-  "Description"               : "Datalake Quickstart - Cloudformation Template",
+  "Description"               : "Datalake Quickstart deployment",
   "Parameters"                : {
                 "KeyName"           : {
                       "Description"           : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
@@ -9,19 +9,19 @@
 
                 },
                 "AdministratorName" : {
-                  "Description"           : "Admin Name",
+                  "Description"           : "Admin name",
                   "Type"                  : "String",
                   "ConstraintDescription" : "Can contain only ASCII characters.",
                   "Default"               : "AdminName"
                 },
                 "AdminEmailID"          : {
-                  "Description"           : "Email ID of the Admin",
+                  "Description"           : "Admin email id",
                   "Type"                  : "String",
                   "ConstraintDescription" : "Can contain only ASCII characters."
 
                 },
                 "InstanceType"      : {
-                      "Description"           : "WebServer EC2 instance type",
+                      "Description"           : "EC2 WebServer instance type",
                       "Type"                  : "String",
                       "Default"               : "m1.medium",
                       "AllowedValues"         : [ "m1.medium", "m1.large", "m1.xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "c1.medium", "c1.xlarge", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge"],
@@ -60,32 +60,32 @@
                   "Description"                 : "Database instance class",
                   "Type"                        : "String",
                   "AllowedValues"               : [ "db.t2.micro", "db.t2.small", "db.t2.medium", "db.t2.large", "db.m4.large", "db.m4.xlarge", "db.m4.2xlarge", "db.m4.4xlarge", "db.m4.10xlarge" ],
-                  "ConstraintDescription"       : "must select a valid database instance type."
+                  "ConstraintDescription"       : "must select a valid RDS database class."
                 },
                 "RDSAllocatedStorage" : {
                   "Default"                     : "5",
-                  "Description"                 : "The size of the database (Gb)",
+                  "Description"                 : "Size of the database(Gb) Range: 5~1024Gb",
                   "Type"                        : "Number",
                   "MinValue"                    : "5",
                   "MaxValue"                    : "1024",
-                  "ConstraintDescription"       : "must be between 5 and 1024Gb."
+                  "ConstraintDescription"       : "RDSAllocatedStorage must be between 5 and 1024Gb."
                 },
                 "RedshiftNodeType" : {
                   "Default"                     : "dc1.large",
-                  "Description"                 : "Redshift instance type",
+                  "Description"                 : "Redshift node type",
                   "Type"                        : "String",
                   "AllowedValues"               : [ "dc1.large", "dw.hs1.xlarge","dw1.xlarge", "dw1.8xlarge", "dw2.large", "dw2.8xlarge"],
-                  "ConstraintDescription"       : "must select a valid database instance type."
+                  "ConstraintDescription"       : "must select a valid Redshift node type."
                 },
                 "RedshiftClusterType" : {
                   "Default"                     : "single-node",
                   "Description"                 : "Redshift instance type",
                   "Type"                        : "String",
                   "AllowedValues"               : [ "single-node", "multi-node"],
-                  "ConstraintDescription"       : "must select a valid database instance type."
+                  "ConstraintDescription"       : "must select a valid Redshift cluster type."
                 },
                 "NumberOfNodes" : {
-                  "Description"                 : "The number of compute nodes in the cluster.",
+                  "Description"                 : "Number of nodes in the redshift cluster(=1 if single-node)",
                   "Type"                        : "Number",
                   "Default"                     : "1"
                 }
@@ -108,7 +108,11 @@
                   },
                   {
                     "Label" : { "default":"RedShift Configuration" },
-                    "Parameters" : [ "RedshiftClusterType" , "RedshiftNodeType" ]
+                    "Parameters" : [ "RedshiftClusterType" , "RedshiftNodeType", "NumberOfNodes" ]
+                  },
+                  {
+                    "Label" : { "default":"Webserver Configuration" },
+                    "Parameters" : [ "InstanceType" ]
                   }
     ],
     "ParameterLabels" : {
@@ -116,7 +120,12 @@
                     "AdminEmailID"             : { "default" : "Administrator Email"},
                     "DatabaseUserName"         : { "default" : "Database User Name"},
                     "DatabaseUserPassword"     : { "default" : "Database User Password"},
-                    "DatabaseName"             : { "default" : "Database Name"}
+                    "DatabaseName"             : { "default" : "Database Name"},
+                    "RDSClass"                 : { "default" : "RDS database class"},
+                    "RDSAllocatedStorage"      : { "default" : "RDS database storage"},
+                    "RedshiftClusterType"      : { "default" : "Redshift cluster type"},
+                    "RedshiftNodeType"         : { "default" : "Redshift node class"},
+                    "InstanceType"             : { "default" : "EC2 webserver class"}
     }
   }
 },
