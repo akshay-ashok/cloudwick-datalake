@@ -30,12 +30,12 @@ aws configure set default.region ${REGION};
 
 
 # Setup catalog lambda code
-wget -A.zip https://github.com/pogaku9/cloudwick-datalake/raw/datalake-customize/lambdas/writetoES.zip; mkdir -p /var/www/html/lambes; unzip writetoES.zip -d /var/www/html/lambes; sed -ie "s|oldelasticsearchep|${ELASTICSEARCHEP}|g" /var/www/html/lambes/writetoES/lambda_function.py; rm -rf writetoES.zip;cd /var/www/html/lambes/writetoES;zip -r writetoESX.zip *;aws s3 cp writetoESX.zip s3://$BUCKET/lambdas/writetoESX.zip --region $REGION --sse AES256;
+wget -A.zip https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/lambdas/writetoES.zip; mkdir -p /var/www/html/lambes; unzip writetoES.zip -d /var/www/html/lambes; sed -ie "s|oldelasticsearchep|${ELASTICSEARCHEP}|g" /var/www/html/lambes/writetoES/lambda_function.py; rm -rf writetoES.zip;cd /var/www/html/lambes/writetoES;zip -r writetoESX.zip *;aws s3 cp writetoESX.zip s3://$BUCKET/lambdas/writetoESX.zip --region $REGION --sse AES256;
 
 /opt/aws/bin/cfn-signal -e 0 ${WAITCONDITION}
 
 ##########WebApp configuration########################################
-wget -A.zip https://github.com/pogaku9/cloudwick-datalake/raw/datalake-customize/web/datalake.zip; unzip datalake.zip -d /var/www/html; chmod 777 /var/www/html/home/welcome*;
+wget -A.zip https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/web/datalake.zip; unzip datalake.zip -d /var/www/html; chmod 777 /var/www/html/home/welcome*;
 rm -rf /etc/php.ini; mv /var/www/html/configurations/php.ini /etc/php.ini;chown apache:apache /etc/php.ini; chown -R apache:apache /var/www/html;service httpd restart;
 
 #Zeppelin configuration
