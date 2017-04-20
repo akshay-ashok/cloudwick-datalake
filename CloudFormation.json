@@ -447,6 +447,149 @@
                                    }
                                  },
 
+           "DatalakeFirehoseStream": {
+                                           "Type": "AWS::KinesisFirehose::DeliveryStream",
+                                           "DependsOn"    : "FirehoseRole",
+                                                       "Properties": {
+                                                        "DeliveryStreamName" : {"Fn::Join" : [ "",[ "datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                       "ElasticsearchDestinationConfiguration": {
+                                                       "BufferingHints": {
+                                                       "IntervalInSeconds": 60,
+                                                       "SizeInMBs": 1
+                                                       },
+                                           "CloudWatchLoggingOptions": {
+                                                       "Enabled": true,
+                                                       "LogGroupName": "deliverystream",
+                                                       "LogStreamName": "DatalakeDeliveryStream"
+                                                       },
+                                           "DomainARN": {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"}]]},
+                                           "IndexName": "datalakedeliverystream",
+                                           "IndexRotationPeriod": "NoRotation",
+                                           "TypeName" : "fromFirehose",
+                                           "RetryOptions": {
+                                                       "DurationInSeconds": "60"
+                                           },
+                                           "RoleARN": { "Fn::GetAtt" : ["FirehoseRole", "Arn"] },
+                                           "S3BackupMode": "FailedDocumentsOnly",
+                                           "S3Configuration": {
+                                                       "BucketARN": {"Fn::Join":["",["arn:aws:s3:::",{"Ref":"DLS3Bucket"}]]},
+                                                       "BufferingHints": {
+                                                       "IntervalInSeconds": "60",
+                                                       "SizeInMBs": "5"
+                                           },
+                                           "CompressionFormat": "UNCOMPRESSED",
+
+                                           "Prefix": "FirehoseDatalake/",
+                                           "RoleARN": { "Fn::GetAtt" : ["FirehoseRole", "Arn"] },
+                                           "CloudWatchLoggingOptions" : {
+                                                       "Enabled" : true,
+                                                       "LogGroupName" : "deliverystream",
+                                                       "LogStreamName" : "DatalakeFirehoseS3log"
+                                           }
+                                           }
+                                           }
+                                           }
+                                         },
+
+
+
+        "FirehoseRole" : {
+                       "Type"        : "AWS::IAM::Role",
+                       "Properties"  : {
+                                     "RoleName"       : {"Fn::Join" : [ "",[ "Datalake-FirehoseRole-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                         "AssumeRolePolicyDocument"  : {
+                                             "Version"   : "2012-10-17",
+                                             "Statement" : [{
+                                                     "Effect"    : "Allow",
+                                                     "Principal" : {
+                                                             "Service"   : [ "firehose.amazonaws.com" ]
+                                                 },
+                                                     "Action"    :  [ "sts:AssumeRole" ]
+                                                 }]
+                                       },
+
+                                         "Path"        : "/",
+                                         "Policies"    : [{
+                                               "PolicyName"        :{"Fn::Join" : [ "",[ "datalake-firehose-policy-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                               "PolicyDocument"    : {
+                                                         "Version"       : "2012-10-17",
+                                                         "Statement": [
+                                                           {
+
+                                                             "Effect": "Allow",
+                                                             "Action": [
+                                                               "s3:AbortMultipartUpload",
+                                                               "s3:GetBucketLocation",
+                                                               "s3:GetObject",
+                                                               "s3:ListBucket",
+                                                               "s3:ListBucketMultipartUploads",
+                                                               "s3:PutObject"
+                                                             ],
+                                                             "Resource": [
+                                                               {"Fn::Join":["",["arn:aws:s3:::",{"Ref":"DLS3Bucket"},"/*"]]},
+                                                               {"Fn::Join":["",["arn:aws:s3:::",{"Ref":"DLS3Bucket"}]]}
+                                                             ]
+                                                           },
+                                                           {
+
+                                                             "Effect": "Allow",
+                                                             "Action": [
+                                                               "lambda:InvokeFunction",
+                                                               "lambda:GetFunctionConfiguration"
+                                                             ],
+                                                           "Resource": {"Fn::Join": ["",["arn:aws:lambda:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":function:%FIREHOSE_DEFAULT_FUNCTION%:%FIREHOSE_DEFAULT_VERSION%"]]}
+                                                           },
+                                                           {
+
+                                                             "Effect": "Allow",
+                                                             "Action": [
+                                                               "es:DescribeElasticsearchDomain",
+                                                               "es:DescribeElasticsearchDomains",
+                                                               "es:DescribeElasticsearchDomainConfig",
+                                                               "es:ESHttpPost",
+                                                               "es:ESHttpPut"
+                                                             ],
+                                                             "Resource": [
+                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"}]]},
+                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/*"]]}
+                                                             ]
+                                                           },
+                                                           {
+
+                                                             "Effect": "Allow",
+                                                             "Action": [
+                                                               "es:ESHttpGet"
+                                                             ],
+                                                             "Resource": [
+                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/_all/_settings"]]},
+                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/_cluster/stats"]]},
+                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/_nodes"]]},
+                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/_nodes/stats"]]},
+                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/_nodes/*/stats"]]},
+                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/_stats"]]},
+                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/_mapping/fromFirehose"]]},
+                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/datalakedeliverystream/_stats"]]}
+                                                             ]
+                                                           },
+                                                           {
+
+                                                             "Effect": "Allow",
+                                                             "Action": [
+                                                               "logs:CreateLogGroup",
+                                                               "logs:CreateLogStream",
+                                                               "logs:PutLogEvents",
+                                                               "logs:DescribeLogStreams"
+                                                             ],
+                                                             "Resource": [
+                                                               "arn:aws:logs:*:*:*"
+                                                             ]
+                                                           }
+                                                         ]
+                                                     }}]
+                                             }
+                         },
+
+
                  "DLS3Bucket" : {
                    "Type" : "AWS::S3::Bucket",
                    "DeletionPolicy" : "Delete",
@@ -653,10 +796,8 @@
             { "Fn::GetAtt": [ "RedshiftSecondaryRole", "Arn" ] }," ",{"Ref":"RDSDB"}," ",{"Ref":"DatabaseName"}," ",{"Ref":"RedshiftCluster"}," ",{"Ref":"DatabaseName"}," ",
             {"Fn::GetAtt" : ["ElasticsearchDomain","DomainEndpoint"]}," ",
             {"Ref":"DLS3Bucket"}," ",{"Ref":"AWS::StackId"}," ",{"Fn::Select": ["4",{"Fn::Split": ["-",{"Fn::Select" : [ "2",{"Fn::Split": ["/",{"Ref": "AWS::StackId"}]}]}]}]}," ",
-            {"Ref":"AWS::StackName"}," \n",
-            "/opt/aws/bin/cfn-signal ",
-            "         -e 0",
-            "        ",{"Fn::Base64":{"Ref" : "WebserverWaitHandle"}},"\n"
+            {"Ref":"AWS::StackName"}," ",{"Fn::Base64":{"Ref" : "WebserverWaitHandle"}}," \n"
+
                   ]]}},
 
 

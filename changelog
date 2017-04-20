@@ -59,3 +59,7 @@ commit ba7b3aa68e1b26f39ef772fa4e1f41ae26ec0859
 commit 181406e70fae3d957c6f5761a12931eb949425c9
 
 ###############################################
+
+
+1. Added Kinesis Firehose and FireHoseRole resources in CF template
+2. Passing WebserverWaitHandle Base64 to the configure.sh script to send out signal from inside the script
