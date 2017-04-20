@@ -18,6 +18,7 @@ BUCKET="${14}"
 STACKID="${15}"
 STACKPART="${16}"
 STACKNAME="${17}"
+WAITCONDITION="${18}"
 REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTERIDENTIFIER}"
 TAG_KEY="solution"
 TAG_VALUE="cloudwick.datalake.${ACCOUNT_ID}"
@@ -30,6 +31,8 @@ aws configure set default.region ${REGION};
 
 # Setup catalog lambda code
 wget -A.zip https://github.com/pogaku9/cloudwick-datalake/raw/datalake-customize/lambdas/writetoES.zip; mkdir -p /var/www/html/lambes; unzip writetoES.zip -d /var/www/html/lambes; sed -ie "s|oldelasticsearchep|${ELASTICSEARCHEP}|g" /var/www/html/lambes/writetoES/lambda_function.py; rm -rf writetoES.zip;cd /var/www/html/lambes/writetoES;zip -r writetoESX.zip *;aws s3 cp writetoESX.zip s3://$BUCKET/lambdas/writetoESX.zip --region $REGION --sse AES256;
+
+/opt/aws/bin/cfn-signal -e 0 ${WAITCONDITION}
 
 ##########WebApp configuration########################################
 wget -A.zip https://github.com/pogaku9/cloudwick-datalake/raw/datalake-customize/web/datalake.zip; unzip datalake.zip -d /var/www/html; chmod 777 /var/www/html/home/welcome*;
