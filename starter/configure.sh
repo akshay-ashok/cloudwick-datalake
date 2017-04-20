@@ -37,11 +37,11 @@ wget -A.zip https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-cust
 rm -rf /etc/php.ini; mv /var/www/html/configurations/php.ini /etc/php.ini;chown apache:apache /etc/php.ini; chown -R apache:apache /var/www/html;service httpd restart;
 
 #Zeppelin configuration
-wget -A.tgz http://apache.claz.org/zeppelin/zeppelin-0.7.0/zeppelin-0.7.0-bin-all.tgz; mkdir -p /var/www/html/zeppelin; tar -xf zeppelin-0.7.0-bin-all.tgz -C /var/www/html/zeppelin; chown -R apache /var/www/html/zeppelin;/var/www/html/zeppelin/zeppelin-0.7.0-bin-all/bin/zeppelin-daemon.sh start
+wget -A.tgz http://apache.claz.org/zeppelin/zeppelin-0.7.0/zeppelin-0.7.0-bin-all.tgz; mkdir -p /var/www/html/zeppelin; tar -xf zeppelin-0.7.0-bin-all.tgz -C /var/www/html/zeppelin; chown -R apache:apache /var/www/html/zeppelin;/var/www/html/zeppelin/zeppelin-0.7.0-bin-all/bin/zeppelin-daemon.sh start
 
 #Sparkflows configuration
 yum install -y java-devel;
-wget -A.tgz http://archives.sparkflows.io/dist/sparkflows/fire/09252016/fire-1.4.0.tgz; mkdir -p /var/www/html/sparkflows; tar -xf fire-1.4.0.tgz -C /var/www/html/sparkflows; chown -R apache /var/www/html/sparkflows;
+wget -A.tgz http://archives.sparkflows.io/dist/sparkflows/fire/09252016/fire-1.4.0.tgz; mkdir -p /var/www/html/sparkflows; tar -xf fire-1.4.0.tgz -C /var/www/html/sparkflows; chown -R apache:apache /var/www/html/sparkflows;
 rm -rf /var/www/html/sparkflows/fire-1.4.0/conf/application.properties; mv /var/www/html/configurations/application.properties /var/www/html/sparkflows/fire-1.4.0/conf/application.properties;
 cd /var/www/html/sparkflows/fire-1.4.0/; ./create-h2-db.sh; ./run-fire-server.sh start > sparkflows.out 2>&1 < /dev/null &
 
@@ -133,8 +133,7 @@ curl http://${IPADDRESS}/scripts/attach-iam-role-to-redshift.php;
 #create kibana visualizations
 curl http://${IPADDRESS}/scripts/kibana-visualizations.php;
 
-#wait for lambdas to be created
-#sleep 5m
 
+chown -R apache:apache /var/www/
 #Sending out email to the Administrator
 curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}";
