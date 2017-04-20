@@ -15,14 +15,8 @@
         $json = json_decode($json, true);
         foreach ($json as $key => $value) {
             $url = 'https://'._ELASTIC_SEARCH_URL.'/.kibana/'.$value["_type"].'/'.$value["_id"];
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-            curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($value["_source"]));
 
-            curl_exec($ch);
+            $result = exec("curl ".$url." -H \"Content-Type: application/json\" --data '".$value["_source"]."'");
         }
     } catch (Exception $ex){
         //no-exception handled

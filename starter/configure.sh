@@ -18,6 +18,7 @@ BUCKET="${14}"
 STACKID="${15}"
 STACKPART="${16}"
 STACKNAME="${17}"
+WAITCONDITION="${18}"
 REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTERIDENTIFIER}"
 TAG_KEY="solution"
 TAG_VALUE="cloudwick.datalake.${ACCOUNT_ID}"
@@ -28,12 +29,13 @@ mkdir -p /var/www/html; chown -R apache:apache /var/www/html;
 aws configure set default.region ${REGION};
 
 
-REDSHIFTHOST=(${REDSHIFT_ENDPOINT//:/ })
+# Setup catalog lambda code
+wget -A.zip https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/lambdas/writetoES.zip; mkdir -p /var/www/html/lambes; unzip writetoES.zip -d /var/www/html/lambes; sed -ie "s|oldelasticsearchep|${ELASTICSEARCHEP}|g" /var/www/html/lambes/writetoES/lambda_function.py; rm -rf writetoES.zip;cd /var/www/html/lambes/writetoES;zip -r writetoESX.zip *;aws s3 cp writetoESX.zip s3://$BUCKET/lambdas/writetoESX.zip --region $REGION --sse AES256;
 
-wget -A.zip https://github.com/pogaku9/cloudwick-datalake/raw/datalake-customize/lambdas/writetoES.zip; mkdir -p /var/www/html/lambes; unzip writetoES.zip -d /var/www/html/lambes; sed -ie "s|oldelasticsearchep|${ELASTICSEARCHEP}|g" /var/www/html/lambes/writetoES/lambda_function.py; sed -ie "s|oldawsregion|${REGION}|g;s|olddynamodbep|${DYNAMODBEP}|g;s|olddynamodbmasktable|${DYNAMOMASKTABLE}|g;s|olddynamodbmaptable|${DYNAMOMAPTABLE}|g;s|oldredshiftdbname|${REDSHIFT_DATABASE}|g;s|oldredshiftadmin|${ADMIN_ID}|g;s|oldredshiftpassword|${PASSWORD}|g;s|oldredshiftep|${REDSHIFTHOST[0]}|g;s|oldredshiftiamarn|${REDSHIFT_IAM_ARN}|g;" /var/www/html/lambes/writetoES/lambdas3dynamo.py; rm -rf writetoES.zip;cd /var/www/html/lambes/writetoES;zip -r writetoESX.zip *;aws s3 cp writetoESX.zip s3://$BUCKET/lambdas/writetoESX.zip --region $REGION --sse AES256;
+/opt/aws/bin/cfn-signal -e 0 ${WAITCONDITION}
 
 ##########WebApp configuration########################################
-wget -A.zip https://github.com/pogaku9/cloudwick-datalake/raw/datalake-customize/web/datalake.zip; unzip datalake.zip -d /var/www/html; chmod 777 /var/www/html/home/welcome*;
+wget -A.zip https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/web/datalake.zip; unzip datalake.zip -d /var/www/html; chmod 777 /var/www/html/home/welcome*;
 rm -rf /etc/php.ini; mv /var/www/html/configurations/php.ini /etc/php.ini;chown apache:apache /etc/php.ini; chown -R apache:apache /var/www/html;service httpd restart;
 
 #Zeppelin configuration
@@ -43,7 +45,8 @@ wget -A.tgz http://apache.claz.org/zeppelin/zeppelin-0.7.0/zeppelin-0.7.0-bin-al
 yum install -y java-devel;
 wget -A.tgz http://archives.sparkflows.io/dist/sparkflows/fire/09252016/fire-1.4.0.tgz; mkdir -p /var/www/html/sparkflows; tar -xf fire-1.4.0.tgz -C /var/www/html/sparkflows; chown -R apache /var/www/html/sparkflows;
 rm -rf /var/www/html/sparkflows/fire-1.4.0/conf/application.properties; mv /var/www/html/configurations/application.properties /var/www/html/sparkflows/fire-1.4.0/conf/application.properties;
-cd /var/www/html/sparkflows/fire-1.4.0/; ./create-h2-db.sh; ./run-fire-server.sh start;
+cd /var/www/html/sparkflows/fire-1.4.0/; ./create-h2-db.sh; ./run-fire-server.sh start > sparkflows.out 2>&1 < /dev/null &
+
 <<EOF
 
 EOF
@@ -53,16 +56,6 @@ cd
 ######TaskRunner#######################################################
 mkdir -p /home/ec2-user/TaskRunner; wget -A.jar https://s3.amazonaws.com/datapipeline-us-east-1/us-east-1/software/latest/TaskRunner/TaskRunner-1.0.jar; mv TaskRunner-1.0.jar /home/ec2-user/TaskRunner/.; cd /home/ec2-user/TaskRunner; java -jar TaskRunner-1.0.jar --workerGroup=${WORKERGROUP} --region=${REGION} --logUri=s3://${BUCKET}/TaskRunnerLogs --taskrunnerId ${TASKRUNNER} > TaskRunner.out 2>&1 < /dev/null &
 
-##########Populate RDS Database#########################################
-
-
-#########Configure and populate DynamoDB tables########################
-
-
-#########TaskRunner Configuration and pipeline activation###############
-
-
-#Create S3 objects
 
 #Create ElasticSearch Indices
 curl -XPUT https://${ELASTICSEARCHEP}/metadata-store -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/metadata-store-mapping.json;
@@ -135,8 +128,16 @@ streamname="${STREAMNAME}"
 
 EOT
 
+
+#attach iam role to redshift
+curl http://${IPADDRESS}/scripts/attach-iam-role-to-redshift.php;
+
+#create kibana visualizations
+curl http://${IPADDRESS}/scripts/kibana-visualizations.php;
+
 #wait for lambdas to be created
 #sleep 5m
 
 #Sending out email to the Administrator
-curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}"
+curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}";
+

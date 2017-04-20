@@ -37,11 +37,11 @@ define("_BUCKET_ARN",$resourceInfo["s3"]["arn"]);
 define("_KINESIS_STREAM_NAME",$resourceInfo["kinesis"]["streamname"]);
 
 define("_TAG_KEY","solution");
-define("_TAG_VALUE","cloudwick.datalake."._ACCOUNT_ID);
+define("_TAG_VALUE","datalake-"._ACCOUNT_ID."-"._STACK_UID);
 
 
-define("_CATLOG_LAMBDA_NAME","cloudwick-datalake-catlamb-"._ACCOUNT_ID."-"._STACK_UID);
-define("_CATLOG_LAMBDA_ARN","arn:aws:lambda:"._REGION.":"._ACCOUNT_ID.":function:cloudwick-datalake-catlamb-"._ACCOUNT_ID."-"._STACK_UID);
+define("_CATLOG_LAMBDA_NAME","datalake-catlamb-"._ACCOUNT_ID."-"._STACK_UID);
+define("_CATLOG_LAMBDA_ARN","arn:aws:lambda:"._REGION.":"._ACCOUNT_ID.":function:datalake-catlamb-"._ACCOUNT_ID."-"._STACK_UID);
 
 
 ?>

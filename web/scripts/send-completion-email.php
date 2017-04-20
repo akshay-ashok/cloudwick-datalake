@@ -9,14 +9,14 @@
 
         $subject = "Data lake portal setup complete";
         $message = "Hello " . $username . ",<br>
-    Thank you for your interest in Cloudwick's Data Lake Quick Start Implementation. We've setup you Data Lake portal successfully.
+    Thank you for your interest in Data Lake Quick Start Implementation. We've setup you Data Lake portal successfully.
     please visit <a href='http://" . $url . "/home/'>http://" . $url . "/home/</a> to access the portal.
     
-    <br><br>--Cloudwick Data Lake Quick Start Portal";
+    <br><br>--Data Lake Quick Start Portal";
         $headers[] = 'MIME-Version: 1.0';
         $headers[] = 'Content-type: text/html; charset=UTF-8';
         $headers[] = 'To: ' . $username . ' <' . $email . '>';
-        $headers[] = 'From: Cloudwick Data Lake Quick Start Portal';
+        $headers[] = 'From: Data Lake Quick Start Portal';
         $sent = mail($email, $subject, $message, implode("\r\n", $headers));
         if ($sent == true) {
             print '<div class="alert alert-success">Sent Email to ' . $email . '.</div>';
