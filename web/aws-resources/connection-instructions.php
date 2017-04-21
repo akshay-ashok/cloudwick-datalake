@@ -119,8 +119,13 @@
             ';
         } else if($sw == "datapipeline") {
             print '
+              <script type="text/javascript" src="../resources/js/datapipelineUtilities.js"></script>
+              <div id="datapipelineresult"></div>
+              <div id="datapipelinespinner" class="centered text-primary"><i class="fa fa-spinner fa-spin fa-4x fa-fw"></i><span class="sr-only">Loading...</span></div>
+              <div id="datapipelinestatus"></div>
+              <div id="datapipelineInit">  
                 <p class="text-success">Run a Full-load datapipeline to copy RDS table to Redshift</p><br>
-                <form class="form-horizontal" method="post" action="#">
+                <form class="form-horizontal" method="post" action="#" id="runDatapipelineForm" >
                     <div class="form-group">
                         <label for="wgroup" class="col-sm-4 control-label">Worker Group</label>
                         <div class="col-sm-8">
@@ -168,10 +173,11 @@
                     <div class="form-group">
                         <div class="col-sm-12">
                             <br/>
-                            <input type="submit" class="btn btn-success btn-block" value="Run Datapipeline"/>
+                            <input type="submit" id="runDatapipelineSubmit" class="btn btn-success btn-block" value="Run Datapipeline"/>
                         </div>
                     </div>
                 </form>
+              </div>  
             ';
         } else {
             print 'You aren\'t looking at the right place';

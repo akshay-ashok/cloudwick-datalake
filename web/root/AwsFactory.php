@@ -80,6 +80,15 @@
             return new Aws\Lambda\LambdaClient($this->getConfig($region));
         }
 
+        /**
+         * @param null $region
+         * @return \Aws\DataPipeline\DataPipelineClient
+         */
+        public function getDatapipelineClient($region=null)
+        {
+            return new Aws\DataPipeline\DataPipelineClient($this->getConfig($region));
+        }
+
     }
 
 ?>
