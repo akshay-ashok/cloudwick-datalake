@@ -235,6 +235,6 @@
     "*myRedshiftPassword": "oldpassword",
     "myRDSRedshiftSecurityGrps": "default",
     "myS3StagingLoc": "s3://olds3stagingloc/pipeline",
-    "myInsertMode": "OVERWRITE_EXISTING",
+    "myInsertMode": "OVERWRITE_EXISTING"
   }
 }

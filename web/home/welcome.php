@@ -22,20 +22,8 @@
             </div>
             <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="crosscheckPanel">
-                    <h3><span class="label label-default">DynamoDB Checks</span></h3>
-                    <div class="checkDiv dynamodb-checks"></div>
-                </div>
-            </div>
-            <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div class="crosscheckPanel">
                     <h3><span class="label label-success">RDS Checks</span></h3>
                     <div class="checkDiv rds-checks"></div>
-                </div>
-            </div>
-            <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div class="crosscheckPanel">
-                    <h3><span class="label label-info">Datapipeline Checks</span></h3>
-                    <div class="checkDiv datapipeline-checks"></div>
                 </div>
             </div>
             <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -64,8 +52,8 @@
             </div>
             <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="crosscheckPanel">
-                    <h3><span class="label label-info">validation Checks</span></h3>
-                    <div class="checkDiv validation-checks"></div>
+                    <h3><span class="label label-info">Elastic Search Checks</span></h3>
+                    <div class="checkDiv es-checks"></div>
                 </div>
             </div>
             <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -88,39 +76,25 @@
                 ["Created S3 bucket","s3","bucket",true],
                 ["Created S3 bucket policy","s3","buckey-policy",true],
                 ["Created lambda execution role","s3","lambda-execution-role",true],
-                ["Created Folders for uploads","s3","upload-folders",true],
-                ["Created DynamoDB MASK table","dynamodb","mask-table",true],
-                ["Created DynamoDB MAP table","dynamodb","map-table",true],
-                ["Created DynamoDB STREAM table","dynamodb","stream-table",true],
-                ["Created DynamoDB streams","dynamodb","dynamodb-stream",true],
-                ["Elastic search Domain","validation","elastic-search",true],
-                ["Kibana visualizations","validation","kibana",true],
+                ["Elastic search Domain","es","elastic-search",true],
                 ["Created RDS instance","rds","rds-instance",true],
                 ["Created Redshift Security group","redshift","redshift-sg",true],
                 ["Created Redshift Cluster","redshift","redshift-cluster",true],
                 ["Created ec2 IAM Role","ec2","ec2-iam-role",true],
                 ["Created ec2 Instance","ec2","ec2-instance",true],
-                ["Populated RDS databases","rds","populate-rds",true],
                 ["Created Datapipelines","datapipeline","dp-exist",true],
-                ["Updated Datapipelines definitions","datapipeline","dp-definitions",true],
-                ["Activated Datapipelines","datapipeline","dp-activate",true],
                 ["Final check Redshift database updates","redshift","redshift-db",true],
-                ["Deactivated Datapipelines","datapipeline","dp-deactivate",true],
-                ["Created Incremental Datapipelines","datapipeline","dp-incremental",true],
-                ["Activated Incremental Datapipelines","datapipeline","dp-incremental-activate",true],
-                ["Created Mysql Databases for user authentication","validation","mysql-validate",true],
+                ["Created Mysql Databases for user authentication","other","mysql-validate",true],
                 ["Created Cloudformation wait condition","other","cf-wait",true],
                 ["Setup management portal","other","portal",true],
                 ["Setup Zeppelin portal","other","zeppelin",true],
-                ["Setup D3 dashboards","other","d3-dashboards",true],
+                ["Created Kibana visualizations","es","kibana",true],
+                ["Created Kibana dashboards","es","d3-dashboards",true],
                 ["Created Stream","kinesis","stream",true],
                 ["Created Catalog lambda Function IAM Role","lambda","lambda-iam-role",true],
                 ["Created Catalog lambda Function","lambda","lambda-create",true],
-                ["Created stream lambda Function IAM Role","lambda","stream-lambda-iam-role",true],
-                ["Created stream lambda Function","lambda","stream-lambda-create",true],
                 ["Updated Catalog lambda Function code","lambda","lambda-code",true],
                 ["Created Catalog lambda Function trigger to S3","lambda","lambda-trigger",true],
-                ["Created stream lambda Function trigger to S3","lambda","stream-lambda-trigger",true],
                 ["Created Cloudtrail","cloudtrail","cloudtrail",true]
             ];
 
