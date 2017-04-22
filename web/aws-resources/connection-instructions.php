@@ -168,6 +168,7 @@
                             }
             print '
                             </select>
+                            <small class="text-danger pull-right">*table must have a primary key for proper loading</small>
                         </div>
                     </div>
                     <div class="form-group">
