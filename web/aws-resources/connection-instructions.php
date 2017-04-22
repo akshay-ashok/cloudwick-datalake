@@ -1,5 +1,6 @@
 <?php
     include_once "../root/defaults.php";
+    sleep(1);
     if(isset($_GET)) {
         $sw = htmlspecialchars($_GET["sw"], ENT_QUOTES);
         $no_affiliation = '
@@ -7,6 +8,15 @@
                 <small class="text-danger pull-right">* we have no affiliation nor do we endorse the said company/software in any manner </small>
                 <br>
                 ';
+        $hide_loader_script = '
+        <script type="text/javascript">
+          $(function(){
+              $(".imageItself").on("load",function (){
+                $(this).parent().find(".imagePreloader").hide();
+              });
+          })
+        </script>
+        ';
 
         if($sw == "tableau"){
             list($redshift['url'], $redshift['port']) = explode(":",_REDSHIFT_ENDPOINT);
@@ -18,7 +28,8 @@
             </a>
             <div class="clearfix"></div><br/>
             <div class="centered">
-                <img class="img img-responsive img-thumbnail" src="../resources/images/tableau_connect.png" alt="Tableau connection" /><br>
+                <span class="text-primary imagePreloader"><i class="fa fa-spinner fa-spin fa-2x fa-fw"></i></span>
+                <img class="img img-responsive img-thumbnail imageItself" src="../resources/images/tableau_connect.png" alt="Tableau connection" /><br>
             </div>
                 <div class="clearfix"></div><br>
                 <ol>
@@ -28,7 +39,7 @@
                     <li><b>Username:</b> <i class="text-primary">'._ADMIN.'</i></li>
                     <li><b>Password:</b> <i class="text-primary"> **chose during stack launch**</i></li>
                 </ol>
-            '.$no_affiliation;
+            '.$no_affiliation.$hide_loader_script;
         } else if($sw == "sqlworkbench") {
             print '
             <a class="btn btn-primary pull-right" 
@@ -38,7 +49,8 @@
             </a>
             <div class="clearfix"></div><br/>
             <div class="centered">
-                <img class="img img-responsive img-thumbnail" src="../resources/images/sqlworkbench_connect.png" alt="SQL Workbench/J connection" /><br>
+                <span class="text-primary imagePreloader"><i class="fa fa-spinner fa-spin fa-2x fa-fw"></i></span>
+                <img class="img img-responsive img-thumbnail imageItself" src="../resources/images/sqlworkbench_connect.png" alt="SQL Workbench/J connection" /><br>
             </div>
                 <div class="clearfix"></div><br>
                 <ol>
@@ -56,7 +68,7 @@
                     <li><b>User Name:</b> <i class="text-primary">'._ADMIN.'</i></li>
                     <li><b>Password:</b> <i class="text-primary"> **chose during stack launch**</i></li>
                 </ol>
-            '.$no_affiliation;
+            '.$no_affiliation.$hide_loader_script;
         } else if($sw == "otherredshift") {
             print '<div class="centered">
                  <a class="btn btn-primary" 
@@ -87,7 +99,8 @@
             </a>
             <div class="clearfix"></div><br/>
             <div class="centered">
-                <img class="img img-responsive img-thumbnail" src="../resources/images/mysql_workbench_connect.png" alt="MySQL Workbench connection" /><br>
+                <span class="text-primary imagePreloader"><i class="fa fa-spinner fa-spin fa-2x fa-fw"></i></span>
+                <img class="img img-responsive img-thumbnail imageItself" src="../resources/images/mysql_workbench_connect.png" alt="MySQL Workbench connection" /><br>
             </div>
                 <div class="clearfix"></div><br>
                 <ol>
@@ -96,7 +109,7 @@
                     <li><b>Username:</b> <i class="text-primary">'._ADMIN.'</i></li>
                     <li><b>Password:</b> <i class="text-primary"> **chose during stack launch**</i></li>
                 </ol>
-            '.$no_affiliation;
+            '.$no_affiliation.$hide_loader_script;
         } else if($sw == "shell") {
             list($rds['url'], $rds['port']) = explode(":",_RDS_ENDPOINT);
             print '
@@ -107,7 +120,8 @@
             </a>
             <div class="clearfix"></div><br/>
             <div class="centered">
-                <img class="img img-responsive img-thumbnail" src="../resources/images/shell_connect.png" alt="Shell connection" /><br>
+                <span class="text-primary imagePreloader"><i class="fa fa-spinner fa-spin fa-2x fa-fw"></i></span>
+                <img class="img img-responsive img-thumbnail imageItself" src="../resources/images/shell_connect.png" alt="Shell connection" /><br>
             </div>
                 <div class="clearfix"></div><br>
                 <ol>
@@ -116,7 +130,7 @@
                     <li><b>User Name:</b> <i class="text-primary">'._ADMIN.'</i></li>
                     <li><b>Password:</b> <i class="text-primary"> **chose during stack launch**</i></li>
                 </ol>
-            ';
+            '.$hide_loader_script;
         } else if($sw == "datapipeline") {
             print '
               <script type="text/javascript" src="../resources/js/datapipelineUtilities.js"></script>
@@ -147,7 +161,7 @@
                     <div class="form-group">
                         <label for="tabletocopy" class="col-sm-4 control-label">Table to Copy</label>
                         <div class="col-sm-8">
-                            <select type="select" class="form-control" id="tabletocopy" name="tabletocopy" placeholder="RDS table to be copied to Redshift" required>
+                            <select class="form-control" id="tabletocopy" name="tabletocopy" required>
                                 <option value=""></option>
                             ';
                             try {
@@ -157,7 +171,8 @@
                                 $result = $rdsConnector->query($query);
                                 if ($result->rowCount() > 0) {
                                     while ($row = $result->fetch(PDO::FETCH_ASSOC) ){
-                                        print '<option value="'.$row["Tables_in_datalake"].'">'.$row["Tables_in_datalake"].'</option>
+                                        $assoc = "Tables_in_"._RDS_DATABASE;
+                                        print '<option value="'.$row[$assoc].'">'.$row[$assoc].'</option>
                                             ';
                                     }
                                 } else {

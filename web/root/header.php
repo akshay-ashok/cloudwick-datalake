@@ -3,8 +3,8 @@
  error_reporting(0);
  require_once("../root/functions.php");
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<!DOCTYPE html>
+<html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,7 +15,6 @@
     <meta content="data lake quick start" name="description" />
 
     <title>Data Lake Quick Start Solution</title>
-    <link rel="icon" type="image/ico" href="../resources/images/favicon.ico"/>
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600" type="text/css" media="all">
 	<link rel="stylesheet" href="../resources/css/bootstrap.min.css">
     <link rel="stylesheet" href="../resources/font-awesome-4.7.0/css/font-awesome.min.css">

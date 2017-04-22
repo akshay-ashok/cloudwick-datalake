@@ -11,7 +11,7 @@
     print '<div class="clearfix"></div><br>
     <div class="col-lg-1 col-md-1"></div>
     <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 contentBody">        
-        <button class="btn btn-warning btn-sm pull-left" onclick="javascript:window.history.back();"><span class="glyphicon glyphicon-chevron-left"></span> go back</button><br><br>
+        <button class="btn btn-warning btn-sm pull-left" onclick="window.history.back();"><span class="glyphicon glyphicon-chevron-left"></span> go back</button><br><br>
         <div class="btn-group" role="group" aria-label="...">
             <a href="../aws-resources/redshift.php?explore=table" class="btn btn-info">Explore Table(s)</a>
             <div class="btn-group" role="group">
@@ -94,19 +94,19 @@
                     printException($ex);
                 }
             } else if($get_explore == "table"){
-                if(!is_null($get_table)){
-                    $query = "SELECT * 
+                try {
+                    if(!is_null($get_table)){
+                        $query = "SELECT * 
                               FROM ".$get_table." 
                               ";
-                } else {
-                    $query = "SELECT 
+                    } else {
+                        $query = "SELECT 
                               DISTINCT(tablename),'public' as schemaname 
                               FROM pg_table_def 
                               WHERE schemaname = 'public' and tablename not like '%_pkey' 
                               ORDER BY tablename
                               ";
-                }
-                try {
+                    }
                     $result = $redshiftConnector->query($query);
                     if ($result->rowCount() > 0) {
                         if(!is_null($get_table)) {

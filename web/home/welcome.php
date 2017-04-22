@@ -4,9 +4,9 @@
     <div class="clearfix"></div><br>
     <div class="col-lg-1 col-md-1"></div>
     <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 contentBody">
-        <p class="text-primary">Setting up your datalake, Please wait...</p>
+        <p class="text-primary">Setting up your data lake, Please wait...</p>
         <div class="progress">
-            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0">
                 <span>0% Complete</span>
             </div>
         </div>
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+        <script src="../resources/js/masonry.pkgd.js"></script>
         <script type="text/javascript">
 
             var messages = [
@@ -126,7 +126,7 @@
             }
 
             function updateBar(){
-                fillPercent = Math.floor(progressFill * i);
+                var fillPercent = Math.floor(progressFill * i);
                 $('.progress-bar').css('width', fillPercent+'%').attr('aria-valuenow', fillPercent);
                 $('.progress-bar > span').html(fillPercent+"% Complete");
                 updateMasonry();

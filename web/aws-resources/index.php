@@ -85,7 +85,7 @@
       <div class="col-lg-1 col-md-1"></div>
       <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 contentBody">
         <ul class="list-inline">
-            <li class="dltag text-info">Datalake</li>
+            <li class="dltag text-info">Data Lake</li>
             <li>
                 <button class="btn btn-primary" type="button">
                     <span class="badge">
@@ -235,7 +235,7 @@
                     Instance Identifier
                 </dt>
                 <dd class="text-primary">
-                    <a href="../aws-resources/rds.php?explore=table" title="Explore redshift">
+                    <a href="../aws-resources/rds.php" title="Explore redshift">
                         '.$rdsobject["DBInstances"][0]["Endpoint"]["Address"].':'.$rdsobject["DBInstances"][0]["Endpoint"]["Port"].' 
                         <i class="fa fa-link"></i>
                     </a>
@@ -273,7 +273,7 @@
                       <ul class="dropdown-menu">
                         <li>
                             <a href="#" class="customMessage" 
-                                title="Instructions to connect to MySQL Workbecnk*" 
+                                title="Instructions to connect to MySQL Workbench*" 
                                 data-url="../aws-resources/connection-instructions.php?sw=mysqlworkbench">
                                 <i class="fa fa-clone"></i> MySQL Workbench <small class="text-danger">*</small>
                             </a>

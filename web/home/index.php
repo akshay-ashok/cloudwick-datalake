@@ -19,7 +19,9 @@
             what questions you want to ask of your data before you store it, giving you a flexible platform for data analysis.
           </p><br/>
           <a href="https://aws.amazon.com/big-data/data-lake-on-aws/" target="_blank" class="btn btn-success btn-lg"><i class="fa fa-external-link-square"></i> Learn More</a>
-          <a href="#" class="btn btn-warning btn-lg"><i class="fa fa-video-camera"></i> Watch Demo</a><br>
+          <!--<a href="#" class="btn btn-warning btn-lg"><i class="fa fa-video-camera"></i> Watch Demo</a>-->
+          <!-- uncomment above line when data lake explanatory video is introduced --susheel 04/21/2017 -->
+          <br>
       </div>
       <div class="col-lg-1 col-md-1"></div>
     ';

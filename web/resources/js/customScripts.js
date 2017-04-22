@@ -5,6 +5,10 @@ $(function() {
         // e.preventDefault();
     });
 
+    setTimeout(function(){
+        $(".databaseConnectionError").hide();
+    },20000);
+
     $('.headerLogo').on("click",function(e){
         window.location = "../home/";
     });
@@ -12,6 +16,7 @@ $(function() {
     $('.customMessage').each(function(){
         $(this).on("click",function(e){
             e.preventDefault();
+            var preload = $(".customMessagePreloader");
             var msg = "<div class='alert alert-warning'>"+$(this).attr("message")+"</div>";
             var title = $(this).attr("title");
             var dataurl = $(this).attr("data-url");
@@ -22,13 +27,21 @@ $(function() {
                 $("#customMessageModalClose").attr("data-dismiss", "");
             }
             if (typeof dataurl !== typeof undefined && dataurl !== false) {
-                $("#CustomMessage").load(dataurl);
+                $("#CustomMessage").load(dataurl,function () {
+                    preload.hide();
+                });
             } else {
                 $("#CustomMessage").html(msg);
+                preload.hide();
             }
             $("#CustomTitle").html(title).addClass("text-primary");
             $("#CustomMessageModal").modal();
         });
+    });
+
+    $("#CustomMessageModal").on("hidden.bs.modal", function (e) {
+        $(".customMessagePreloader").show();
+        $("#CustomMessage").html("")
     });
 
     $.ajax({

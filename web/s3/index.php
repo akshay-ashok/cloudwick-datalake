@@ -117,7 +117,7 @@ use Aws\S3\Exception\S3Exception;
                 <form id="subscribeBucketForm" action="../s3/s3Catalog.php" method="post">
                     <div class="form-group">
                         <label for="bucketname">Select Bucket:</label>
-                        <select name="bucketname" id="bucketname" class="form-control" placeholder="Select a Bucket" required>
+                        <select name="bucketname" id="bucketname" class="form-control" required>
                             <option value=""></option>';
                         try{
                             $buckets = $s3Client->listBuckets([]);
