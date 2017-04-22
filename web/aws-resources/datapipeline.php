@@ -13,7 +13,7 @@
             try {
                 $cuid = md5(microtime());
                 $result = $client->createPipeline([
-                    'name' => "Datalake-custom-DP-".strtoupper(substr($cuid,0,6)),
+                    'name' => "data-lake-quick-start-custom-data-pipeline-".strtoupper(substr($cuid,0,6)),
                     'tags' => [
                         [
                             'key' => _TAG_KEY,
