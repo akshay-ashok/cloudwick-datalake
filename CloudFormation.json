@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion"  : "2010-09-09",
-  "Description"               : "Cloudwick Datalake Quickstart - Cloudformation Template",
+  "Description"               : "Datalake Quickstart deployment",
   "Parameters"                : {
                 "KeyName"           : {
                       "Description"           : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
@@ -9,19 +9,19 @@
 
                 },
                 "AdministratorName" : {
-                  "Description"           : "Admin Name",
+                  "Description"           : "Admin name",
                   "Type"                  : "String",
                   "ConstraintDescription" : "Can contain only ASCII characters.",
                   "Default"               : "AdminName"
                 },
                 "AdminEmailID"          : {
-                  "Description"           : "Email ID of the Admin",
+                  "Description"           : "Admin email id",
                   "Type"                  : "String",
                   "ConstraintDescription" : "Can contain only ASCII characters."
 
                 },
                 "InstanceType"      : {
-                      "Description"           : "WebServer EC2 instance type",
+                      "Description"           : "EC2 WebServer instance type",
                       "Type"                  : "String",
                       "Default"               : "m1.medium",
                       "AllowedValues"         : [ "m1.medium", "m1.large", "m1.xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "c1.medium", "c1.xlarge", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge"],
@@ -60,32 +60,32 @@
                   "Description"                 : "Database instance class",
                   "Type"                        : "String",
                   "AllowedValues"               : [ "db.t2.micro", "db.t2.small", "db.t2.medium", "db.t2.large", "db.m4.large", "db.m4.xlarge", "db.m4.2xlarge", "db.m4.4xlarge", "db.m4.10xlarge" ],
-                  "ConstraintDescription"       : "must select a valid database instance type."
+                  "ConstraintDescription"       : "must select a valid RDS database class."
                 },
                 "RDSAllocatedStorage" : {
                   "Default"                     : "5",
-                  "Description"                 : "The size of the database (Gb)",
+                  "Description"                 : "Size of the database(Gb) Range: 5~1024Gb",
                   "Type"                        : "Number",
                   "MinValue"                    : "5",
                   "MaxValue"                    : "1024",
-                  "ConstraintDescription"       : "must be between 5 and 1024Gb."
+                  "ConstraintDescription"       : "RDSAllocatedStorage must be between 5 and 1024Gb."
                 },
                 "RedshiftNodeType" : {
                   "Default"                     : "dc1.large",
-                  "Description"                 : "Redshift instance type",
+                  "Description"                 : "Redshift node type",
                   "Type"                        : "String",
                   "AllowedValues"               : [ "dc1.large", "dw.hs1.xlarge","dw1.xlarge", "dw1.8xlarge", "dw2.large", "dw2.8xlarge"],
-                  "ConstraintDescription"       : "must select a valid database instance type."
+                  "ConstraintDescription"       : "must select a valid Redshift node type."
                 },
                 "RedshiftClusterType" : {
                   "Default"                     : "single-node",
                   "Description"                 : "Redshift instance type",
                   "Type"                        : "String",
                   "AllowedValues"               : [ "single-node", "multi-node"],
-                  "ConstraintDescription"       : "must select a valid database instance type."
+                  "ConstraintDescription"       : "must select a valid Redshift cluster type."
                 },
                 "NumberOfNodes" : {
-                  "Description"                 : "The number of compute nodes in the cluster.",
+                  "Description"                 : "Number of nodes in the redshift cluster(=1 if single-node)",
                   "Type"                        : "Number",
                   "Default"                     : "1"
                 }
@@ -94,117 +94,124 @@
   "Metadata" : {
     "AWS::CloudFormation::Interface" : {
     "ParameterGroups" : [
-      {
-        "Label" : { "default" : "Adminstrator Configuration" },
-        "Parameters" : [ "AdministratorName", "AdminEmailID", "KeyName" ]
-      },
-      {
-        "Label" : { "default":"Database Configuration" },
-        "Parameters" : [ "DatabaseName", "DatabaseUserName", "DatabaseUserPassword" ]
-      },
-      {
-        "Label" : { "default":"RDS Configuration" },
-        "Parameters" : [ "RDSClass", "RDSAllocatedStorage" ]
-      },
-      {
-        "Label" : { "default":"RedShift Configuration" },
-        "Parameters" : [ "RedshiftClusterType" , "RedshiftNodeType" ]
-      }
-
+                  {
+                    "Label" : { "default" : "Adminstrator Configuration" },
+                    "Parameters" : [ "AdministratorName", "AdminEmailID", "KeyName" ]
+                  },
+                  {
+                    "Label" : { "default":"Database Configuration" },
+                    "Parameters" : [ "DatabaseName", "DatabaseUserName", "DatabaseUserPassword" ]
+                  },
+                  {
+                    "Label" : { "default":"RDS Configuration" },
+                    "Parameters" : [ "RDSClass", "RDSAllocatedStorage" ]
+                  },
+                  {
+                    "Label" : { "default":"RedShift Configuration" },
+                    "Parameters" : [ "RedshiftClusterType" , "RedshiftNodeType", "NumberOfNodes" ]
+                  },
+                  {
+                    "Label" : { "default":"Webserver Configuration" },
+                    "Parameters" : [ "InstanceType" ]
+                  }
     ],
     "ParameterLabels" : {
-      "AdministratorName"        : { "default" : "Administrator Name" },
-      "AdminEmailID"             : { "default" : "Administrator Email"},
-      "DatabaseUserName"         : { "default" : "Database User Name"},
-      "DatabaseUserPassword"     : { "default" : "Database User Password"},
-      "DatabaseName"             : { "default" : "Database Name"}
+                    "AdministratorName"        : { "default" : "Administrator Name" },
+                    "AdminEmailID"             : { "default" : "Administrator Email"},
+                    "DatabaseUserName"         : { "default" : "Database User Name"},
+                    "DatabaseUserPassword"     : { "default" : "Database User Password"},
+                    "DatabaseName"             : { "default" : "Database Name"},
+                    "RDSClass"                 : { "default" : "RDS database class"},
+                    "RDSAllocatedStorage"      : { "default" : "RDS database storage"},
+                    "RedshiftClusterType"      : { "default" : "Redshift cluster type"},
+                    "RedshiftNodeType"         : { "default" : "Redshift node class"},
+                    "InstanceType"             : { "default" : "EC2 webserver class"}
     }
   }
 },
    "Conditions" : {
-      "IsMultiNodeCluster" : {
-        "Fn::Equals" : [{ "Ref" : "RedshiftClusterType" }, "multi-node" ]
-      }
+                "IsMultiNodeCluster" : {
+                  "Fn::Equals" : [{ "Ref" : "RedshiftClusterType" }, "multi-node" ]
+                }
     },
 
 
 
   "Mappings"  : {
-        "RegiontoAmiMap" : {
-                            "us-east-1"      : {"Name" :  "ami-7a3dd76c"},
-                            "us-west-2"      : {"Name" :  "ami-8a72cdea"}
-                      },
+              "RegiontoAmiMap" : {
+                                  "us-east-1"      : {"Name" :  "ami-7a3dd76c"},
+                                  "us-west-2"      : {"Name" :  "ami-8a72cdea"}
+                            },
 
-        "RDSEngineVersionMapping" : {
-          "mysql"                       : { "latest" : "5.7"}
-                      }},
+              "RDSEngineVersionMapping" : {
+                "mysql"                       : { "latest" : "5.7"}
+                            }},
   "Resources" : {
-
 
     "VpcId" : {
         "Type"        : "AWS::EC2::VPC",
         "Properties"  : {
-          "CidrBlock"                 : "10.0.0.0/16",
-      	  "EnableDnsSupport"          : "true",
-      	  "EnableDnsHostnames"        : "true",
-          "InstanceTenancy"           : "default",
-          "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
-           }
+              "CidrBlock"                 : "10.0.0.0/16",
+          	  "EnableDnsSupport"          : "true",
+          	  "EnableDnsHostnames"        : "true",
+              "InstanceTenancy"           : "default",
+              "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
+               }
        },
     "RouteTable"   :  {
           "Type" : "AWS::EC2::RouteTable",
           "DependsOn" : "AttachGateway",
           "Properties" : {
-            "VpcId"                   : { "Ref" : "VpcId" },
-            "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
-        }
+              "VpcId"                   : { "Ref" : "VpcId" },
+              "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
+          }
     },
 
     "Route" : {
          "Type" : "AWS::EC2::Route",
          "DependsOn" : "AttachGateway",
          "Properties" : {
-            "RouteTableId" : { "Ref" : "RouteTable" },
-            "DestinationCidrBlock" : "0.0.0.0/0",
-            "GatewayId" : { "Ref" : "InternetGateway" }
-         }
+              "RouteTableId" : { "Ref" : "RouteTable" },
+              "DestinationCidrBlock" : "0.0.0.0/0",
+              "GatewayId" : { "Ref" : "InternetGateway" }
+           }
       },
 
-    "publicSubnet" : {
+    "PublicSubnet" : {
           "Type"        : "AWS::EC2::Subnet",
           "Properties"  : {
             "VpcId"                   : { "Ref" : "VpcId" },
             "CidrBlock"               : "10.0.0.0/24",
             "AvailabilityZone"        : {"Fn::Join" : ["",[{"Ref":"AWS::Region"},"c"]]},
             "MapPublicIpOnLaunch"     : "true",
-            "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
+            "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
         }
       },
-    "privateSubnet" : {
+    "PrivateSubnet" : {
           "Type"        : "AWS::EC2::Subnet",
           "Properties"  : {
             "VpcId"                   : { "Ref" : "VpcId" },
             "CidrBlock"               : "10.0.1.0/24",
             "AvailabilityZone"        : {"Fn::Join" :["",[{"Ref":"AWS::Region"},"a"]]},
             "MapPublicIpOnLaunch"     : "true",
-            "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
+            "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
         }
       },
 
-    "publicRouteTableAssociation" : {
+    "PublicRouteTableAssociation" : {
           "Type" : "AWS::EC2::SubnetRouteTableAssociation",
           "DependsOn" : "RouteTable",
           "Properties" : {
-            "SubnetId"                : { "Ref" : "publicSubnet" },
+            "SubnetId"                : { "Ref" : "PublicSubnet" },
             "RouteTableId"            : { "Ref" : "RouteTable" }
         }
     },
 
-    "privateRouteTableAssociation" : {
+    "PrivateRouteTableAssociation" : {
           "Type" : "AWS::EC2::SubnetRouteTableAssociation",
           "DependsOn" : "RouteTable",
           "Properties" : {
-            "SubnetId"                : { "Ref" : "privateSubnet" },
+            "SubnetId"                : { "Ref" : "PrivateSubnet" },
             "RouteTableId"            : { "Ref" : "RouteTable" }
         }
     },
@@ -225,13 +232,13 @@
                               { "IpProtocol" : "icmp", "FromPort" : "-1", "ToPort" : "-1", "CidrIp" : "0.0.0.0/0" }
                             ],
              "SecurityGroupEgress"    : [ {"CidrIp": "0.0.0.0/0","IpProtocol": "-1"} ],
-             "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
+             "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
           }
       },
 
     "InternetGateway" : {
         "Type"        : "AWS::EC2::InternetGateway",
-        "Properties"  : {"Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]}
+        "Properties"  : {"Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]}
       },
 
     "AttachGateway" : {
@@ -243,14 +250,14 @@
        }
     },
 
-    "RDSDBSubnetGroup" : {
+    "RDSdbSubnetGroup" : {
         "Type"          : "AWS::RDS::DBSubnetGroup",
         "Properties"    : {
           "DBSubnetGroupDescription"  : "Subnets available for the RDS DB Instance",
-          "SubnetIds"                 : [ { "Ref" : "publicSubnet" }, { "Ref" : "privateSubnet" }]
+          "SubnetIds"                 : [ { "Ref" : "PublicSubnet" }, { "Ref" : "PrivateSubnet" }]
         }
       },
-    "RDSDB" : {
+    "RDSdb" : {
         "Type"          : "AWS::RDS::DBInstance",
         "Properties"    : {
           "DBName"                    : { "Ref"   : "DatabaseName" },
@@ -262,11 +269,11 @@
           "MasterUsername"            : { "Ref"   : "DatabaseUserName" } ,
           "MasterUserPassword"        : { "Ref"   : "DatabaseUserPassword" },
           "StorageType"               : "gp2",
-          "DBSubnetGroupName"         : { "Ref"   : "RDSDBSubnetGroup" },
+          "DBSubnetGroupName"         : { "Ref"   : "RDSdbSubnetGroup" },
           "VPCSecurityGroups"         : [ { "Ref" : "VPCSecurityGroup" } ],
           "PubliclyAccessible"        : "true",
-          "DBInstanceIdentifier"      : {"Fn::Join" : [ "",[ "cloudwick-datalake-rds-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
-          "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
+          "DBInstanceIdentifier"      : {"Fn::Join" : [ "",[ "datalake-rds-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+          "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
         },
         "DeletionPolicy" : "Delete"
       },
@@ -301,14 +308,14 @@
             "Type"          : "AWS::Redshift::ClusterSubnetGroup",
             "Properties"    : {
                 "Description"             : "Cluster subnet group",
-                "SubnetIds"               : [ { "Ref" : "privateSubnet" } ]
+                "SubnetIds"               : [ { "Ref" : "PrivateSubnet" } ]
                             }
             },
 
     "ElasticsearchDomain": {
        "Type": "AWS::Elasticsearch::Domain",
        "Properties": {
-         "DomainName": {"Fn::Join" : [ "",[ "cloudwick-dles-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+         "DomainName": {"Fn::Join" : [ "",[ "dles-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
           "ElasticsearchVersion": "5.1",
           "ElasticsearchClusterConfig": {
                                      "DedicatedMasterEnabled"      : "false",
@@ -333,13 +340,13 @@
                "AWS": ["*"]
              },
              "Action": ["es:*"],
-             "Resource"  : {"Fn::Join" : [ "",[ "arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/cloudwick-dles-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] }, "/*" ]]}
+             "Resource"  : {"Fn::Join" : [ "",[ "arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/dles-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] }, "/*" ]]}
            }]
          },
          "AdvancedOptions": {
            "rest.action.multi.allow_explicit_index": "true"
          },
-          "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
+          "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }]
        }
      },
 
@@ -347,7 +354,7 @@
                                     "Type"        : "AWS::IAM::Role",
                                     "DependsOn"   : "RedshiftSecondaryRole",
                                     "Properties"  : {
-                                                  "RoleName"       : {"Fn::Join" : [ "",[ "cloudwick-datalake-lambdaExecutionRole-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                  "RoleName"       : {"Fn::Join" : [ "",[ "datalake-lambdaExecutionRole-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
                                                       "AssumeRolePolicyDocument"  : {
                                                           "Version"   : "2012-10-17",
                                                           "Statement" : [{
@@ -361,7 +368,7 @@
 
                                                       "Path"        : "/",
                                                       "Policies"    : [{
-                                                            "PolicyName"        :{"Fn::Join" : [ "",[ "cloudwick-datalake-catlamb-policy-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                            "PolicyName"        :{"Fn::Join" : [ "",[ "datalake-catlamb-policy-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
                                                             "PolicyDocument"    : {
                                                                       "Version"       : "2012-10-17",
                                                                       "Statement"     : [
@@ -385,7 +392,7 @@
                                                                                        "Action": [
                                                                                            "es:*"
                                                                                        ],
-                                                                                       "Resource":[{"Fn::Join" : [ "", ["arn:aws:es:::domain/cloudwick-dles-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },":*"]]}]
+                                                                                       "Resource":[{"Fn::Join" : [ "", ["arn:aws:es:::domain/dles-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },":*"]]}]
                                                                                    },
                                                                                    {
                                                                                        "Effect": "Allow",
@@ -402,7 +409,7 @@
                                       "RedshiftSecondaryRole" : {
                                                             "Type"        : "AWS::IAM::Role",
                                                             "Properties"  : {
-                                                                          "RoleName"       : {"Fn::Join" : [ "",[ "cloudwick-datalake-RedshiftSecondaryRole-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                                          "RoleName"       : {"Fn::Join" : [ "",[ "datalake-RedshiftSecondaryRole-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
                                                                               "AssumeRolePolicyDocument"  : {
                                                                                   "Version"   : "2012-10-17",
                                                                                   "Statement" : [{
@@ -416,14 +423,14 @@
 
                                                                               "Path"        : "/",
                                                                               "Policies"    : [{
-                                                                                    "PolicyName"        :{"Fn::Join" : [ "",[ "cloudwick-datalake-RedshiftSecondaryRole-policy-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                                                    "PolicyName"        :{"Fn::Join" : [ "",[ "datalake-RedshiftSecondaryRole-policy-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
                                                                                     "PolicyDocument"    : {
                                                                                               "Version"       : "2012-10-17",
                                                                                               "Statement"     : [
                                                                                                            {
                                                                                                                 "Effect": "Allow",
                                                                                                                 "Action": "s3:*",
-                                                                                                                "Resource": {"Fn::Join" : [ "", ["arn:aws:s3:::cloudwick-datalake-", { "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },"/*"]]}
+                                                                                                                "Resource": {"Fn::Join" : [ "", ["arn:aws:s3:::datalake-", { "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },"/*"]]}
                                                                                                             }
                                                                                           ]}}]
                                                                                   }
@@ -434,12 +441,12 @@
                                    "DependsOn"          : "WebserverWaitCondtion",
                                    "Type"               : "AWS::Lambda::Function",
                                    "Properties"         : {
-                                                    "FunctionName": {"Fn::Join" : [ "",[ "cloudwick-datalake-catlamb-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                    "FunctionName": {"Fn::Join" : [ "",[ "datalake-catlamb-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
                                                     "Handler"     : "lambda_function.lambda_handler",
                                                     "Role"        : { "Fn::GetAtt"  :   ["LambdaExecutionRole", "Arn"] },
                                                     "Code"        : {
 
-                                                                    "S3Bucket"    : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                                    "S3Bucket"    : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
                                                                     "S3Key"       : "lambdas/writetoESX.zip"
                                                                   },
                                                     "Runtime": "python2.7",
@@ -472,7 +479,7 @@
                                            "RoleARN": { "Fn::GetAtt" : ["FirehoseRole", "Arn"] },
                                            "S3BackupMode": "FailedDocumentsOnly",
                                            "S3Configuration": {
-                                                       "BucketARN": {"Fn::Join":["",["arn:aws:s3:::",{"Ref":"DLS3Bucket"}]]},
+                                                       "BucketARN": {"Fn::Join":["",["arn:aws:s3:::",{"Ref":"DataLakeS3Bucket"}]]},
                                                        "BufferingHints": {
                                                        "IntervalInSeconds": "60",
                                                        "SizeInMBs": "5"
@@ -526,8 +533,8 @@
                                                                "s3:PutObject"
                                                              ],
                                                              "Resource": [
-                                                               {"Fn::Join":["",["arn:aws:s3:::",{"Ref":"DLS3Bucket"},"/*"]]},
-                                                               {"Fn::Join":["",["arn:aws:s3:::",{"Ref":"DLS3Bucket"}]]}
+                                                               {"Fn::Join":["",["arn:aws:s3:::",{"Ref":"DataLakeS3Bucket"},"/*"]]},
+                                                               {"Fn::Join":["",["arn:aws:s3:::",{"Ref":"DataLakeS3Bucket"}]]}
                                                              ]
                                                            },
                                                            {
@@ -590,12 +597,12 @@
                          },
 
 
-                 "DLS3Bucket" : {
+                 "DataLakeS3Bucket" : {
                    "Type" : "AWS::S3::Bucket",
                    "DeletionPolicy" : "Delete",
                    "Properties": {
                          "AccessControl" : "PublicReadWrite",
-                         "BucketName"    : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                         "BucketName"    : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
                          "VersioningConfiguration": {
                                              "Status": "Enabled"
                                            },
@@ -613,11 +620,11 @@
                        }
                      },
 
-                 "s3Interimbucketpolicy" : {
+                 "S3InterimBucketPolicy" : {
                        "Type"        : "AWS::S3::BucketPolicy",
-                       "DependsOn"   : "DLS3Bucket",
+                       "DependsOn"   : "DataLakeS3Bucket",
                        "Properties"  : {
-                                       "Bucket"          : {"Ref" : "DLS3Bucket"},
+                                       "Bucket"          : {"Ref" : "DataLakeS3Bucket"},
                                        "PolicyDocument"  : {
                                                            "Statement":[
                                                              {
@@ -627,7 +634,7 @@
                                                                           "Service": "cloudtrail.amazonaws.com"
                                                                       },
                                                                       "Action": "s3:GetBucketAcl",
-                                                                      "Resource": {"Fn::Join" : ["",["arn:aws:s3:::cloudwick-datalake-",{"Ref":"AWS::AccountId"},"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}
+                                                                      "Resource": {"Fn::Join" : ["",["arn:aws:s3:::datalake-",{"Ref":"AWS::AccountId"},"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}
                                                                    },
                                                                    {
                                                                       "Sid": "AWSCloudTrailWriteintermediate",
@@ -636,7 +643,7 @@
                                                                           "Service": "cloudtrail.amazonaws.com"
                                                                       },
                                                                       "Action": "s3:PutObject",
-                                                                      "Resource": {"Fn::Join" : ["",["arn:aws:s3:::cloudwick-datalake-",{"Ref":"AWS::AccountId"},"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] }, "/CloudTrailLogs/AWSLogs/",{"Ref":"AWS::AccountId"},"/*" ]]},
+                                                                      "Resource": {"Fn::Join" : ["",["arn:aws:s3:::datalake-",{"Ref":"AWS::AccountId"},"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] }, "/CloudTrailLogs/AWSLogs/",{"Ref":"AWS::AccountId"},"/*" ]]},
                                                                       "Condition": {
                                                                           "StringEquals": {
                                                                               "s3:x-amz-acl": "bucket-owner-full-control"
@@ -647,29 +654,29 @@
                                      }
                        },
 
-          "datalakecloudtrail" : {
+          "DatalakeCloudtrail" : {
 
                              "Type" : "AWS::CloudTrail::Trail",
-                             "DependsOn" : "s3Interimbucketpolicy",
+                             "DependsOn" : "S3InterimBucketPolicy",
                              "Properties" : {
-                                       "S3BucketName" : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                       "S3BucketName" : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
                                        "S3KeyPrefix"  : "CloudTrailLogs",
                                        "IsLogging" : true
                                            }
                                          },
 
-               "s3bucketpolicy" : {
+               "S3BucketPolicy" : {
                      "Type"        : "AWS::S3::BucketPolicy",
-                     "DependsOn"   : "datalakecloudtrail",
+                     "DependsOn"   : "DatalakeCloudtrail",
                      "Properties"  : {
-                                     "Bucket"          : {"Ref" : "DLS3Bucket"},
+                                     "Bucket"          : {"Ref" : "DataLakeS3Bucket"},
                                      "PolicyDocument"  : {
                                                          "Statement":[{
                                                                        "Sid"               : "DenyIncorrectEncryptionHeader",
                                                                        "Effect"            : "Deny",
                                                                        "Principal"         : "*",
                                                                        "Action"            : "s3:PutObject",
-                                                                       "Resource"          : {"Fn::Join" : ["",["arn:aws:s3:::cloudwick-datalake-",{"Ref":"AWS::AccountId"},"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },"/*" ]]},
+                                                                       "Resource"          : {"Fn::Join" : ["",["arn:aws:s3:::datalake-",{"Ref":"AWS::AccountId"},"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },"/*" ]]},
                                                                        "Condition": {
                                                                          "StringNotEquals": {
                                                                            "s3:x-amz-server-side-encryption": "AES256"
@@ -682,7 +689,7 @@
                                                                        "Effect"              : "Deny",
                                                                        "Principal"           : "*",
                                                                        "Action"              : "s3:PutObject",
-                                                                       "Resource"            : {"Fn::Join" : ["",["arn:aws:s3:::cloudwick-datalake-",{"Ref":"AWS::AccountId"},"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },"/*" ]]},
+                                                                       "Resource"            : {"Fn::Join" : ["",["arn:aws:s3:::datalake-",{"Ref":"AWS::AccountId"},"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },"/*" ]]},
                                                                        "Condition": {
                                                                          "Null": {
                                                                            "s3:x-amz-server-side-encryption": "true"
@@ -708,7 +715,7 @@
     "EC2WebserverRole": {
        "Type"           : "AWS::IAM::Role",
        "Properties"     : {
-          "RoleName"       : {"Fn::Join" : [ "",[ "cloudwick-dl-webserver-role-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+          "RoleName"       : {"Fn::Join" : [ "",[ "dl-webserver-role-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
           "AssumeRolePolicyDocument"  : {
                                            "Version"  : "2012-10-17",
                                            "Statement": [ {
@@ -721,7 +728,7 @@
           },
           "Path"      : "/",
           "Policies"  : [ {
-             "PolicyName"       : {"Fn::Join" : [ "",[ "cloudwick-dl-webserver-policy-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+             "PolicyName"       : {"Fn::Join" : [ "",[ "dl-webserver-policy-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
              "PolicyDocument"   : {
                                           "Version"   : "2012-10-17",
                                           "Statement" : [ {
@@ -776,7 +783,7 @@
             },
        "Properties": {
           "ImageId"             : { "Fn::FindInMap" : [ "RegiontoAmiMap", { "Ref" : "AWS::Region" }, "Name"]},
-          "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "cloudwick-datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  },{"Key" : "Name", "Value" : {"Fn::Join" : [ "",[ "cloudwick-datalake-webserver-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}}],
+          "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  },{"Key" : "Name", "Value" : {"Fn::Join" : [ "",[ "datalake-webserver-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}}],
           "IamInstanceProfile"  : {"Ref" : "EC2WebserverIamProfile"},
           "InstanceType"        : { "Ref" : "InstanceType" },
           "KeyName"             : { "Ref" : "KeyName" },
@@ -791,11 +798,11 @@
             "         --region ", { "Ref" : "AWS::Region" }, "\n",
             "wget https://raw.githubusercontent.com/akshay-ashok/cloudwick-datalake/datalake-customize/starter/configure.sh;cat configure.sh | tr -d '\r' > configure_l.sh;chmod 777 configure_l.sh;./configure_l.sh ",
             {"Ref":"AWS::AccountId"}," ",{"Ref":"AWS::Region"}," ",{"Ref":"DatabaseUserName"}," ",{"Ref":"DatabaseUserPassword"}," ",{"Ref":"AdminEmailID"}," ",
-            { "Fn::GetAtt": [ "RDSDB", "Endpoint.Address" ] }," ",
+            { "Fn::GetAtt": [ "RDSdb", "Endpoint.Address" ] }," ",
             { "Fn::GetAtt" : [ "RedshiftCluster", "Endpoint.Address" ] }," ",
-            { "Fn::GetAtt": [ "RedshiftSecondaryRole", "Arn" ] }," ",{"Ref":"RDSDB"}," ",{"Ref":"DatabaseName"}," ",{"Ref":"RedshiftCluster"}," ",{"Ref":"DatabaseName"}," ",
+            { "Fn::GetAtt": [ "RedshiftSecondaryRole", "Arn" ] }," ",{"Ref":"RDSdb"}," ",{"Ref":"DatabaseName"}," ",{"Ref":"RedshiftCluster"}," ",{"Ref":"DatabaseName"}," ",
             {"Fn::GetAtt" : ["ElasticsearchDomain","DomainEndpoint"]}," ",
-            {"Ref":"DLS3Bucket"}," ",{"Ref":"AWS::StackId"}," ",{"Fn::Select": ["4",{"Fn::Split": ["-",{"Fn::Select" : [ "2",{"Fn::Split": ["/",{"Ref": "AWS::StackId"}]}]}]}]}," ",
+            {"Ref":"DataLakeS3Bucket"}," ",{"Ref":"AWS::StackId"}," ",{"Fn::Select": ["4",{"Fn::Split": ["-",{"Fn::Select" : [ "2",{"Fn::Split": ["/",{"Ref": "AWS::StackId"}]}]}]}]}," ",
             {"Ref":"AWS::StackName"}," ",{"Fn::Base64":{"Ref" : "WebserverWaitHandle"}}," \n"
                   ]]}},
 
@@ -804,7 +811,7 @@
            "AssociatePublicIpAddress": "true",
            "DeviceIndex": "0",
            "GroupSet": [{ "Ref" : "VPCSecurityGroup" }],
-           "SubnetId": { "Ref" : "publicSubnet"}
+           "SubnetId": { "Ref" : "PublicSubnet"}
                                 }],
 
            "BlockDeviceMappings" : [
@@ -840,38 +847,70 @@
 
   },
   "Outputs" : {
-                "WaitConditionHandle" : {
-                  "Description" : "---",
-                  "Value"       : {"Fn::Base64": {"Ref":"WebserverWaitHandle"}}
+                "S3Bucket":
+                {
+                  "Description"               : "S3 Bucket",
+                  "Value"                     : {"Ref" : "DataLakeS3Bucket"}
                 },
-                "S3Bucket"            : {
-                  "Description" : "S3bucket",
-                  "Value"       : {"Ref" : "DLS3Bucket"}
+
+                "ElasticSearchEndpoint":
+                {
+                  "Description"               : "ElasticSearch Endpoint",
+                  "Value"                     : {"Fn::GetAtt" : ["ElasticsearchDomain","DomainEndpoint"]}
                 },
-                "ElasticSearchEndpoint" : {
-                  "Description" : "ElasticSearchEndpoint",
-                  "Value"       : {"Fn::GetAtt" : ["ElasticsearchDomain","DomainEndpoint"]}
+
+                "lambdaFunction":
+                {
+                  "Description"                : "Lambda Function",
+                  "Value"                      : {"Ref" : "LambdafunctionES"}
                 },
-                "lambdaName"    : {
-                  "Description" : "LambdaName",
-                  "Value"       : {"Ref" : "LambdafunctionES"}
+
+                "VPCInfo":
+                {
+                  "Description"                : "VPC ID",
+                  "Value"                      : {"Ref" : "VpcId"}
                 },
-                "VPCInfo"    : {
-                  "Description"   : "New VPC Info",
-                  "Value"         : {"Ref" : "VpcId"}
+
+                "PrivateSubnet":
+                {
+                  "Description"                : "Private Subnet ID",
+                  "Value"                      : {"Ref" : "PrivateSubnet"}
                 },
-                "RDSEndpoint": {
+
+                "PublicSubnet":
+                {
+                  "Description"                : "Public Subnet ID",
+                  "Value"                      : {"Ref" : "PublicSubnet"}
+                },
+
+                "RDSEndpoint":
+                {
                   "Description"                 : "RDS endpoint",
-                  "Value"                       : { "Fn::GetAtt": [ "RDSDB", "Endpoint.Address" ] }
+                  "Value"                       : { "Fn::GetAtt": [ "RDSdb", "Endpoint.Address" ] }
                 },
-                "RedshiftClusterEndpoint" : {
+
+                "RedshiftClusterEndpoint":
+                {
                   "Description"                 : "Redshift Cluster endpoint",
                   "Value"                       : { "Fn::GetAtt" : [ "RedshiftCluster", "Endpoint.Address" ] }
                 },
 
-                "RedshiftSecondaryRole" : {
-                  "Description"                 : "Ref - RedshiftSecondaryRole ",
+                "RedshiftSecondaryRole":
+                {
+                  "Description"                 : "Redshift Secondary Role",
                   "Value"                       : { "Ref" : "RedshiftSecondaryRole"}
+                },
+
+                "FirehoseDeliveryStream":
+                {
+                  "Description"                 : "Firehose delivery stream",
+                  "Value"                       : { "Ref" : "DatalakeFirehoseStream"}
+                },
+
+                "CloudTrail":
+                {
+                  "Description"                 : "CloudTrail",
+                  "Value"                       : { "Ref" : "DatalakeCloudtrail"}
                 }
 
   }
