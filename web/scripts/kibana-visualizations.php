@@ -17,8 +17,6 @@
             $url = 'https://'._ELASTIC_SEARCH_URL.'/.kibana/'.$value["_type"].'/'.$value["_id"];
 
             $result = exec("curl ".$url." -H \"Content-Type: application/json\" --data '".json_encode($value["_source"])."'");
-
-
         }
     } catch (Exception $ex){
         //no-exception handled
