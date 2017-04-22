@@ -803,7 +803,7 @@
             { "Fn::GetAtt": [ "RedshiftSecondaryRole", "Arn" ] }," ",{"Ref":"RDSdb"}," ",{"Ref":"DatabaseName"}," ",{"Ref":"RedshiftCluster"}," ",{"Ref":"DatabaseName"}," ",
             {"Fn::GetAtt" : ["ElasticsearchDomain","DomainEndpoint"]}," ",
             {"Ref":"DataLakeS3Bucket"}," ",{"Ref":"AWS::StackId"}," ",{"Fn::Select": ["4",{"Fn::Split": ["-",{"Fn::Select" : [ "2",{"Fn::Split": ["/",{"Ref": "AWS::StackId"}]}]}]}]}," ",
-            {"Ref":"AWS::StackName"}," ",{"Fn::Base64":{"Ref" : "WebserverWaitHandle"}}," \n"
+            {"Ref":"AWS::StackName"}," ",{"Fn::Base64":{"Ref" : "WebserverWaitHandle"}}," ",{"Ref":"DatalakeFirehoseStream"}," \n"
                   ]]}},
 
 
