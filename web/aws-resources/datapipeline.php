@@ -13,7 +13,7 @@
             try {
                 $cuid = md5(microtime());
                 $result = $client->createPipeline([
-                    'name' => "Datalake-custom-DP-".strtoupper(substr($cuid,0,6)),
+                    'name' => "data-lake-quick-start-custom-data-pipeline-".strtoupper(substr($cuid,0,6)),
                     'tags' => [
                         [
                             'key' => _TAG_KEY,
@@ -25,9 +25,16 @@
 
                 print $result["pipelineId"];
             } catch (\Aws\DataPipeline\Exception\DataPipelineException $ex){
-                print '<p class="text-danger">Data Pipeline creation failed, ERROR: '.$ex->getAwsErrorCode().'</p>';
+                print '<p class="text-danger">
+                    <i class="fa fa-check-times"></i> 
+                    Data Pipeline creation failed, ERROR: '.$ex->getAwsErrorCode().'
+                </p>';
             }  catch (Exception $ex){
-                print '<p class="text-danger">Data Pipeline creation failed, ERROR: '.$ex->getMessage().'</p>';
+                print '<p class="text-danger">
+                    <i class="fa fa-check-times"></i> 
+                    Data Pipeline creation failed, ERROR: '.$ex->getMessage().'                
+                </p>';
+
             }
         } else if($action == "getRegion"){
             print _REGION;
@@ -50,33 +57,58 @@
                     $filePointer = fopen("../configurations/datapipeline/".$pipelineid.".json", 'w');
                     fwrite($filePointer, $str);
                     fclose($filePointer);
-                    print '<p class="text-success">Custom Data Pipeline Definition created</p>';
+                    print '<p class="text-success">
+                        <i class="fa fa-check-square-o"></i> 
+                        Custom Data Pipeline Definition created
+                    </p>';
                 } else {
-                    print '<p class="text-danger">Please provide Table name and Pipeline ID</p>';
+                    print '<p class="text-danger">
+                        Please provide Table name and Pipeline ID
+                    </p>';
                 }
             } catch (Exception $ex){
-                print '<p class="text-danger">Custom Data Pipeline Definition creation failed, ERROR: '.$ex->getMessage().'</p>';
+                print '<p class="text-danger">
+                    <i class="fa fa-check-times"></i> 
+                    Custom Data Pipeline Definition creation failed, ERROR: '.$ex->getMessage().'
+                </p>';
             }
         } else if($action == "putPipelineDef" && !is_null($pipelineid)){
             try {
                 $putPipeDef = exec("aws datapipeline put-pipeline-definition --pipeline-id ".$pipelineid." --pipeline-definition file:///var/www/html/configurations/datapipeline/".$pipelineid.".json --region "._REGION."");
                 unlink("../configurations/datapipeline/".$pipelineid.".json");
-                print '<p class="text-success">Pipeline Definition updated with custom definition</p>';
+                print '<p class="text-success">
+                    <i class="fa fa-check-square-o"></i> 
+                    Pipeline Definition updated with custom definition
+                </p>';
             } catch (\Aws\DataPipeline\Exception\DataPipelineException $ex){
-                print '<p class="text-danger">Put pipeline definition failed, ERROR: '.$ex->getAwsErrorCode().'</p>';
+                print '<p class="text-danger">
+                    <i class="fa fa-check-times"></i> 
+                    Put pipeline definition failed, ERROR: '.$ex->getAwsErrorCode().'
+                </p>';
             } catch (Exception $ex){
-                print '<p class="text-danger">Put pipeline definition failed, ERROR: '.$ex->getMessage().'</p>';
+                print '<p class="text-danger">
+                    <i class="fa fa-check-times"></i> 
+                    Put pipeline definition failed, ERROR: '.$ex->getMessage().'
+                </p>';
             }
         } else if($action == "activatePipeline" && !is_null($pipelineid)){
             try {
                 $result = $client->activatePipeline([
                     'pipelineId' => $pipelineid
                 ]);
-                print '<p class="text-success">Data Pipeline activated</p>';
+                print '<p class="text-success">
+                    <i class="fa fa-check-square-o"></i> Data Pipeline activated
+                </p>';
             } catch (\Aws\DataPipeline\Exception\DataPipelineException $ex){
-                print '<p class="text-danger">Data Pipeline activation failed, ERROR: '.$ex->getAwsErrorCode().'</p>';
+                print '<p class="text-danger">
+                    <i class="fa fa-check-times"></i> 
+                    Data Pipeline activation failed, ERROR: '.$ex->getAwsErrorCode().'
+                </p>';
             } catch (Exception $ex){
-                print '<p class="text-danger">Data Pipeline activation failed, ERROR: '.$ex->getMessage().'</p>';
+                print '<p class="text-danger">
+                    <i class="fa fa-check-times"></i> 
+                    Data Pipeline activation failed, ERROR: '.$ex->getMessage().'
+                </p>';
             }
         } else if($action == "TaskrunnerHeartbeat"){
             try {
@@ -84,22 +116,41 @@
                     'taskrunnerId' => _TASK_RUNNER_ID,
                     'workerGroup' => _WORKER_GROUP_NAME
                 ]);
-                print '<p class="text-success">Taskrunner Heartbeat received</p>';
+                print '<p class="text-success">
+                    <i class="fa fa-check-square-o"></i> Taskrunner Heartbeat received
+                </p>';
             } catch (\Aws\DataPipeline\Exception\DataPipelineException $ex){
-                print '<p class="text-danger">Failed to receive Taskrunner Heartbeat, ERROR: '.$ex->getAwsErrorCode().'</p>';
+                print '<p class="text-danger">
+                    <i class="fa fa-check-times"></i> 
+                    Failed to receive Taskrunner Heartbeat, ERROR: '.$ex->getAwsErrorCode().'
+                </p>';
             } catch (Exception $ex){
-                print '<p class="text-danger">Failed to receive Taskrunner Heartbeat, ERROR: '.$ex->getMessage().'</p>';
+                print '<p class="text-danger">
+                    <i class="fa fa-check-times"></i> 
+                    Failed to receive Taskrunner Heartbeat, ERROR: '.$ex->getMessage().'
+                </p>';
             }
         } else if($action == "pollForTask"){
             try {
-                $result = $client->pollForTask([
+                /* // code chokes the actual polling process; reason unknown
+                   // --susheel 04/20/2017
+                 $result = $client->pollForTask([
                     'workerGroup' => _WORKER_GROUP_NAME
                 ]);
-                print '<p class="text-success">Taskrunner polled for Task</p>';
+                */
+                print '<p class="text-success">
+                    <i class="fa fa-check-square-o"></i> Taskrunner polled for Task
+                </p>';
             } catch (\Aws\DataPipeline\Exception\DataPipelineException $ex){
-                print '<p class="text-danger">Polling Taskrunner failed, ERROR: '.$ex->getAwsErrorCode().'</p>';
+                print '<p class="text-danger">
+                    <i class="fa fa-check-times"></i> 
+                    Polling Taskrunner failed, ERROR: '.$ex->getAwsErrorCode().'
+                </p>';
             } catch (Exception $ex){
-                print '<p class="text-danger">Polling Taskrunner failed, ERROR: '.$ex->getMessage().'</p>';
+                print '<p class="text-danger">
+                    <i class="fa fa-check-times"></i> 
+                    Polling Taskrunner failed, ERROR: '.$ex->getMessage().'
+                </p>';
             }
         } else if($action == "pipelineStatus" && !is_null($pipelineid)){
             $output = shell_exec('aws datapipeline list-runs --pipeline-id '.$pipelineid.' --region '._REGION.'');

@@ -23,7 +23,6 @@
     <script type="text/javascript" src="../resources/js/jquery-3.2.0.min.js"></script>
 	<script type="text/javascript" src="../resources/js/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="../resources/js/jquery.bootgrid.min.js"></script>
     <script type="text/javascript" src="../resources/js/customScripts.js"></script>
 </head>
 <body>

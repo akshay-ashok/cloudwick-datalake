@@ -29,7 +29,7 @@ $(function(){
                 output.append(pid);
             } else {
                 pipelineid = pid;
-                output.append("<p class='text-success'>Datapipeline created, Pipeline Id : <b>"+pid+"</b></p>");
+                output.append("<p class='text-success'><i class='fa fa-check-square-o'></i> Datapipeline created, Pipeline Id : <b>"+pid+"</b></p>");
                 $.ajax({
                     url: url,
                     data: { action: "createPipelineDef", pipelineid:pipelineid, tablename:tablename}
@@ -61,7 +61,13 @@ $(function(){
                                         "<i class='fa fa-circle fa-blink'></i> Running <i class='fa fa-external-link-square'></i></a>" +
                                         "</div>");
                                     $("#datapipelinespinner > i.fa").removeClass("fa-4x").addClass("fa-1x");
-                                    startStatusCheck();
+                                    $.ajax({
+                                        url: url,
+                                        data: { action: "pipelineStatus", pipelineid:pipelineid}
+                                    }).done(function(pipelineStatus) {
+                                        $("#datapipelinestatus").append(pipelineStatus);
+                                        startStatusCheck();
+                                    });
                                 });
                             });
                         });
@@ -75,25 +81,25 @@ $(function(){
         function stopStatusCheck() {
             clearTimeout(timer);
         }
-        var i = 0;
+
         function startStatusCheck() {
             timer = setTimeout(checkDPStatus, interval);
         }
 
         function checkDPStatus(){
             if (timer == null) return;
-            if(i > 0) {$("#datapipelinespinner").toggle();}
+            $("#datapipelinespinner").toggle();
             $.ajax({
                 url: url,
                 data: { action: "pipelineStatus", pipelineid:pipelineid}
             }).done(function(pipelineStatus) {
-                i++;
                 $("#datapipelinespinner").toggle();
                 pipelineStatus = pipelineStatus.replace(new RegExp('FINISHED', 'g'),"<em class='text-success'>FINISHED</em>");
                 pipelineStatus = pipelineStatus.replace(new RegExp('WAITING_ON_DEPENDENCIES','g'),"<em class='text-warning'>WAITING_ON_DEPENDENCIES</em>");
+                pipelineStatus = pipelineStatus.replace(new RegExp('WAITING_FOR_RUNNER','g'),"<em class='text-warning'>WAITING_FOR_RUNNER</em>");
                 pipelineStatus = pipelineStatus.replace(new RegExp('RUNNING','g'),"<em class='text-info'>RUNNING</em>");
                 $("#datapipelinestatus").html(pipelineStatus);
-                if(pipelineStatus.indexOf("WAIT")!==-1 || pipelineStatus.indexOf("PENDING")!==-1){
+                if(pipelineStatus.indexOf("WAIT")!==-1 || pipelineStatus.indexOf("PENDING")!==-1 || pipelineStatus.indexOf("RUNNING")!==-1){
                     startStatusCheck();
                 } else {
                     stopStatusCheck();
