@@ -104,7 +104,7 @@ use Aws\S3\Exception\S3Exception;
                 <i class="fa fa-sitemap"></i> Add bucket for cataloging
             </a> &nbsp;
         </div>
-        <!-- Start createFolder Modal -->
+        <!-- Start subscribeToBucket Modal -->
         <div class="modal fade" id="subscribeBucketModal" tabindex="-1" role="dialog" aria-labelledby="subscribeBucketLabel">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -150,7 +150,7 @@ use Aws\S3\Exception\S3Exception;
             </div>
           </div>
         </div>
-        <!-- End createFolder Modal -->
+        <!-- End subscribeToBucket Modal -->
         <br>
             <ul class="list-group">';
         foreach ($buckets_list as $bucket_item) {

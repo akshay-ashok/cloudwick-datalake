@@ -18,6 +18,7 @@ define("_STACK_ID",$resourceInfo["stack"]["stackid"]);
 define("_STACK_NAME",$resourceInfo["stack"]["stackname"]);
 define("_STACK_UID",end(explode("-",_STACK_ID)));
 define("_WORKER_GROUP_NAME","datalakeworkergroup-"._ACCOUNT_ID."-"._STACK_UID);
+define("_TASK_RUNNER_ID","datalaketaskrunner-"._ACCOUNT_ID."-"._STACK_UID);
 
 define("_RDS_IDENTIFIER",$resourceInfo["rds"]["dbinstanceidentifier"]);
 define("_RDS_ENDPOINT",$resourceInfo["rds"]["endpoint"]);
