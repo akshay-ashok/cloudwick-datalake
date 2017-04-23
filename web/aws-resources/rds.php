@@ -7,7 +7,7 @@ function adminer_object() {
 
     class AdminerSoftware extends Adminer {
         function name(){
-            return 'DLQS';
+            return '';
         }
 
         function credentials() {

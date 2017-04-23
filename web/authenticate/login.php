@@ -57,7 +57,7 @@ include_once "../root/ConnectionManager.php";
                 <div class="modal-header text-primary">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myLoginModalTitle"><b>Password Reset</b></h4>
+                    <h4 class="modal-title" id="myResetPasswordModalTitle"><b>Password Reset</b></h4>
                 </div>
                 <div class="modal-body" style="margin-top:1em;">
                     <div id="reset_output"></div>

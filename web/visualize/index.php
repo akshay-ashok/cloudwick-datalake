@@ -9,7 +9,7 @@ print '
     <div class="col-lg-10-col-md-10-col-sm-12 col-xs-12">
         <div class="btn-group" role="group" aria-label="...">
           <a href="../visualize/zeppelin.php" class="btn btn-warning"><span class="glyphicon glyphicon-file"></span> Explore Data</a>
-          <a href="../visualize/cloudtrail.php" class="btn btn-success customMessage" message="Exploring API calls via Cloudtrail logs is underway" title="Explore API Calls" ><span class="glyphicon glyphicon-console"></span> Explore API calls</a>
+          <a href="../visualize/cloudtrail.php" class="btn btn-success" title="Explore API Calls" ><span class="glyphicon glyphicon-console"></span> Explore API calls</a>
         </div>
     </div>
     <div class="col-lg-1 col-md-1"></div>

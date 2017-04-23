@@ -22,11 +22,11 @@ h1 {
 	border-bottom:1px solid #f4f4f4;
 
 	padding:20px;
-	margin:0px;
+	margin:0;
 }
 
 #menu h1 {
-	padding:0px 0px 5px 20px;
+	padding:0 0 5px 20px;
 	background:none;
 }
 
@@ -37,8 +37,8 @@ h2,h3 {
 	color:#1e5eb6;
 	border-bottom:1px solid #f4f4f4;
 
-	padding:20px 0px;
-	margin:0px;
+	padding:20px 0;
+	margin:0;
 }
 
 fieldset {
@@ -82,7 +82,7 @@ code{
 code a:hover{background:transparent}
 
 table{
-	margin:10px 0px;
+	margin:10px 0;
 	border:1px solid #d0cdc4;
 	border-collapse:collapse;
 }
@@ -104,7 +104,7 @@ th,td{
 
 th a {
 	font-weight:bold;
-	padding-bottom:0px;
+	padding-bottom:0;
 }
 
 th {
@@ -121,7 +121,7 @@ th {
 }
 
 .error,.message{
-	padding:0px;
+	padding:0;
 	background:transparent;
 	font-weight:bold
 }
@@ -135,8 +135,8 @@ th {
 }
 
 #content{
-	margin:0px 0px 0px 320px;
-	padding:50px 20px 40px 0px;
+	margin:0 0 0 320px;
+	padding:50px 20px 40px 0;
 	height:100%;
 }
 
@@ -144,8 +144,8 @@ th {
 	background:#f2eee1;
 	color:#808080;
 	position:fixed;
-	top:0px;
-	left:0px;
+	top:0;
+	left:0;
 	width:100%;
 	padding:10px 20px;
 	z-index:1;
@@ -153,8 +153,8 @@ th {
 
 #breadcrumb {
 	position:fixed;
-	top:0px;
-	left:300px;
+	top: 5.8rem;
+	left:27rem;
 	background:#f2eee1;
 	z-index:2;
 	width:100%;
@@ -164,13 +164,12 @@ th {
 #menu {
 	background:#fcfaf5;
 	position:fixed;
-	top:-10px;
-	padding:20px;
-	padding-top:40px;
-	bottom:0px;
+	top: 5.8rem;
+	padding: 40px 20px 20px;
+	bottom:0;
 	overflow:auto;
-	left:0px;
-	width:240px;
+	left:0;
+	width:27rem;
 	border-right:5px solid #f2eee1;
 }
 

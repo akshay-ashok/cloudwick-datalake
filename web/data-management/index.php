@@ -14,7 +14,7 @@
             try{
                 $upload = $client->upload(_BUCKET, $_FILES['patientfile']['name'], fopen($_FILES['patientfile']['tmp_name'], 'rb'), 'public-read');
                 print '<p>
-                    Upload <a href="'.htmlspecialchars($upload->get('ObjectURL')).'">successful</a> :)
+                    Upload <a href="'.htmlspecialchars($upload->get('ObjectURL'),ENT_QUOTES).'">successful</a> :)
                 </p>';
             } catch (Exception $e){
                 print '<div class="alert alert-danger">

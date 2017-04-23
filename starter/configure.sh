@@ -20,6 +20,7 @@ STACKPART="${16}"
 STACKNAME="${17}"
 WAITCONDITION="${18}"
 STREAMNAME="${19}"
+CLOUDTRAIL="${20}"
 REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTERIDENTIFIER}"
 WORKERGROUP="datalakeworkergroup-${ACCOUNT_ID}-${STACKPART}"
 TASKRUNNER="datalaketaskrunner-${ACCOUNT_ID}-${STACKPART}"
@@ -124,6 +125,9 @@ arn="arn:aws:s3:${REGION}:${ACCOUNT_ID}:${BUCKET}"
 
 [kinesis]
 streamname="${STREAMNAME}"
+
+[cloudtrail]
+cloudtrailname="${CLOUDTRAIL}"
 
 EOT
 

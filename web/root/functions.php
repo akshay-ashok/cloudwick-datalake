@@ -21,7 +21,7 @@ function checkSession() {
 			destroySession($relogin);
 		}
 	} else {
-		destroySession();
+		destroySession($relogin);
 	}
 }
 
@@ -101,7 +101,7 @@ function getMenubar() {
 				  </ul>
 				</li>
 				<li>
-				    <a class="t1" title="List all Datalake resources" href="../aws-resources/"><span class="fa fa-cubes"></span> Resources</a>
+				    <a class="t1" title="List all Data Lake resources" href="../aws-resources/"><span class="fa fa-cubes"></span> Resources</a>
 				</li>
 				<li class="dropdown">
 				  <a href="#" class="dropdown-toggle" 
@@ -167,7 +167,7 @@ function getMenubar() {
                   </a>
 				  <ul class="dropdown-menu">
 					<li>
-					    <a href="#" data-toggle="modal" data-target="#myLoginModal" title="Datalake Access Login">
+					    <a href="#" data-toggle="modal" data-target="#myLoginModal" title="Data Lake Access Login">
 					        <span class="glyphicon glyphicon-user"></span> Login
 					    </a>
 					</li>

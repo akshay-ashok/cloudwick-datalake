@@ -1,12 +1,12 @@
 <?php
-    include_once "../root/header.php";
+include_once "../root/header.php";
 ?>
     <div class="clearfix"></div><br>
     <div class="col-lg-1 col-md-1"></div>
     <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 contentBody">
-        <p class="text-primary">Setting up your datalake, Please wait...</p>
+        <p class="text-primary">Setting up your data lake, Please wait...</p>
         <div class="progress">
-            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0">
                 <span>0% Complete</span>
             </div>
         </div>
@@ -40,7 +40,7 @@
             </div>
             <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="crosscheckPanel">
-                    <h3><span class="label label-success">EC2 Checks</span></h3>
+                    <h3><span class="label label-warning">EC2 Checks</span></h3>
                     <div class="checkDiv ec2-checks"></div>
                 </div>
             </div>
@@ -52,69 +52,59 @@
             </div>
             <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="crosscheckPanel">
-                    <h3><span class="label label-info">Elastic Search Checks</span></h3>
-                    <div class="checkDiv es-checks"></div>
+                    <h3><span class="label label-danger">Other Checks</span></h3>
+                    <div class="checkDiv portal-checks"></div>
                 </div>
             </div>
             <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="crosscheckPanel">
-                    <h3><span class="label label-danger">Cloudtrail Checks</span></h3>
+                    <h3><span class="label label-default">Elastic Search Checks</span></h3>
+                    <div class="checkDiv elasticsearch-checks"></div>
+                </div>
+            </div>
+            <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="crosscheckPanel">
+                    <h3><span class="label label-success">Cloudtrail Checks</span></h3>
                     <div class="checkDiv cloudtrail-checks"></div>
                 </div>
             </div>
             <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="crosscheckPanel">
-                    <h3><span class="label label-warning">Other Checks</span></h3>
-                    <div class="checkDiv other-checks"></div>
+                    <h3><span class="label label-primary">Datapipeline Checks</span></h3>
+                    <div class="checkDiv cloudtrail-checks"></div>
                 </div>
             </div>
         </div>
-        <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+        <script src="../resources/js/masonry.pkgd.min.js"></script>
         <script type="text/javascript">
 
             var messages = [
-                ["Created S3 bucket","s3","bucket",true],
-                ["Created S3 bucket policy","s3","buckey-policy",true],
-                ["Created lambda execution role","s3","lambda-execution-role",true],
-                ["Elastic search Domain","es","elastic-search",true],
-                ["Created RDS instance","rds","rds-instance",true],
-                ["Created Redshift Security group","redshift","redshift-sg",true],
-                ["Created Redshift Cluster","redshift","redshift-cluster",true],
-                ["Created ec2 IAM Role","ec2","ec2-iam-role",true],
-                ["Created ec2 Instance","ec2","ec2-instance",true],
-                ["Created Datapipelines","datapipeline","dp-exist",true],
-                ["Final check Redshift database updates","redshift","redshift-db",true],
-                ["Created Mysql Databases for user authentication","other","mysql-validate",true],
-                ["Created Cloudformation wait condition","other","cf-wait",true],
-                ["Setup management portal","other","portal",true],
-                ["Setup Zeppelin portal","other","zeppelin",true],
-                ["Created Kibana visualizations","es","kibana",true],
-                ["Created Kibana dashboards","es","d3-dashboards",true],
-                ["Created Stream","kinesis","stream",true],
-                ["Created Catalog lambda Function IAM Role","lambda","lambda-iam-role",true],
-                ["Created Catalog lambda Function","lambda","lambda-create",true],
-                ["Updated Catalog lambda Function code","lambda","lambda-code",true],
-                ["Created Catalog lambda Function trigger to S3","lambda","lambda-trigger",true],
-                ["Created Cloudtrail","cloudtrail","cloudtrail",true]
+                ["s3","s3-bucket"],
+                ["s3","s3-bucket-lifecycle-policy"],
+                ["s3","s3-bucket-encryption"],
+                ["rds","rds-instance"],
+                ["redshift","redshift-cluster"],
+                ["redshift","redshift-role"],
+                ["elasticsearch","elasticsearch-domain"],
+                ["lambda","lambda-catalog-function"],
+                ["lambda","lambda-catalog-trigger"],
+                ["lambda","lambda-catalog-sample"],
+                ["kinesis","kinesis-firehose"],
+                ["kinesis","kinesis-firehose-role"],
+                ["cloudtrail","cloudtrail"],
+                ["datapipeline","datapipeline-taskrunner"],
+                ["ec2","ec2-instance"],
+                ["ec2","ec2-instance-webserver-role"],
+                ["portal","mysql-databases"],
+                ["portal","portal-zeppelin-setup"],
+                ["portal","portal-kibana-visualizations"],
+                ["portal","portal-kibana-dashboards"]
             ];
-
-            function shuffle(array) {
-                var len = array.length, swap, i;
-                while (len) {
-                    i = Math.floor(Math.random() * len--);
-                    swap = array[len];
-                    array[len] = array[i];
-                    array[i] = swap;
-                }
-                return array;
-            }
-
-            messages = shuffle(messages);
 
             var op = $(".messages");
             var i=0;
             var timer = null;
-            var interval = 1000;
+            var url = "../home/initial-setup.php";
             var totalChecksCount = messages.length;
             var progressFill = (100 / totalChecksCount);
 
@@ -123,64 +113,188 @@
                     columnWidth: '.grid-item',
                     itemSelector: '.grid-item'
                 });
+
+                if(i>= totalChecksCount){
+                    $.ajax({
+                        url: url,
+                        data: { action: "cleanup"}
+                    }).done(function(msg) {
+                        setTimeout(function () {
+                            window.location.replace("../home/?welcome");
+                        }, 5000);
+                    });
+                }
             }
 
             function updateBar(){
-                fillPercent = Math.floor(progressFill * i);
+                i++;
+                var fillPercent = Math.floor(progressFill * i);
                 $('.progress-bar').css('width', fillPercent+'%').attr('aria-valuenow', fillPercent);
                 $('.progress-bar > span').html(fillPercent+"% Complete");
                 updateMasonry();
             }
 
-            function start() {
-                timer = setTimeout(writeToConsole, interval);
-            }
 
-            function stop() {
-                clearTimeout(timer);
-                op.hide();
+            $(function(){
+                // s3 checks & lambda checks
+                // lambda dependency on s3 --susheel 04/22/2017
                 $.ajax({
-                    url: "../home/cleanup.php",
-                    success: function(){
+                    url: url,
+                    data: { action: "s3-bucket"}
+                }).done(function(msg) {
+                    $(".s3-checks").append(msg);
+                    updateBar();
+                    $.ajax({
+                        url: url,
+                        data: { action: "s3-bucket-lifecycle-policy"}
+                    }).done(function(msg) {
+                        $(".s3-checks").append(msg);
                         updateBar();
-                    }
+                        $.ajax({
+                            url: url,
+                            data: { action: "s3-bucket-encryption"}
+                        }).done(function(msg) {
+                            $(".s3-checks").append(msg);
+                            updateBar();
+                            $.ajax({
+                                url: url,
+                                data: { action: "lambda-catalog-function"}
+                            }).done(function(msg) {
+                                $(".lambda-checks").append(msg);
+                                updateBar();
+                                $.ajax({
+                                    url: url,
+                                    data: { action: "lambda-catalog-trigger"}
+                                }).done(function(msg) {
+                                    $(".lambda-checks").append(msg);
+                                    updateBar();
+                                    $.ajax({
+                                        url: url,
+                                        data: { action: "lambda-catalog-sample"}
+                                    }).done(function(msg) {
+                                        $(".lambda-checks").append(msg);
+                                        updateBar();
+                                    });
+                                });
+                            });
+                        });
+                    });
                 });
-                setTimeout(redirect, interval*8);
-            }
 
-            function writeToConsole(){
-                if (timer == null) return;
-                op.html( "<p><span class=\"glyphicon glyphicon-cog\"></span> "+messages[i][0]+"</p>" );
-                if(messages[i][3] == true) {
-                    $("." + messages[i][1] + "-checks").append("<p class=\"text-success\"><span class=\"glyphicon glyphicon-ok-circle\"></span> " + messages[i][0] + "</p>");
-                } else {
-                    $("." + messages[i][1] + "-checks").append("<p class=\"text-danger\"><span class=\"glyphicon glyphicon-remove-circle\"></span> " + messages[i][0] + "</p>");
-                }
-                i++;
-                updateBar();
-                if(i < totalChecksCount){
-                    start();
-                } else {
-                    stop();
-                }
-            }
-
-            setTimeout(function(){
+                // elasticsearch checks
                 $.ajax({
-                    url: "../s3/s3Catalog.php",
-                    type: "POST",
-                    data: {bucketname: "<?php print _BUCKET; ?>"},
-                    success: function(){
-                        updateBar();
-                    }
+                    url: url,
+                    data: { action: "elasticsearch-domain"}
+                }).done(function(msg) {
+                    $(".elasticsearch-checks").append(msg);
+                    updateBar();
                 });
-            }, interval);
 
-            function redirect(){
-                window.location.replace("../home/?relogin");
-            }
+                // kinesis checks
+                $.ajax({
+                    url: url,
+                    data: { action: "kinesis-firehose"}
+                }).done(function(msg) {
+                    $(".kinesis-checks").append(msg);
+                    updateBar();
+                    $.ajax({
+                        url: url,
+                        data: { action: "kinesis-firehose-role"}
+                    }).done(function(msg) {
+                        $(".kinesis-checks").append(msg);
+                        updateBar();
+                    });
+                });
 
-            start();
+                // ec2 checks
+                $.ajax({
+                    url: url,
+                    data: { action: "ec2-instance"}
+                }).done(function(msg) {
+                    $(".ec2-checks").append(msg);
+                    updateBar();
+                    $.ajax({
+                        url: url,
+                        data: { action: "ec2-instance-webserver-role"}
+                    }).done(function(msg) {
+                        $(".ec2-checks").append(msg);
+                        updateBar();
+                    });
+                });
+
+                // cloudtrail checks
+                $.ajax({
+                    url: url,
+                    data: { action: "cloudtrail"}
+                }).done(function(msg) {
+                    $(".cloudtrail-checks").append(msg);
+                    updateBar();
+                });
+
+                // datapipeline taskrunner checks
+                $.ajax({
+                    url: url,
+                    data: { action: "datapipeline-taskrunner"}
+                }).done(function(msg) {
+                    $(".datapipeline-checks").append(msg);
+                    updateBar();
+                });
+
+                // rds checks
+                $.ajax({
+                    url: url,
+                    data: { action: "rds-instance"}
+                }).done(function(msg) {
+                    $(".rds-checks").append(msg);
+                    updateBar();
+                });
+
+                // redshift checks
+                $.ajax({
+                    url: url,
+                    data: { action: "redshift-cluster"}
+                }).done(function(msg) {
+                    $(".redshift-checks").append(msg);
+                    updateBar();
+                    $.ajax({
+                        url: url,
+                        data: { action: "redshift-role"}
+                    }).done(function(msg) {
+                        $(".redshift-checks").append(msg);
+                        updateBar();
+                    });
+                });
+
+                // web ui portal checks
+                $.ajax({
+                    url: url,
+                    data: { action: "mysql-databases"}
+                }).done(function(msg) {
+                    $(".portal-checks").append(msg);
+                    updateBar();
+                    $.ajax({
+                        url: url,
+                        data: { action: "portal-zeppelin-setup"}
+                    }).done(function(msg) {
+                        $(".portal-checks").append(msg);
+                        updateBar();
+                        $.ajax({
+                            url: url,
+                            data: { action: "portal-kibana-visualizations"}
+                        }).done(function(msg) {
+                            $(".portal-checks").append(msg);
+                            updateBar();
+                            $.ajax({
+                                url: url,
+                                data: { action: "portal-kibana-dashboards"}
+                            }).done(function(msg) {
+                                $(".portal-checks").append(msg);
+                                updateBar();
+                            });
+                        });
+                    });
+                });
+            });
         </script>
     </div>
     <div class="col-lg-1 col-md-1"></div>

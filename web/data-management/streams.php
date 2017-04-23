@@ -8,7 +8,11 @@
      <div class="well well-lg">
         Kinesis Firehose Delivery Stream Name : <b class="text-primary">'._KINESIS_STREAM_NAME.'</b> <br><br>
         
-        <a class="btn btn-primary customMessage" title="Stream Sample data to Kinesis" message="Should we be doing this ?">Stream sample data to Kinesis</a> &nbsp;
+        <a class="btn btn-primary customMessage" 
+            title="Stream Sample data to Kinesis Firehose \''._KINESIS_STREAM_NAME.'\'" 
+            data-url="../data-management/stream-instructions.php?type=sampleStream">
+            Stream sample data to Kinesis
+        </a> &nbsp;
         <a class="btn btn-warning customMessage" 
             title="API call to add data to your Stream:" 
             data-url="../data-management/stream-instructions.php?type=apicall">

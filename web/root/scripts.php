@@ -8,6 +8,9 @@
 			<h4 class="modal-title" id="CustomTitle">-----</h4>
 		  </div>
 		  <div class="modal-body" style="margin-top:1em;">
+            <div class="text-primary text-center centered customMessagePreloader">
+                <i class="fa fa-cog fa-spin fa-2x fa-fw"></i> Loading content...
+            </div>
 		    <span id="CustomMessage"></span>
 		  </div>
 		  <div class="modal-footer">
@@ -20,11 +23,13 @@
     <?php
     if(!isset($_SESSION["DatalakeUser"])) {
     include_once "../authenticate/login.php";
-      if(isset($_GET["relogin"]) || isset($_GET["password_change"]) ){
+      if(isset($_GET["relogin"]) || isset($_GET["password_change"]) || isset($_GET["welcome"])){
         print '
         <script type="text/javascript">
-         $("#myLoginModal").modal("show");
-         $("#auth_output").html("<div class=\'alert alert-'.(isset($_GET["relogin"]) ? 'danger\'>Session expired, please login again !!' : (isset($_GET["password_change"]) ? 'success\'>Password updated, please login with your new password' : '')).'</div>");
+        $(function(){ 
+          $("#myLoginModal").modal("show");
+          $("#auth_output").html("<div class=\'alert alert-'.(isset($_GET["relogin"]) ? 'danger\'>Session expired, please login again !!' : (isset($_GET["password_change"]) ? 'success\'>Password updated, please login with your new password' : (isset($_GET["welcome"]) ? 'success\'>Welcome to Data Lake Portal' : ''))).'</div>");
+        });
         </script>';
       }
     }

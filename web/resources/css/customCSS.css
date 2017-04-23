@@ -112,7 +112,7 @@ body{
 
 .footer {
     background-color: #0778bf;
-    min-height: 18rem;
+    min-height: 10rem;
     text-align: left;
     color: #ffffff;
     padding-top: 1rem;
@@ -326,4 +326,9 @@ body.modal-open[style] {
     -ms-animation: fa-blink 0.5s linear infinite;
     -o-animation: fa-blink 0.5s linear infinite;
     animation: fa-blink 0.5s linear infinite;
+}
+
+.tooltip-inner {
+    max-width: none;
+    white-space: nowrap;
 }
