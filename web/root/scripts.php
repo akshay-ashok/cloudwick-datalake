@@ -23,12 +23,12 @@
     <?php
     if(!isset($_SESSION["DatalakeUser"])) {
     include_once "../authenticate/login.php";
-      if(isset($_GET["relogin"]) || isset($_GET["password_change"]) ){
+      if(isset($_GET["relogin"]) || isset($_GET["password_change"]) || isset($_GET["welcome"])){
         print '
         <script type="text/javascript">
         $(function(){ 
           $("#myLoginModal").modal("show");
-          $("#auth_output").html("<div class=\'alert alert-'.(isset($_GET["relogin"]) ? 'danger\'>Session expired, please login again !!' : (isset($_GET["password_change"]) ? 'success\'>Password updated, please login with your new password' : '')).'</div>");
+          $("#auth_output").html("<div class=\'alert alert-'.(isset($_GET["relogin"]) ? 'danger\'>Session expired, please login again !!' : (isset($_GET["password_change"]) ? 'success\'>Password updated, please login with your new password' : (isset($_GET["welcome"]) ? 'success\'>Welcome to Data Lake Portal' : ''))).'</div>");
         });
         </script>';
       }

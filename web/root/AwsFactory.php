@@ -89,6 +89,15 @@
             return new Aws\DataPipeline\DataPipelineClient($this->getConfig($region));
         }
 
+        /**
+         * @param null $region
+         * @return \Aws\ElasticsearchService\ElasticsearchServiceClient
+         */
+        public function getElasticsearchClient($region=null){
+            $client = new Aws\ElasticsearchService\ElasticsearchServiceClient($this->getConfig($region));
+            return $client;
+        }
+
     }
 
 ?>

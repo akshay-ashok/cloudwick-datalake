@@ -31,11 +31,15 @@ define("_REDSHIFT_DATABASE",$resourceInfo["redshift"]["database"]);
 
 define("_KIBANA_URL",$resourceInfo["elasticsearch"]["kibana"]);
 define("_ELASTIC_SEARCH_URL",$resourceInfo["elasticsearch"]["elasticsearch"]);
+define("_ELASTIC_SEARCH_NAME","dles-"._STACK_UID);
 
 define("_BUCKET",$resourceInfo["s3"]["bucket"]);
 define("_BUCKET_ARN",$resourceInfo["s3"]["arn"]);
 
+define("_CLOUDTRAIL_NAME",$resourceInfo["cloudtrail"]["cloudtrailname"]);
+
 define("_KINESIS_STREAM_NAME",$resourceInfo["kinesis"]["streamname"]);
+define("_KINESIS_STREAM_ROLE_ARN","arn:aws:iam::"._ACCOUNT_ID.":role/Datalake-FirehoseRole-"._ACCOUNT_ID."-"._STACK_UID);
 
 define("_TAG_KEY","solution");
 define("_TAG_VALUE","datalake-"._ACCOUNT_ID."-"._STACK_UID);
