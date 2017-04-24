@@ -76,5 +76,3 @@ Merged pull-request #6
 1. Changes in parameter section
 2. Template deployment for us-east-1 region  - passed (performed without ec2 key)
 ##############################################
-1. resolved conflicts in kiban script
-2. CF template - Firehose name passed to configure.sh 

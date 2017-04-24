@@ -30,7 +30,7 @@
      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 header">
          <?php
             if (strpos($_SERVER['SCRIPT_FILENAME'], '/home/welcome') !== false) {
-                // do not show menu bar
+                // do not show menu bar on welcome page
             } else {
                 getMenubar();
             }
