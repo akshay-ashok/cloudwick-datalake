@@ -4,7 +4,8 @@ $(function(){
     url = "../aws-resources/datapipeline.php";
     region = "us-west-2";
     output = $("#datapipelineresult");
-    $("#datapipelinespinner").toggle();
+    spinner = $("#datapipelinespinner");
+    spinner.toggle();
 
     $('#runDatapipelineForm').submit(function( event ) {
         event.preventDefault();
@@ -12,7 +13,7 @@ $(function(){
         var interval = 15000;
         tablename = $("#tabletocopy").val();
         $("#datapipelineInit").hide();
-        $("#datapipelinespinner").toggle();
+        spinner.toggle();
 
         $.ajax({
             url: url,
@@ -66,6 +67,7 @@ $(function(){
                                         data: { action: "pipelineStatus", pipelineid:pipelineid}
                                     }).done(function(pipelineStatus) {
                                         $("#datapipelinestatus").append(pipelineStatus);
+                                        spinner.toggle();
                                         startStatusCheck();
                                     });
                                 });
@@ -88,12 +90,12 @@ $(function(){
 
         function checkDPStatus(){
             if (timer == null) return;
-            $("#datapipelinespinner").toggle();
+            spinner.toggle();
             $.ajax({
                 url: url,
                 data: { action: "pipelineStatus", pipelineid:pipelineid}
             }).done(function(pipelineStatus) {
-                $("#datapipelinespinner").toggle();
+                spinner.toggle();
                 pipelineStatus = pipelineStatus.replace(new RegExp('FINISHED', 'g'),"<em class='text-success'>FINISHED</em>");
                 pipelineStatus = pipelineStatus.replace(new RegExp('WAITING_ON_DEPENDENCIES','g'),"<em class='text-warning'>WAITING_ON_DEPENDENCIES</em>");
                 pipelineStatus = pipelineStatus.replace(new RegExp('WAITING_FOR_RUNNER','g'),"<em class='text-warning'>WAITING_FOR_RUNNER</em>");

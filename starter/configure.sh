@@ -19,7 +19,8 @@ STACKID="${15}"
 STACKPART="${16}"
 STACKNAME="${17}"
 WAITCONDITION="${18}"
-CLOUDTRAIL="${19}"
+STREAMNAME="${19}"
+CLOUDTRAIL="${20}"
 REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTERIDENTIFIER}"
 WORKERGROUP="datalakeworkergroup-${ACCOUNT_ID}-${STACKPART}"
 TASKRUNNER="datalaketaskrunner-${ACCOUNT_ID}-${STACKPART}"
@@ -59,12 +60,6 @@ mkdir -p /home/ec2-user/TaskRunner; wget -A.jar https://s3.amazonaws.com/datapip
 #Create ElasticSearch Indices
 curl -XPUT https://${ELASTICSEARCHEP}/metadata-store -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/metadata-store-mapping.json;
 curl -XPUT https://${ELASTICSEARCHEP}/cloudtraillogs -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/cloudtraillogs-mapping.json;
-
-#Create kibana index patterns
-curl -XPUT https://${ELASTICSEARCHEP}/.kibana/index-pattern/metadata-store -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/indexes/metadata-store-index.json;
-curl -XPUT https://${ELASTICSEARCHEP}/.kibana/index-pattern/cloudtraillogs -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/indexes/cloudtraillogs-index.json;
-curl -XPUT https://${ELASTICSEARCHEP}/.kibana/config/5.1.1 -H "Content-Type: application/json" -d '{"defaultIndex" : "metadata-store"}';
-
 
 #Mysql configuration
 setenforce 0;chkconfig httpd on;chkconfig mysqld on;
@@ -133,9 +128,6 @@ EOT
 
 #attach iam role to redshift
 curl http://${IPADDRESS}/scripts/attach-iam-role-to-redshift.php;
-
-#create kibana visualizations
-curl http://${IPADDRESS}/scripts/kibana-visualizations.php;
 
 
 chown -R apache:apache /var/www/

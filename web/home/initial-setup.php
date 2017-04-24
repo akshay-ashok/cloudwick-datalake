@@ -209,7 +209,7 @@
                     </p>';
             } catch (Exception $ex){
                 print '<p class="text-danger">
-                        <i class="fa fa-check-square-o"></i> 
+                        <i class="fa fa-times"></i> 
                         Lambda function trigger configuration failed
                     </p>';
             }
@@ -228,7 +228,7 @@
                     </p>';
             } catch (Exception $ex){
                 print '<p class="text-danger">
-                        <i class="fa fa-check-square-o"></i> 
+                        <i class="fa fa-times"></i> 
                         Catalog test failed
                     </p>';
             }
@@ -247,7 +247,7 @@
                 }
             } catch (Exception $ex){
                 print '<p class="text-danger">
-                    <i class="fa fa-check-square-o"></i> 
+                    <i class="fa fa-times"></i> 
                     Kinesis Firehose status cannot be verified
                 </p>';
             }
@@ -265,7 +265,7 @@
                 //if($result["DeliveryStreamDescription"]["Destinations"]["ElasticsearchDestinationDescription"]["RoleARN"] == _KINESIS_STREAM_ROLE_ARN) {}
             } catch (Exception $ex){
                 print '<p class="text-danger">
-                    <i class="fa fa-check-square-o"></i> 
+                    <i class="fa fa-times"></i> 
                     Kinesis Firehose role not found
                 </p>';
             }
@@ -284,7 +284,7 @@
                 }
             } catch (Exception $ex){
                 print '<p class="text-danger">
-                    <i class="fa fa-check-square-o"></i> 
+                    <i class="fa fa-times"></i> 
                     Cloudtrail not found
                 </p>';
             }
@@ -314,15 +314,33 @@
                 Zeppelin potal setup finished
             </p>';
         } elseif ($action == "portal-kibana-visualizations"){
+
+            $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/.kibana/index-pattern/metadata-store -H \"Content-Type: application/json\" --data @/var/www/html/configurations/kibana/indexes/metadata-store-index.json");
+            $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/.kibana/index-pattern/cloudtraillogs -H \"Content-Type: application/json\" --data @/var/www/html/configurations/kibana/indexes/cloudtraillogs-index.json");
+            $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/.kibana/config/5.1.1 -H \"Content-Type: application/json\" -d '{\"defaultIndex\" : \"metadata-store\"}' ");
             print '<p class="text-success">
                 <i class="fa fa-check-square-o"></i> 
                 Created Kibana Visualizations
             </p>';
         } elseif ($action == "portal-kibana-dashboards"){
-            print '<p class="text-success">
-                <i class="fa fa-check-square-o"></i> 
-                Created Kibana Dashboards
-            </p>';
+            try {
+                $json = file_get_contents("../configurations/kibana/objects/export.json");
+
+                $json = json_decode($json, true);
+                foreach ($json as $key => $value) {
+                    $url = 'https://'._ELASTIC_SEARCH_URL.'/.kibana/'.$value["_type"].'/'.$value["_id"];
+                    $result = shell_exec("curl ".$url." -H \"Content-Type: application/json\" --data '".json_encode($value["_source"])."'");
+                }
+                print '<p class="text-success">
+                    <i class="fa fa-check-square-o"></i> 
+                    Created Kibana Dashboards
+                </p>';
+            } catch (Exception $ex){
+                print '<p class="text-danger">
+                    <i class="fa fa-times"></i> 
+                    Created Kibana Dashboards
+                </p>';
+            }
         } elseif ($action == "cleanup"){
             sleep(1);
             $result = exec("rm -rf /var/www/html/home/welcome.php");
