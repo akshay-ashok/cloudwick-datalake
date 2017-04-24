@@ -93,11 +93,6 @@ function getMenubar() {
                             <span class="glyphicon glyphicon-random"></span> Stream Data
                         </a>
                     </li>
-                    <li>
-                        <a class="t1" title="Sparkflows" href="../data-management/sparkflows.php">
-                            <span class="glyphicon glyphicon-fire"></span> Sparkflows
-                        </a>
-                    </li>
 				  </ul>
 				</li>
 				<li>

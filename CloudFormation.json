@@ -458,7 +458,7 @@
                                            "Type": "AWS::KinesisFirehose::DeliveryStream",
                                            "DependsOn"    : "FirehoseRole",
                                                        "Properties": {
-                                                        "DeliveryStreamName" : {"Fn::Join" : [ "",[ "datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                       "DeliveryStreamName" : {"Fn::Join" : [ "",[ "datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
                                                        "ElasticsearchDestinationConfiguration": {
                                                        "BufferingHints": {
                                                        "IntervalInSeconds": 60,
@@ -466,8 +466,8 @@
                                                        },
                                            "CloudWatchLoggingOptions": {
                                                        "Enabled": true,
-                                                       "LogGroupName": "deliverystream",
-                                                       "LogStreamName": "DatalakeDeliveryStream"
+                                                       "LogGroupName": {"Fn::Join" : [ "",[ "aws/kinesisfirehose/datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                       "LogStreamName": "ElasticsearchDelivery"
                                                        },
                                            "DomainARN": {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"}]]},
                                            "IndexName": "datalakedeliverystream",
@@ -490,8 +490,8 @@
                                            "RoleARN": { "Fn::GetAtt" : ["FirehoseRole", "Arn"] },
                                            "CloudWatchLoggingOptions" : {
                                                        "Enabled" : true,
-                                                       "LogGroupName" : "deliverystream",
-                                                       "LogStreamName" : "DatalakeFirehoseS3log"
+                                                       "LogGroupName" : {"Fn::Join" : [ "",[ "aws/kinesisfirehose/datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                       "LogStreamName" : "S3Delivery"
                                            }
                                            }
                                            }
@@ -575,7 +575,7 @@
                                                                {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/_nodes/*/stats"]]},
                                                                {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/_stats"]]},
                                                                {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"*/_mapping/fromFirehose"]]},
- +                                                             {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/datalakedeliverystream*/_stats"]]}
+                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/datalakedeliverystream*/_stats"]]}
                                                              ]
                                                            },
                                                            {
@@ -588,7 +588,8 @@
                                                                "logs:DescribeLogStreams"
                                                              ],
                                                              "Resource": [
-                                                               "arn:aws:logs:*:*:*"
+                                                               "arn:aws:logs:*:*:*",
+															   {"Fn::Join":["",["arn:aws:logs:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":log-group:/aws/kinesisfirehose/datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },":log-stream:*"]]}
                                                              ]
                                                            }
                                                          ]

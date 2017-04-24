@@ -109,7 +109,7 @@
                           lastName = faker.name.lastName();
         
                       var dob = faker.date.past(50, new Date("Sat Sep 20 1992 21:35:02 GMT+0200 (CEST)"));
-                      dob = dob.getFullYear() + "-" + (dob.getMonth()+1) + "-" + dob.getDate();
+                      dob = dob.getFullYear() + "-" + ("0" + (dob.getMonth()+1)).slice(-2) + "-" + ("0" + dob.getDate()).slice(-2);
                       $("#inputName").val(faker.name.findName(firstName, lastName));
                       $("#inputDob").val(dob);
                       $("#inputStreetAddress").val(faker.address.streetAddress());
