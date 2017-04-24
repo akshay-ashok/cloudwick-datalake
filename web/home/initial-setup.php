@@ -1,5 +1,6 @@
 <?php
     include_once "../root/AwsFactory.php";
+    error_reporting(0);
     sleep(1);
     $aws = new AwsFactory();
     $action = (isset($_GET["action"])) ? htmlspecialchars($_GET["action"],ENT_QUOTES) : null;
@@ -200,7 +201,7 @@
 
                 $query = "INSERT 
                   INTO datalake.buckets 
-                  VALUES ('"._BUCKET."','".$statementid."')
+                  VALUES ('"._BUCKET."','".$statementId."')
                   ";
                 $result = $mysqlConnector->exec($query);
                 print '<p class="text-success">
