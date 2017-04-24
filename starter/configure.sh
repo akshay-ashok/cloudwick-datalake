@@ -60,6 +60,7 @@ mkdir -p /home/ec2-user/TaskRunner; wget -A.jar https://s3.amazonaws.com/datapip
 #Create ElasticSearch Indices
 curl -XPUT https://${ELASTICSEARCHEP}/metadata-store -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/metadata-store-mapping.json;
 curl -XPUT https://${ELASTICSEARCHEP}/cloudtraillogs -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/cloudtraillogs-mapping.json;
+curl -XPUT https://${ELASTICSEARCHEP}/datalakedeliverystream -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/kinesis-firehose-mapping.json;
 
 #Mysql configuration
 setenforce 0;chkconfig httpd on;chkconfig mysqld on;

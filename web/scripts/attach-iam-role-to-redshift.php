@@ -13,9 +13,9 @@
         foreach ($result["Cluster"]["IamRoles"] as $role) {
             if ($role["IamRoleArn"] == _REDSHIFT_ROLE_ARN) {
                 if ($role["ApplyStatus"] == "in-sync") {
-                    print 'attach success';
+                    print 'Successfully attached IAM role to redshift';
                 } else {
-                    print 'attach failed';
+                    print 'IAM role attachment to redshift initiated';
                 }
             }
         }
