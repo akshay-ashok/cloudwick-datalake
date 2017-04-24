@@ -338,7 +338,7 @@
             } catch (Exception $ex){
                 print '<p class="text-danger">
                     <i class="fa fa-times"></i> 
-                    Created Kibana Dashboards
+                    Error Creating Kibana Dashboards
                 </p>';
             }
         } elseif ($action == "cleanup"){
