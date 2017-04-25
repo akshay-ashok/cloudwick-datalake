@@ -466,7 +466,7 @@
                                                        },
                                            "CloudWatchLoggingOptions": {
                                                        "Enabled": true,
-                                                       "LogGroupName": {"Fn::Join" : [ "",[ "aws/kinesisfirehose/datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                       "LogGroupName": {"Fn::Join" : [ "",[ "/aws/kinesisfirehose/datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
                                                        "LogStreamName": "ElasticsearchDelivery"
                                                        },
                                            "DomainARN": {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"}]]},
@@ -490,7 +490,7 @@
                                            "RoleARN": { "Fn::GetAtt" : ["FirehoseRole", "Arn"] },
                                            "CloudWatchLoggingOptions" : {
                                                        "Enabled" : true,
-                                                       "LogGroupName" : {"Fn::Join" : [ "",[ "aws/kinesisfirehose/datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                       "LogGroupName" : {"Fn::Join" : [ "",[ "/aws/kinesisfirehose/datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
                                                        "LogStreamName" : "S3Delivery"
                                            }
                                            }
