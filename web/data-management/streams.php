@@ -19,6 +19,7 @@
                 API call to add data to your Stream
             </a><br>
         </div>
+        <i class="text-danger pull-right">*Kibana takes approx. 60s to show the new data</i>
         <object data="'._KIBANA_URL.''.$stream_cont.'" width="100%" height="2000rem">
             <embed src="'._KIBANA_URL.''.$stream_cont.'" width="100%" height="2000rem"> </embed>
             Error: Embedded data requires HTML5 support. Data could not be displayed.
