@@ -2,12 +2,7 @@
   "AWSTemplateFormatVersion"  : "2010-09-09",
   "Description"               : "Datalake Quickstart deployment",
   "Parameters"                : {
-                "KeyName"           : {
-                      "Description"           : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
-                      "Type"                  : "AWS::EC2::KeyPair::KeyName",
-                      "ConstraintDescription" : "Can contain only ASCII characters."
 
-                },
                 "AdministratorName" : {
                   "Description"           : "Admin name",
                   "Type"                  : "String",
@@ -96,7 +91,7 @@
     "ParameterGroups" : [
                   {
                     "Label" : { "default" : "Adminstrator Configuration" },
-                    "Parameters" : [ "AdministratorName", "AdminEmailID", "KeyName" ]
+                    "Parameters" : [ "AdministratorName", "AdminEmailID" ]
                   },
                   {
                     "Label" : { "default":"Database Configuration" },
@@ -497,7 +492,7 @@
                                            }
                                            }
                                          },
-										 
+
 			"DatalakeFirehoseLogGroup": {
 										  "Type" : "AWS::Logs::LogGroup",
 										  "DependsOn"    : "DatalakeFirehoseStream",
@@ -505,7 +500,7 @@
 											"LogGroupName" : {"Fn::Join" : [ "",[ "/aws/kinesisfirehose/datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}
 										  }
 										},
-										
+
 			"DatalakeFirehoseESLogStream": {
 										  "Type" : "AWS::Logs::LogStream",
 										  "DependsOn"    : "DatalakeFirehoseLogGroup",
@@ -514,7 +509,7 @@
 											"LogStreamName" : "ElasticsearchDelivery"
 										  }
 										},
-										
+
 			"DatalakeFirehoseS3LogStream": {
 										  "Type" : "AWS::Logs::LogStream",
 										  "DependsOn"    : "DatalakeFirehoseLogGroup",
@@ -523,7 +518,7 @@
 											"LogStreamName" : "S3Delivery"
 										  }
 										},
-										
+
 			"FirehoseRole" : {
                        "Type"        : "AWS::IAM::Role",
                        "Properties"  : {
@@ -692,7 +687,7 @@
 
                "S3BucketPolicy" : {
                      "Type"        : "AWS::S3::BucketPolicy",
-                     "DependsOn"   : "DatalakeCloudtrail",
+                     "DependsOn"   : ["DatalakeCloudtrail","FirehoseRole"],
                      "Properties"  : {
                                      "Bucket"          : {"Ref" : "DataLakeS3Bucket"},
                                      "PolicyDocument"  : {
@@ -817,7 +812,6 @@
           "Tags" : [{"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  },{"Key" : "Name", "Value" : {"Fn::Join" : [ "",[ "datalake-webserver-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}}],
           "IamInstanceProfile"  : {"Ref" : "EC2WebserverIamProfile"},
           "InstanceType"        : { "Ref" : "InstanceType" },
-          "KeyName"             : { "Ref" : "KeyName" },
           "UserData"            : { "Fn::Base64" : { "Fn::Join" : ["", [
             "#!/bin/bash -xe\n",
             "yum install -y aws-cfn-bootstrap\n",
