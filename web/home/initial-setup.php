@@ -318,7 +318,7 @@
 
             $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/.kibana/index-pattern/metadata-store -H \"Content-Type: application/json\" --data @/var/www/html/configurations/kibana/indexes/metadata-store-index.json");
             $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/.kibana/index-pattern/cloudtraillogs -H \"Content-Type: application/json\" --data @/var/www/html/configurations/kibana/indexes/cloudtraillogs-index.json");
-            $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/.kibana/index-pattern/datalakedeliverystream -H \"Content-Type: application/json\" --data @/var/www/html/configurations/kibana/indexes/kinesis-firehose--index.json");
+            $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/.kibana/index-pattern/datalakedeliverystream -H \"Content-Type: application/json\" --data @/var/www/html/configurations/kibana/indexes/kinesis-firehose-index.json");
             $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/.kibana/config/5.1.1 -H \"Content-Type: application/json\" -d '{\"defaultIndex\" : \"metadata-store\"}' ");
             print '<p class="text-success">
                 <i class="fa fa-check-square-o"></i> 
