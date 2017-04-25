@@ -10,7 +10,7 @@
         $result = $client->putRecord([
             'DeliveryStreamName' => _KINESIS_STREAM_NAME,
             'Record' => [
-                "Data" => base64_encode($data)
+                "Data" => $data
             ]
         ]);
         print '<div class="alert alert-success">

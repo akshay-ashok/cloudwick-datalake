@@ -598,7 +598,7 @@
                                                                {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/_nodes/stats"]]},
                                                                {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/_nodes/*/stats"]]},
                                                                {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/_stats"]]},
-                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"*/_mapping/fromFirehose"]]},
+                                                               {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/datalakedeliverystream*/_mapping/fromFirehose"]]},
                                                                {"Fn::Join":["",["arn:aws:es:",{"Ref":"AWS::Region"},":",{"Ref":"AWS::AccountId"},":domain/",{"Ref":"ElasticsearchDomain"},"/datalakedeliverystream*/_stats"]]}
                                                              ]
                                                            },
@@ -699,7 +699,10 @@
                                                          "Statement":[{
                                                                        "Sid"               : "DenyIncorrectEncryptionHeader",
                                                                        "Effect"            : "Deny",
-                                                                       "Principal"         : "*",
+                                                                       "NotPrincipal"      : {
+																								"AWS": {"Fn::Join" : [ "",[ "arn:aws:iam::",{ "Ref":"AWS::AccountId" },":role/Datalake-FirehoseRole-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+																								"Service": "firehose.amazonaws.com"
+																							},
                                                                        "Action"            : "s3:PutObject",
                                                                        "Resource"          : {"Fn::Join" : ["",["arn:aws:s3:::datalake-",{"Ref":"AWS::AccountId"},"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },"/*" ]]},
                                                                        "Condition": {
@@ -712,7 +715,10 @@
                                                            {
                                                                        "Sid"                 : "DenyUnEncryptedObjectUploads",
                                                                        "Effect"              : "Deny",
-                                                                       "Principal"           : "*",
+                                                                       "NotPrincipal"      : {
+																								"AWS": {"Fn::Join" : [ "",[ "arn:aws:iam::",{ "Ref":"AWS::AccountId" },":role/Datalake-FirehoseRole-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+																								"Service": "firehose.amazonaws.com"
+																							},
                                                                        "Action"              : "s3:PutObject",
                                                                        "Resource"            : {"Fn::Join" : ["",["arn:aws:s3:::datalake-",{"Ref":"AWS::AccountId"},"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },"/*" ]]},
                                                                        "Condition": {
