@@ -692,7 +692,7 @@
 
                "S3BucketPolicy" : {
                      "Type"        : "AWS::S3::BucketPolicy",
-                     "DependsOn"   : "DatalakeCloudtrail",
+                     "DependsOn"   : ["DatalakeCloudtrail","FirehoseRole"],
                      "Properties"  : {
                                      "Bucket"          : {"Ref" : "DataLakeS3Bucket"},
                                      "PolicyDocument"  : {
