@@ -497,10 +497,34 @@
                                            }
                                            }
                                          },
-
-
-
-        "FirehoseRole" : {
+										 
+			"DatalakeFirehoseLogGroup": {
+										  "Type" : "AWS::Logs::LogGroup",
+										  "DependsOn"    : "DatalakeFirehoseStream",
+										  "Properties" : {
+											"LogGroupName" : {"Fn::Join" : [ "",[ "/aws/kinesisfirehose/datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}
+										  }
+										},
+										
+			"DatalakeFirehoseESLogStream": {
+										  "Type" : "AWS::Logs::LogStream",
+										  "DependsOn"    : "DatalakeFirehoseLogGroup",
+										  "Properties" : {
+											"LogGroupName" : {"Fn::Join" : [ "",[ "/aws/kinesisfirehose/datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+											"LogStreamName" : "ElasticsearchDelivery"
+										  }
+										},
+										
+			"DatalakeFirehoseS3LogStream": {
+										  "Type" : "AWS::Logs::LogStream",
+										  "DependsOn"    : "DatalakeFirehoseLogGroup",
+										  "Properties" : {
+											"LogGroupName" : {"Fn::Join" : [ "",[ "/aws/kinesisfirehose/datalake-firehose-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+											"LogStreamName" : "S3Delivery"
+										  }
+										},
+										
+			"FirehoseRole" : {
                        "Type"        : "AWS::IAM::Role",
                        "Properties"  : {
                                      "RoleName"       : {"Fn::Join" : [ "",[ "Datalake-FirehoseRole-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
