@@ -101,8 +101,8 @@
     },
     {
       "failureAndRerunMode": "CASCADE",
-      "resourceRole": "DataPipelineDefaultResourceRole",
-      "role": "DataPipelineDefaultRole",
+      "resourceRole": "oldDataPipelineDefaultResourceRole",
+      "role": "oldDataPipelineDefaultRole",
       "pipelineLogUri": "s3://olds3stagingloc/pipeline/pipelinelogs",
       "scheduleType": "ONDEMAND",
       "name": "Default",
