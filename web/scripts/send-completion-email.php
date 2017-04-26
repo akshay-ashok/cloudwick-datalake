@@ -5,8 +5,8 @@
         $password = $_POST["password"];
         $email = $_POST["email"];
         $region = $_POST["region"];
-        $url = "ec2-".str_replace(".","-",$ip).".".(($region == "us-east-1") ? "compute-1" : $region.".compute").".amazonaws.com";
         $ip = $_POST["ip"];
+        $url = "ec2-".str_replace(".","-",$ip).".".(($region == "us-east-1") ? "compute-1" : $region.".compute").".amazonaws.com";
         $hostname = exec("hostname");
         $internal_ip = $hostname.".".(($region == "us-east-1") ? "compute-1" : $region.".compute").".internal";
 

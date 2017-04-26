@@ -93,26 +93,6 @@
                     Put pipeline definition failed, ERROR: '.$ex->getMessage().'
                 </p>';
             }
-        }  else if($action == "deletePipeline" && !is_null($pipelineid)){
-            try {
-                $result = $client->deletePipeline([
-                    'pipelineId' => $pipelineid
-                ]);
-                print '<p class="text-success">
-                    <i class="fa fa-check-square-o"></i> 
-                    Pipeline deleted
-                </p>';
-            } catch (\Aws\DataPipeline\Exception\DataPipelineException $ex){
-                print '<p class="text-danger">
-                    <i class="fa fa-check-times"></i> 
-                    Failed to delete pipeline, ERROR: '.$ex->getAwsErrorCode().'
-                </p>';
-            } catch (Exception $ex){
-                print '<p class="text-danger">
-                    <i class="fa fa-check-times"></i> 
-                    Failed to delete pipeline, ERROR: '.$ex->getMessage().'
-                </p>';
-            }
         } else if($action == "activatePipeline" && !is_null($pipelineid)){
             try {
                 $result = $client->activatePipeline([
