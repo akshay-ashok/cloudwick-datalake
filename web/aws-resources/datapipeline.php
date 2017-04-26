@@ -53,8 +53,6 @@
                     $str = str_replace("oldtablename", $tablename, $str);
                     $str = str_replace("oldredshiftconnectionstring", _REDSHIFT_ENDPOINT, $str);
                     $str = str_replace("oldredshiftdbname", _REDSHIFT_DATABASE, $str);
-                    $str = str_replace("oldDataPipelineDefaultResourceRole", _DATAPIPELINE_RESOURCE_ROLE, $str);
-                    $str = str_replace("oldDataPipelineDefaultRole", _DATAPIPELINE_ROLE, $str);
 
                     $filePointer = fopen("../configurations/datapipeline/".$pipelineid.".json", 'w');
                     fwrite($filePointer, $str);
