@@ -94,10 +94,8 @@
          * @return \Aws\ElasticsearchService\ElasticsearchServiceClient
          */
         public function getElasticsearchClient($region=null){
-            $client = new Aws\ElasticsearchService\ElasticsearchServiceClient($this->getConfig($region));
-            return $client;
+            return new Aws\ElasticsearchService\ElasticsearchServiceClient($this->getConfig($region));
         }
-
     }
 
 ?>

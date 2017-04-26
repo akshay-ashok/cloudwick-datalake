@@ -38,9 +38,6 @@ define("_BUCKET_ARN",$resourceInfo["s3"]["arn"]);
 
 define("_CLOUDTRAIL_NAME",$resourceInfo["cloudtrail"]["cloudtrailname"]);
 
-define("_DATAPIPELINE_RESOURCE_ROLE",$resourceInfo["datapipeline"]["dpresourcerole"]);
-define("_DATAPIPELINE_ROLE",$resourceInfo["datapipeline"]["dprole"]);
-
 define("_KINESIS_STREAM_NAME",$resourceInfo["kinesis"]["streamname"]);
 define("_KINESIS_STREAM_ROLE_ARN","arn:aws:iam::"._ACCOUNT_ID.":role/Datalake-FirehoseRole-"._ACCOUNT_ID."-"._STACK_UID);
 

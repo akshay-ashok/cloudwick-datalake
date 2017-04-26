@@ -18,13 +18,21 @@
 
         sleep(2);
         print '<p class="text-warning">Cleaning up s3://' . _BUCKET . ' bucket</p>';
-        $s3cleanup = exec("aws s3 rb s3://" . _BUCKET . " --force");
+        $taskrunner_pid = shell_exec("ps aux |grep TaskRunner|grep -v grep|awk -F\" \" '{print $2}'");
+        $kill_taskrunner = shell_exec("sudo kill -9 ".$taskrunner_pid);
 
-        sleep(2);
+        $cmd = "echo '#!/bin/bash' > deleteBucketScript.sh && aws --output text s3api list-object-versions --bucket "._BUCKET." | grep -E \"^VERSIONS\" | awk '{print \"aws s3api delete-object --bucket "._BUCKET." --key \"$4\" --version-id \"$8\";\"}' >> deleteBucketScript.sh && . deleteBucketScript.sh; rm -f deleteBucketScript.sh; echo '#!/bin/bash' > deleteBucketScript.sh && aws --output text s3api list-object-versions --bucket "._BUCKET." | grep -E \"^DELETEMARKERS\" | grep -v \"null\" | awk '{print \"aws s3api delete-object --bucket "._BUCKET." --key \"$3\" --version-id \"$5\";\"}' >> deleteBucketScript.sh && . deleteBucketScript.sh; rm -f deleteBucketScript.sh;";
+        $version_delete = shell_exec($cmd);
+
+        $s3cleanup = shell_exec("aws s3 rb s3://" . _BUCKET . " --force");
+        sleep(1);
+
         if($bucket->doesBucketExist(_BUCKET)){
-            $result = $client->deleteBucket([
+            $result = $bucket->deleteBucket([
                 'Bucket' => _BUCKET
             ]);
+            $bucket->waitUntil('BucketNotExists', array('Bucket' => _BUCKET));
+
             print '<p class="text-success">Bucket deleted</p><br>';
         } else {
             print '<p class="text-success">Bucket deleted</p><br>';
