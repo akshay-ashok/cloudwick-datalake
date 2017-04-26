@@ -431,111 +431,145 @@
                                                               }
                                           },
 
-                "DatalakePipelineRole" : {
-                                      "Type"        : "AWS::IAM::Role",
-                                      "Properties"  : {
-                                                    "RoleName"       : {"Fn::Join" : [ "",[ "datalake-DatalakePipelineRole-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
-                                                        "AssumeRolePolicyDocument"  : {
-                                                            "Version"   : "2012-10-17",
-                                                            "Statement" : [{
-                                                                    "Effect"    : "Allow",
-                                                                    "Principal" : {
-                                                                            "Service"   : ["datapipeline.amazonaws.com","elasticmapreduce.amazonaws.com"]
-                                                                },
-                                                                    "Action"    :  [ "sts:AssumeRole" ]
-                                                                }]
-                                                      },
+                                          "DatalakePipelineRole" : {
+                                                                "Type"        : "AWS::IAM::Role",
+                                                                "Properties"  : {
+                                                                              "RoleName"       : {"Fn::Join" : [ "",[ "datalake-PipelineRole-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                                                  "AssumeRolePolicyDocument"  : {
+                                                                                      "Version"   : "2012-10-17",
+                                                                                      "Statement" : [{
+                                                                                              "Effect"    : "Allow",
+                                                                                              "Principal" : {
+                                                                                                      "Service"   : ["datapipeline.amazonaws.com","elasticmapreduce.amazonaws.com"]
+                                                                                          },
+                                                                                              "Action"    :  [ "sts:AssumeRole" ]
+                                                                                          }]
+                                                                                },
 
-                                                        "Path"        : "/",
-                                                        "Policies"    : [{
-                                                              "PolicyName"        :{"Fn::Join" : [ "",[ "datalake-DatalakePipelineRole-policy-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
-                                                              "PolicyDocument"    : {
-                                                                        "Version"       : "2012-10-17",
-                                                                        "Statement"     : [
-                                                                          {
-                                                                                "Effect": "Allow",
-                                                                                "Action": [
-                                                                                  "cloudwatch:*",
-                                                                                  "datapipeline:DescribeObjects",
-                                                                                  "datapipeline:EvaluateExpression",
-                                                                                  "dynamodb:*",
-                                                                                  "ec2:*",
-                                                                                  "elasticmapreduce:*",
-                                                                                  "iam:GetInstanceProfile",
-                                                                                  "iam:GetRole",
-                                                                                  "iam:GetRolePolicy",
-                                                                                  "iam:ListAttachedRolePolicies",
-                                                                                  "iam:ListRolePolicies",
-                                                                                  "iam:ListInstanceProfiles",
-                                                                                  "iam:PassRole",
-                                                                                  "rds:*",
-                                                                                  "redshift:DescribeClusters",
-                                                                                  "redshift:DescribeClusterSecurityGroups",
-                                                                                  "s3:*",
-                                                                                  "sdb:BatchPutAttributes",
-                                                                                  "sdb:Select*",
-                                                                                  "sns:GetTopicAttributes",
-                                                                                  "sns:ListTopics",
-                                                                                  "sns:Publish",
-                                                                                  "sns:Subscribe",
-                                                                                  "sns:Unsubscribe",
-                                                                                  "sqs:CreateQueue",
-                                                                                  "sqs:Delete*",
-                                                                                  "sqs:GetQueue*",
-                                                                                  "sqs:PurgeQueue",
-                                                                                  "sqs:ReceiveMessage"
-                                                                                ],
-                                                                                "Resource": ["*"]
-                                                                          }
-                                                                    ]}}]
-                                                            }
-                                        },
+                                                                                  "Path"        : "/",
+                                                                                  "Policies"    : [{
+                                                                                        "PolicyName"        :{"Fn::Join" : [ "",[ "datalake-PipelineRole-policy-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                                                        "PolicyDocument"    : {
+                                                                                                  "Version"       : "2012-10-17",
+                                                                                                  "Statement"     : [
+                                                                                                    {
+                                                                                                          "Effect": "Allow",
+                                                                                                          "Action": [
+                                                                                                            "cloudwatch:*",
+                                                                                                            "datapipeline:DescribeObjects",
+                                                                                                            "datapipeline:EvaluateExpression",
+                                                                                                            "dynamodb:BatchGetItem",
+                                                                                                            "dynamodb:DescribeTable",
+                                                                                                            "dynamodb:GetItem",
+                                                                                                            "dynamodb:Query",
+                                                                                                            "dynamodb:Scan",
+                                                                                                            "dynamodb:UpdateTable",
+                                                                                                            "ec2:AuthorizeSecurityGroupIngress",
+                                                                                                            "ec2:CancelSpotInstanceRequests",
+                                                                                                            "ec2:CreateSecurityGroup",
+                                                                                                            "ec2:CreateTags",
+                                                                                                            "ec2:DeleteTags",
+                                                                                                            "ec2:Describe*",
+                                                                                                            "ec2:ModifyImageAttribute",
+                                                                                                            "ec2:ModifyInstanceAttribute",
+                                                                                                            "ec2:RequestSpotInstances",
+                                                                                                            "ec2:RunInstances",
+                                                                                                            "ec2:StartInstances",
+                                                                                                            "ec2:StopInstances",
+                                                                                                            "ec2:TerminateInstances",
+                                                                                                            "ec2:AuthorizeSecurityGroupEgress",
+                                                                                                            "ec2:DeleteSecurityGroup",
+                                                                                                            "ec2:RevokeSecurityGroupEgress",
+                                                                                                            "ec2:DescribeNetworkInterfaces",
+                                                                                                            "ec2:CreateNetworkInterface",
+                                                                                                            "ec2:DeleteNetworkInterface",
+                                                                                                            "ec2:DetachNetworkInterface",
+                                                                                                            "elasticmapreduce:*",
+                                                                                                            "iam:GetInstanceProfile",
+                                                                                                            "iam:GetRole",
+                                                                                                            "iam:GetRolePolicy",
+                                                                                                            "iam:ListAttachedRolePolicies",
+                                                                                                            "iam:ListRolePolicies",
+                                                                                                            "iam:ListInstanceProfiles",
+                                                                                                            "iam:PassRole",
+                                                                                                            "rds:DescribeDBInstances",
+                                                                                                            "rds:DescribeDBSecurityGroups",
+                                                                                                            "redshift:DescribeClusters",
+                                                                                                            "redshift:DescribeClusterSecurityGroups",
+                                                                                                            "s3:CreateBucket",
+                                                                                                            "s3:DeleteObject",
+                                                                                                            "s3:Get*",
+                                                                                                            "s3:List*",
+                                                                                                            "s3:Put*",
+                                                                                                            "sdb:BatchPutAttributes",
+                                                                                                            "sdb:Select*",
+                                                                                                            "sns:GetTopicAttributes",
+                                                                                                            "sns:ListTopics",
+                                                                                                            "sns:Publish",
+                                                                                                            "sns:Subscribe",
+                                                                                                            "sns:Unsubscribe",
+                                                                                                            "sqs:CreateQueue",
+                                                                                                            "sqs:Delete*",
+                                                                                                            "sqs:GetQueue*",
+                                                                                                            "sqs:PurgeQueue",
+                                                                                                            "sqs:ReceiveMessage"
+                                                                                                          ],
+                                                                                                          "Resource": ["*"]
+                                                                                                        },
+                                                                                                        {
+                                                                                                            "Effect": "Allow",
+                                                                                                            "Action": "s3:*",
+                                                                                                            "Resource": "*"
+                                                                                                          }
+                                                                                              ]}}]
+                                                                                      }
+                                                                  },
 
-                "DatalakePipelineResourceRole" : {
-                                      "Type"        : "AWS::IAM::Role",
-                                      "Properties"  : {
-                                                    "RoleName"       : {"Fn::Join" : [ "",[ "datalake-DatalakePipelineResourceRole-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
-                                                        "AssumeRolePolicyDocument"  : {
-                                                            "Version"   : "2012-10-17",
-                                                            "Statement" : [{
-                                                                    "Effect"    : "Allow",
-                                                                    "Principal" : {
-                                                                            "Service"   : [ "ec2.amazonaws.com" ]
-                                                                },
-                                                                    "Action"    :  [ "sts:AssumeRole" ]
-                                                                }]
-                                                      },
+                                          "DatalakePipelineResourceRole" : {
+                                                                "Type"        : "AWS::IAM::Role",
+                                                                "Properties"  : {
+                                                                              "RoleName"       : {"Fn::Join" : [ "",[ "datalake-PipelineResourceRole-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                                                  "AssumeRolePolicyDocument"  : {
+                                                                                      "Version"   : "2012-10-17",
+                                                                                      "Statement" : [{
+                                                                                              "Effect"    : "Allow",
+                                                                                              "Principal" : {
+                                                                                                      "Service"   : [ "ec2.amazonaws.com" ]
+                                                                                          },
+                                                                                              "Action"    :  [ "sts:AssumeRole" ]
+                                                                                          }]
+                                                                                },
 
-                                                        "Path"        : "/",
-                                                        "Policies"    : [{
-                                                              "PolicyName"        :{"Fn::Join" : [ "",[ "datalake-DatalakePipelineResourceRole-policy-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
-                                                              "PolicyDocument"    : {
-                                                                        "Version"       : "2012-10-17",
-                                                                        "Statement"     : [
-                                                                          {
-                                                                                "Effect": "Allow",
-                                                                                "Action": [
-                                                                                "cloudwatch:*",
-                                                                                "datapipeline:*",
-                                                                                "dynamodb:*",
-                                                                                "ec2:Describe*",
-                                                                                "elasticmapreduce:AddJobFlowSteps",
-                                                                                "elasticmapreduce:Describe*",
-                                                                                "elasticmapreduce:ListInstance*",
-                                                                                "elasticmapreduce:ModifyInstanceGroups",
-                                                                                "rds:Describe*",
-                                                                                "redshift:DescribeClusters",
-                                                                                "redshift:DescribeClusterSecurityGroups",
-                                                                                "s3:*",
-                                                                                "sdb:*",
-                                                                                "sns:*",
-                                                                                "sqs:*"
-                                                                                ],
-                                                                                "Resource": ["*"]
-                                                                        }
-                                                                    ]}}]
-                                                            }
-                                        },
+                                                                                  "Path"        : "/",
+                                                                                  "Policies"    : [{
+                                                                                        "PolicyName"        :{"Fn::Join" : [ "",[ "datalake-PipelineResourceRole-policy-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
+                                                                                        "PolicyDocument"    : {
+                                                                                                  "Version"       : "2012-10-17",
+                                                                                                  "Statement"     : [
+                                                                                                    {
+                                                                                                              "Effect": "Allow",
+                                                                                                              "Action": [
+                                                                                                                "cloudwatch:*",
+                                                                                                                "datapipeline:*",
+                                                                                                                "dynamodb:*",
+                                                                                                                "ec2:Describe*",
+                                                                                                                "elasticmapreduce:AddJobFlowSteps",
+                                                                                                                "elasticmapreduce:Describe*",
+                                                                                                                "elasticmapreduce:ListInstance*",
+                                                                                                                "elasticmapreduce:ModifyInstanceGroups",
+                                                                                                                "rds:Describe*",
+                                                                                                                "redshift:DescribeClusters",
+                                                                                                                "redshift:DescribeClusterSecurityGroups",
+                                                                                                                "s3:*",
+                                                                                                                "sdb:*",
+                                                                                                                "sns:*",
+                                                                                                                "sqs:*"
+                                                                                                              ],
+                                                                                                              "Resource": ["*"]
+                                                                                                            }
+                                                                                              ]}}]
+                                                                                      }
+                                                                  },
               "LambdafunctionES": {
                                    "DependsOn"          : "WebserverWaitCondtion",
                                    "Type"               : "AWS::Lambda::Function",
@@ -932,7 +966,7 @@
             { "Fn::GetAtt": [ "RedshiftSecondaryRole", "Arn" ] }," ",{"Ref":"RDSdb"}," ",{"Ref":"DatabaseName"}," ",{"Ref":"RedshiftCluster"}," ",{"Ref":"DatabaseName"}," ",
             {"Fn::GetAtt" : ["ElasticsearchDomain","DomainEndpoint"]}," ",
             {"Ref":"DataLakeS3Bucket"}," ",{"Ref":"AWS::StackId"}," ",{"Fn::Select": ["4",{"Fn::Split": ["-",{"Fn::Select" : [ "2",{"Fn::Split": ["/",{"Ref": "AWS::StackId"}]}]}]}]}," ",
-            {"Ref":"AWS::StackName"}," ",{"Fn::Base64":{"Ref" : "WebserverWaitHandle"}}," ",{"Ref":"DatalakeFirehoseStream"}," ",{"Ref" : "DatalakeCloudtrail"},
+            {"Ref":"AWS::StackName"}," ",{"Fn::Base64":{"Ref" : "WebserverWaitHandle"}}," ",{"Ref":"DatalakeFirehoseStream"}," ",{"Ref" : "DatalakeCloudtrail"}," ",
             {"Ref":"DatalakePipelineResourceRole"}," ",{"Ref":"DatalakePipelineRole"}," \n"
 
                   ]]}},
