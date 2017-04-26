@@ -2,7 +2,7 @@ $(function(){
     tablename = "";
     pipelineid = "";
     url = "../aws-resources/datapipeline.php";
-    region = "us-west-2";
+    var region = "";
     output = $("#datapipelineresult");
     spinner = $("#datapipelinespinner");
     spinner.toggle();
@@ -68,7 +68,7 @@ $(function(){
                                     }).done(function(pipelineStatus) {
                                         $("#datapipelinestatus").append(pipelineStatus);
                                         spinner.toggle();
-                                        startStatusCheck();
+                                        timer = setTimeout(checkDPStatus, 2000);
                                     });
                                 });
                             });
@@ -104,12 +104,17 @@ $(function(){
                 if(pipelineStatus.indexOf("WAIT")!==-1 || pipelineStatus.indexOf("PENDING")!==-1 || pipelineStatus.indexOf("RUNNING")!==-1){
                     startStatusCheck();
                 } else {
+                    $.ajax({
+                        url: url,
+                        data: { action: "deletePipeline", pipelineid:pipelineid}
+                    }).done(function(pipelineDeleteStatus) {
+                        $("#datapipelinespinner").hide();
+                        $("#datapipelinelivestatus").hide();
+                        $("#datapipelinestatus").html("<br><div class='alert alert-success'>Datapipeline Status : <i class='fa fa-circle fa-blink'></i> FINISHED<br>" +
+                            "<a class='btn btn-warning btn-sm' href='../aws-resources/redshift.php?explore=table&table="+tablename+"'>click here</a> " +
+                            "to see '"+tablename+"' table in redshift</div><br/>"+pipelineDeleteStatus);
+                    });
                     stopStatusCheck();
-                    $("#datapipelinespinner").hide();
-                    $("#datapipelinelivestatus").hide();
-                    $("#datapipelinestatus").html("<br><div class='alert alert-success'>Datapipeline Status : <i class='fa fa-circle fa-blink'></i> FINISHED<br>" +
-                        "<a class='btn btn-warning btn-sm' href='../aws-resources/redshift.php?explore=table&table="+tablename+"'>click here</a> " +
-                        "to see '"+tablename+"' table in redshift</div>");
                 }
             });
         }

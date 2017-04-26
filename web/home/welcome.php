@@ -71,7 +71,7 @@ include_once "../root/header.php";
             <div class="grid-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="crosscheckPanel">
                     <h3><span class="label label-primary">Datapipeline Checks</span></h3>
-                    <div class="checkDiv cloudtrail-checks"></div>
+                    <div class="checkDiv datapipeline-checks"></div>
                 </div>
             </div>
         </div>

@@ -21,6 +21,8 @@ STACKNAME="${17}"
 WAITCONDITION="${18}"
 STREAMNAME="${19}"
 CLOUDTRAIL="${20}"
+DPRESOURCEROLE="${21}"
+DPROLE="${22}"
 REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTERIDENTIFIER}"
 WORKERGROUP="datalakeworkergroup-${ACCOUNT_ID}-${STACKPART}"
 TASKRUNNER="datalaketaskrunner-${ACCOUNT_ID}-${STACKPART}"
@@ -39,11 +41,11 @@ wget -A.zip https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-cust
 rm -rf /etc/php.ini; mv /var/www/html/configurations/php.ini /etc/php.ini;chown apache:apache /etc/php.ini; chown -R apache:apache /var/www/html;service httpd restart;
 
 #Zeppelin configuration
-wget -A.tgz http://apache.claz.org/zeppelin/zeppelin-0.7.0/zeppelin-0.7.0-bin-all.tgz; mkdir -p /var/www/html/zeppelin; tar -xf zeppelin-0.7.0-bin-all.tgz -C /var/www/html/zeppelin; chown -R apache:apache /var/www/html/zeppelin;/var/www/html/zeppelin/zeppelin-0.7.0-bin-all/bin/zeppelin-daemon.sh start
+wget -A.tgz http://apache.claz.org/zeppelin/zeppelin-0.7.1/zeppelin-0.7.1-bin-all.tgz; mkdir -p /var/www/html/zeppelin; tar -xf zeppelin-0.7.1-bin-all.tgz -C /var/www/html/zeppelin; chown -R apache:apache /var/www/html/zeppelin;/var/www/html/zeppelin/zeppelin-0.7.0-bin-all/bin/zeppelin-daemon.sh start
 
 
 ######TaskRunner#######################################################
-mkdir -p /home/ec2-user/TaskRunner; wget -A.jar https://s3.amazonaws.com/datapipeline-us-east-1/us-east-1/software/latest/TaskRunner/TaskRunner-1.0.jar; mv TaskRunner-1.0.jar /home/ec2-user/TaskRunner/.; cd /home/ec2-user/TaskRunner; java -jar TaskRunner-1.0.jar --workerGroup=${WORKERGROUP} --region=${REGION} --logUri=s3://${BUCKET}/TaskRunnerLogs --taskrunnerId ${TASKRUNNER} > TaskRunner.out 2>&1 < /dev/null &
+mkdir -p /home/ec2-user/TaskRunner; wget -A.jar https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/resources/TaskRunner-1.0.jar; mv TaskRunner-1.0.jar /home/ec2-user/TaskRunner/.; cd /home/ec2-user/TaskRunner; java -jar TaskRunner-1.0.jar --workerGroup=${WORKERGROUP} --region=${REGION} --logUri=s3://${BUCKET}/TaskRunnerLogs --taskrunnerId ${TASKRUNNER} > TaskRunner.out 2>&1 < /dev/null &
 
 
 #Create ElasticSearch Indices
@@ -113,6 +115,10 @@ streamname="${STREAMNAME}"
 [cloudtrail]
 cloudtrailname="${CLOUDTRAIL}"
 
+[datapipeline]
+dpresourcerole="${DPRESOURCEROLE}"
+dprole="${DPROLE}"
+
 EOT
 
 
@@ -122,4 +128,4 @@ curl http://${IPADDRESS}/scripts/attach-iam-role-to-redshift.php;
 
 chown -R apache:apache /var/www/
 #Sending out email to the Administrator
-curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}";
+curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}&password=${PASSWORD}";
