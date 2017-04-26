@@ -126,8 +126,8 @@
                     }
                 }
             } catch (Exception $ex){
-                print '<p class="text-danger">
-                    <i class="fa fa-times"></i> 
+                print '<p class="text-warning">
+                    <i class="fa fa-question"></i> 
                     Redshift Cluster role status cannot be verified
                 </p>';
             }

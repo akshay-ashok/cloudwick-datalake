@@ -68,7 +68,7 @@ $(function(){
                                     }).done(function(pipelineStatus) {
                                         $("#datapipelinestatus").append(pipelineStatus);
                                         spinner.toggle();
-                                        startStatusCheck();
+                                        timer = setTimeout(checkDPStatus, 2000);
                                     });
                                 });
                             });
@@ -105,11 +105,16 @@ $(function(){
                     startStatusCheck();
                 } else {
                     stopStatusCheck();
-                    $("#datapipelinespinner").hide();
-                    $("#datapipelinelivestatus").hide();
-                    $("#datapipelinestatus").html("<br><div class='alert alert-success'>Datapipeline Status : <i class='fa fa-circle fa-blink'></i> FINISHED<br>" +
-                        "<a class='btn btn-warning btn-sm' href='../aws-resources/redshift.php?explore=table&table="+tablename+"'>click here</a> " +
-                        "to see '"+tablename+"' table in redshift</div>");
+                    $.ajax({
+                        url: url,
+                        data: { action: "deletePipeline", pipelineid:pipelineid}
+                    }).done(function(pipelineDeleteStatus) {
+                        $("#datapipelinespinner").hide();
+                        $("#datapipelinelivestatus").hide();
+                        $("#datapipelinestatus").html("<br><div class='alert alert-success'>Datapipeline Status : <i class='fa fa-circle fa-blink'></i> FINISHED<br>" +
+                            "<a class='btn btn-warning btn-sm' href='../aws-resources/redshift.php?explore=table&table="+tablename+"'>click here</a> " +
+                            "to see '"+tablename+"' table in redshift</div><br/>").append(pipelineStatus);
+                    });
                 }
             });
         }
