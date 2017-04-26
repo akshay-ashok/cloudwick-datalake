@@ -5,15 +5,15 @@
         $password = $_POST["password"];
         $email = $_POST["email"];
         $region = $_POST["region"];
+        $url = "ec2-".str_replace(".","-",$ip).".".(($region == "us-east-1") ? "compute-1" : $region.".compute").".amazonaws.com";
         $ip = $_POST["ip"];
-        $url = "ec2-".str_replace(".","-",$ip).".".$region.".compute.amazonaws.com";
-        $hostname = shell_exec("hostname");
-        $internal_ip = $hostname.".".$region.".compute.internal";
+        $hostname = exec("hostname");
+        $internal_ip = $hostname.".".(($region == "us-east-1") ? "compute-1" : $region.".compute").".internal";
 
         $subject = "Data lake portal setup complete";
         $message = "Hello,<br>
     Thank you for your interest in Data Lake Quick Start Implementation. We've setup your Data Lake portal successfully.
-    please visit <a href='http://" . $url . "/home/'>http://" . $url . "/home/</a> to access the portal. <br/>
+    please visit <a href='http://" . $url . "/home/'>http://" . $url . "/home/</a> to access the portal. <br/><br/>
     
     Your access credentials are: <br/>
     login id : <b>".$username."</b> <br/>
@@ -24,8 +24,8 @@
         $headers[] = 'Content-type: text/html; charset=UTF-8';
         $headers[] = "X-Priority: 3";
         $headers[] = 'To: ' . $username . ' <' . $email . '>';
-        $headers[] = "Return-Path: Data Lake Quick Start Portal <apache@".$internal_ip.">";
-        $headers[] = "From: Data Lake Quick Start Portal <apache@".$internal_ip.">";
+        $headers[] = 'Return-Path: Data Lake Quick Start Portal <apache@'.$internal_ip.'>';
+        $headers[] = 'From: Data Lake Quick Start Portal <apache@'.$internal_ip.'>';
 
         $sent = mail($email, $subject, $message, implode("\r\n", $headers));
         if ($sent == true) {
