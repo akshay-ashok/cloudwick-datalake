@@ -24,6 +24,8 @@ CLOUDTRAIL="${20}"
 DPRESOURCEROLE="${21}"
 DPROLE="${22}"
 REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTERIDENTIFIER}"
+WORKERGROUP="datalakeworkergroup-${ACCOUNT_ID}-${STACKPART}"
+TASKRUNNER="datalaketaskrunner-${ACCOUNT_ID}-${STACKPART}"
 
 mkdir -p /var/www/html; chown -R apache:apache /var/www/html;
 aws configure set default.region ${REGION};
@@ -39,7 +41,7 @@ wget -A.zip https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-cust
 rm -rf /etc/php.ini; mv /var/www/html/configurations/php.ini /etc/php.ini;chown apache:apache /etc/php.ini; chown -R apache:apache /var/www/html;service httpd restart;
 
 #Zeppelin configuration
-wget -A.tgz http://apache.claz.org/zeppelin/zeppelin-0.7.1/zeppelin-0.7.1-bin-all.tgz; mkdir -p /var/www/html/zeppelin; tar -xf zeppelin-0.7.0-bin-all.tgz -C /var/www/html/zeppelin; chown -R apache:apache /var/www/html/zeppelin;/var/www/html/zeppelin/zeppelin-0.7.0-bin-all/bin/zeppelin-daemon.sh start
+wget -A.tgz http://apache.claz.org/zeppelin/zeppelin-0.7.1/zeppelin-0.7.1-bin-all.tgz; mkdir -p /var/www/html/zeppelin; tar -xf zeppelin-0.7.1-bin-all.tgz -C /var/www/html/zeppelin; chown -R apache:apache /var/www/html/zeppelin;/var/www/html/zeppelin/zeppelin-0.7.0-bin-all/bin/zeppelin-daemon.sh start
 
 
 ######TaskRunner#######################################################
