@@ -50,34 +50,10 @@
 
         /**
          * @param null $region
-         * @return \Aws\DataPipeline\DataPipelineClient
-         */
-        public function getDatapipelineClient($region=null){
-            return new Aws\DataPipeline\DataPipelineClient($this->getConfig($region));
-        }
-
-        /**
-         * @param null $region
-         * @return \Aws\DynamoDb\DynamoDbClient
-         */
-        public function getDynamoDBClient($region=null){
-            return new Aws\DynamoDb\DynamoDbClient($this->getConfig($region));
-        }
-
-        /**
-         * @param null $region
          * @return \Aws\CloudTrail\CloudTrailClient
          */
         public function getCloudTrailClient($region=null){
             return new Aws\CloudTrail\CloudTrailClient($this->getConfig($region));
-        }
-
-        /**
-         * @param null $region
-         * @return \Aws\Kinesis\KinesisClient
-         */
-        public function getKinesisClient($region=null){
-            return new Aws\Kinesis\KinesisClient($this->getConfig($region));
         }
 
         /**
@@ -88,8 +64,38 @@
             return new Aws\CloudFormation\CloudFormationClient($this->getConfig($region));
         }
 
+        /**
+         * @param null $region
+         * @return \Aws\Firehose\FirehoseClient
+         */
+        public function getFirehoseClient($region=null){
+            return new Aws\Firehose\FirehoseClient($this->getConfig($region));
+        }
+
+        /**
+         * @param null $region
+         * @return \Aws\Lambda\LambdaClient
+         */
         public function getLambdaClient($region=null){
             return new Aws\Lambda\LambdaClient($this->getConfig($region));
+        }
+
+        /**
+         * @param null $region
+         * @return \Aws\DataPipeline\DataPipelineClient
+         */
+        public function getDatapipelineClient($region=null)
+        {
+            return new Aws\DataPipeline\DataPipelineClient($this->getConfig($region));
+        }
+
+        /**
+         * @param null $region
+         * @return \Aws\ElasticsearchService\ElasticsearchServiceClient
+         */
+        public function getElasticsearchClient($region=null){
+            $client = new Aws\ElasticsearchService\ElasticsearchServiceClient($this->getConfig($region));
+            return $client;
         }
 
     }

@@ -1,0 +1,235 @@
+a{
+	padding: 1rem;
+	margin: 0.25rem;
+}
+
+#content table thead span, #content table thead a {
+	font-weight:bold;
+	color:black;
+}
+
+#content table thead a:hover {
+	background:none;
+	text-decoration:underline;
+	color:black;
+}
+
+h1 {
+	font-size:1.9em;
+	font-weight:normal;
+	background:white;
+	color:#1e5eb6;
+	border-bottom:1px solid #f4f4f4;
+
+	padding:20px;
+	margin:0;
+}
+
+#menu h1 {
+	padding:0 0 5px 20px;
+	background:none;
+}
+
+h2,h3 {
+	font-size:1.5em;
+	font-weight:normal;
+	background:white;
+	color:#1e5eb6;
+	border-bottom:1px solid #f4f4f4;
+
+	padding:20px 0;
+	margin:0;
+}
+
+fieldset {
+	padding:5px;
+	border:1px solid #f4f4f4;
+}
+
+input,select,textarea {
+	border:1px solid #e5e5e5;
+	margin:1px;
+	padding:3px;
+}
+
+input[type=submit] {
+	margin-bottom: 0.2rem;
+}
+
+.createOps{
+	color: #ffffff;
+}
+
+.checkbox2 {
+	margin-right: 2rem;
+}
+
+input[type=image] {
+	border:1px solid #d0cdc4;
+}
+
+input[type=checkbox],input[type=radio]{
+	border:1px solid #e5e5e5;
+	padding:2px 5px;
+}
+
+code{
+	background:#f0ffe1;
+	border:1px dashed #d5f1b9;
+	padding:2px 4px;
+	font-family:"Courier New";
+}
+code a:hover{background:transparent}
+
+table{
+	margin:10px 0;
+	border:1px solid #d0cdc4;
+	border-collapse:collapse;
+}
+
+thead th, thead td {
+	text-align:center;
+	vertical-align:middle;
+	font-weight:bold;
+	white-space:nowrap;
+	background:#f2eee1;
+	color:#808080;
+}
+
+th,td{
+	border:1px solid #d0cdc4;
+	padding:3px 6px;
+	vertical-align:top;
+}
+
+th a {
+	font-weight:bold;
+	padding-bottom:0;
+}
+
+th {
+	background:white;
+}
+
+#content tbody tr.checked td, tr.checked.odd td {
+	background:#fbe2e2;
+	color:red;
+}
+
+.hidden{
+	display:none
+}
+
+.error,.message{
+	padding:0;
+	background:transparent;
+	font-weight:bold
+}
+
+.error{
+	color:#c00
+}
+
+.message{
+	color:#090
+}
+
+#content{
+	margin:0 0 0 320px;
+	padding:50px 20px 40px 0;
+	height:100%;
+}
+
+#lang {
+	background:#f2eee1;
+	color:#808080;
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	padding:10px 20px;
+	z-index:1;
+}
+
+#breadcrumb {
+	position:fixed;
+	top: 5.8rem;
+	left:27rem;
+	background:#f2eee1;
+	z-index:2;
+	width:100%;
+	padding:10px;
+}
+
+#menu {
+	background:#fcfaf5;
+	position:fixed;
+	top: 5.8rem;
+	padding: 40px 20px 20px;
+	bottom:0;
+	overflow:auto;
+	left:0;
+	width:27rem;
+	border-right:5px solid #f2eee1;
+}
+
+#schema .table {
+	padding:5px;
+	background:#fcfaf5;
+	border:1px solid #d0cdc4;
+	margin: 1rem;
+}
+
+#schema .table b {
+	color:#006aeb;
+	font-weight:bold;
+	text-decoration:underline;
+}
+
+#schema .table b:hover {
+	color:white;
+}
+
+input[name=logout] {
+	color:#fce2e2;
+	background:#d73e3e;
+}
+
+input[name=logout]:hover {
+	background:#ea0202;
+}
+
+#logins a, #tables a { 
+	background:none;
+}
+
+#logins a:hover {
+	background:#006aeb;
+}
+
+#logout {
+	color:#006aeb;
+	text-decoration:none;
+}
+
+#logout:hover {
+	color:white;
+	background:#006aeb;
+}
+
+.js .column {
+	background:#f2eee1;
+}
+
+#content table thead a.text:hover {
+	text-decoration:none;
+}
+
+#version, .version {
+	font-size:50%;
+	display: none;
+}
+
+#h1:hover {
+	color:white;
+}

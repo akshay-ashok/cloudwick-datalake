@@ -2,12 +2,6 @@
 include_once "../root/defaults.php";
 include_once "../root/ConnectionManager.php";
 
-$mysqlConnector = (new ConnectionManager())->getMysqlConnector();
-
-$query = "select * from datalake.user where `username`='" . _ADMIN . "'";
-$result = $mysqlConnector->query($query);
-$bypass = (isset($_SESSION["bypass"])) ? $_SESSION["bypass"] : false;
-if ($result->rowCount() > 0 || $bypass) {
     print '
         <!-- Start #myLoginModal Modal -->
         <script type="text/javascript" src="../resources/js/jquery.form-4.20.min.js"></script>
@@ -34,7 +28,7 @@ if ($result->rowCount() > 0 || $bypass) {
                             <div class="form-group">
                                 <label for="password" class="col-sm-1 control-label"><i class="fa fa-key fa-lg"></i></label>
                                 <div class="col-sm-11">
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" required>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -55,6 +49,7 @@ if ($result->rowCount() > 0 || $bypass) {
             </div>
         </div>
         <!-- End #myLoginModal Modal -->
+        
         <!-- End #myResetPasswordModal Modal -->
         <div class="modal fade" id="myResetPasswordModal" tabindex="-1" role="dialog" aria-labelledby="myResetPasswordLabel">
         <div class="modal-dialog" role="document">
@@ -62,7 +57,7 @@ if ($result->rowCount() > 0 || $bypass) {
                 <div class="modal-header text-primary">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myLoginModalTitle"><b>Password Reset</b></h4>
+                    <h4 class="modal-title" id="myResetPasswordModalTitle"><b>Password Reset</b></h4>
                 </div>
                 <div class="modal-body" style="margin-top:1em;">
                     <div id="reset_output"></div>
@@ -94,27 +89,8 @@ if ($result->rowCount() > 0 || $bypass) {
         </div>
     </div>
     <!-- End #myResetPasswordModal Modal -->
-        ';
-} else {
-    print '
-        <!-- Start #myLoginModal Modal -->
-        <script type="text/javascript" src="../resources/js/jquery.form-4.20.min.js"></script>
-        <script type="text/javascript" src="../resources/js/authentication.js"></script>
-        <div class="modal fade" id="myLoginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header text-primary">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myLoginModalTitle"><b>Register</b></h4>
-                    </div>
-                    <div class="modal-body" style="margin-top:1em;">
-                        <div class="alert alert-warning">Please <a href="#" class="btn btn-danger btn-sm customMessage" data-dismiss="modal" data-url="../authenticate/register.php" title="Register">register</a> before continuing</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End #myLoginModal Modal -->
-        ';
-}
+    ';
+
+    // todo: registration form & handle - abandoned after datalake 2nd status call
+    // --susheel 04/11/2017
 ?>

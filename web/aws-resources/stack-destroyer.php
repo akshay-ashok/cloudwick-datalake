@@ -9,7 +9,7 @@ include "../root/header.php";
             <br>
             <p class="text-danger">This action cannot be undone.</p>
             <br>
-            <a class="btn btn-danger btn-lg btn-block deleteStack" data-url="../aws-resources/stack-cleanup.php">I understand, delete stack now !!</a></p>
+            <a class="btn btn-danger btn-lg btn-block deleteStack" data-url="../aws-resources/stack-cleanup.php">I understand, delete stack now !!</a>
             <br><br><br><br>
         </div>
     </div>

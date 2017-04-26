@@ -13,9 +13,13 @@
         if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['patientfile']) && $_FILES['patientfile']['error'] == UPLOAD_ERR_OK && is_uploaded_file($_FILES['patientfile']['tmp_name'])) {
             try{
                 $upload = $client->upload(_BUCKET, $_FILES['patientfile']['name'], fopen($_FILES['patientfile']['tmp_name'], 'rb'), 'public-read');
-                print '<p>Upload <a href="'.htmlspecialchars($upload->get('ObjectURL')).'">successful</a> :)</p>';
+                print '<p>
+                    Upload <a href="'.htmlspecialchars($upload->get('ObjectURL'),ENT_QUOTES).'">successful</a> :)
+                </p>';
             } catch (Exception $e){
-                print '<div class="alert alert-danger">Upload Failed to '._BUCKET.'. '.$e->getMessage().'</div>';
+                print '<div class="alert alert-danger">
+                    Upload Failed to '._BUCKET.'. '.$e->getMessage().'
+                </div>';
             }
         }
     print '
@@ -66,127 +70,4 @@
     <div class="col-lg-1 col-md-1"></div>';
 
 include_once "../root/footer.php";
-die();
-
-    if(isset($_GET)) {
-        if(isset($_GET["action"]) && $_GET["action"]=="listBuckets") {
-            $object = $client->listBuckets([]);
-
-            foreach($object["Buckets"] as $bucket){
-                if(substr($bucket["Name"],0,strlen(_BUCKET))===_BUCKET){
-                    print $bucket["Name"];
-                }
-            }
-            /*
-            print '
-            <table class="table table-bordered table-striped table-hover" id="gridTable">
-            <thead>
-              <tr class="success centered">
-                <td>S.no</td>
-                <td>Bucket Name</td>
-                <td>Owner</td>
-              </tr>  
-            </thead>
-          ';
-                $i = 1;
-                $owner = $buckets["Owner"]["DisplayName"];
-                foreach ($buckets["Buckets"] as $bucket) {
-                    print '<tr>
-                <td>' . $i++ . '</td>
-                <td>' . $bucket["Name"] . '</td>
-                <td>' . $owner . '</td>
-            </tr>';
-                }
-                print  '</table>
-           <script type="text/javascript">
-             //$("#gridTable").bootgrid();
-            </script>
-          ';
-            */
-        }
-        else if(isset($_GET["action"]) && $_GET["action"]=="uploadFile"){
-            print '<div class="panel panel-info">
-                    <div class="panel-heading">
-                       <h3 class="panel-title">Upload File to S3</h3>
-                    </div>
-                  <div class="panel-body">
-                    <form class="form-horizontal">
-                      <div class="form-group">
-                        <div class="col-sm-12">
-                          <input type="file" class="form-control" id="file" placeholder="File to upload">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <div class="col-sm-12">
-                          <input type="file" class="form-control" id="file" placeholder="File to upload">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <div class="col-sm-12">
-                          <input type="file" class="form-control" id="file" placeholder="File to upload">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <div class="col-sm-12">
-                          <input type="file" class="form-control" id="file" placeholder="File to upload">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <div class="col-sm-12">
-                          <input type="file" class="form-control" id="file" placeholder="File to upload">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <div class="col-sm-12">
-                          <input type="submit" value="Upload Files" class="btn btn-success btn-lg">
-                          <input type="reset" value="Reset Form" class="btn btn-danger btn-lg">
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-            ';
-            /*
-
-            global $rdsConnector;
-
-            print '<br><br><br>';
-            $command = "copy usertable from 's3://_SOURCE_LOCATION_/configuration/userdata.csv' IAM_ROLE '"._REDSHIFT_ARN."'";
-            try {
-                $rdsConnector->exec($command);
-            } catch (\PDOException $e) {
-                $query = $rdsConnector->query("SELECT * FROM stl_load_errors WHERE query = pg_last_query_id();");
-                if (count($result)) {
-                    while($row = $result->fetch(PDO::FETCH_ASSOC)){
-                        print_r($row);
-                    }
-                } else {
-                    $message = "Query failed: " . $e->getMessage();
-                }
-            }
-
-            print '<br><br><br>';
-            try{
-            $query3 = "select * from usertable";
-            $result3 = $rdsConnector->query($query3);
-            if ($result3->rowCount() > 0) {
-                while($row3 = $result3->fetch(PDO::FETCH_ASSOC)){
-                    print_r($row3);
-                }
-            } else {
-                print 'nothing here bicth';
-            }
-            }catch(PDOException $ex){
-                print $ex->getMessage();
-            }
-          */
-        }
-        else {
-            print '<div class="alert alert-danger"><h3>Please choose from menu</h3></div>';
-            //$output = shell_exec('aws s3 ls _SOURCE_LOCATION_/configuration/ --region us-east-2');
-            //echo "<pre>$output</pre>";
-        }
-    }
-
-include_once('../root/footer.php');
 ?>

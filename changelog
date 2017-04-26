@@ -1,5 +1,5 @@
 1. Redacted emailid,accountid
-2. Added placeholder _SOURCE_LOCATION_ for s3 bucket 
+2. Added placeholder _SOURCE_LOCATION_ for s3 bucket
 (in files: configure.sh, CloudFormation.json,
 and web/data-management/index.php -lines 154,186
 3. Added placeholder _ACCOUNTID_ in
@@ -7,3 +7,74 @@ scripts/s3-put-bucket-notification-configuration.ph -lines 15
 
 
 ###############################################
+
+1. Created input parameters for pre-existing s3 buckets for catalogging in
+elasticsearch (passes as an array - ["s3_a,s3_b,..."])
+2. Need to fix passing this array to configure.sh and break the array to fetch
+individual s3 bucket names
+3. Capturing this shell parameter in $PREEXISTS3
+
+##############################################
+1. Removals from cf template -
+dynamodb: Al tables
+Kinesis: streams
+Lambda: Kinesis
+Edit: Resource removals from policy for LambdaExecutionRole
+
+2. Removals from configure.sh -
+TaskRunner configuration
+DataPipeline configuration
+DynamoDB pre-loading
+RDS pre-loading
+Kibana Indices for edi-270,271
+
+3. Additions in CF template -
+paramters - SourceLocation, PreexistingS3
+params passed at ${23}, ${24}
+
+4.  Additions in configure.sh -
+Parameters handled - but need to parse ${PreexistingS3} and pass to conf.ini file
+
+###############################################
+1. Removals - Map/Mask lambda removed from Catalogging lambda
+  Extra parameters from User-Data
+
+2. Additions -
+  config.ini file : ${PreexistingS3} parameter added in [s3]
+
+3. Fixed Catalog Lambda - working
+
+##############################################
+Merged changes -
+commit 425fa168ef4557fa02a0c9baa7e8b5a6739f9fe3 -PullRequest
+commit b417f1e9af3173c0b083d237643045a684ee8a6c
+commit 095b215c8d49c13d3e535f86e36c3248ecba6c3f
+commit bd32552d953fd5b9d740529b8467b8f40b10e90f
+commit c2de1cbaefd024c506b7323d4b3a4016a55caebc
+commit 736cb7b80ea59c21ba97bae38748e5d9233e928e
+commit 19655a3085a092c75c02c0f24ebc3919f5a1ec61
+commit 27b292a76e68bf5459dae06bf4a9fdba63d3a60b
+commit bc98ab32d1cdfdc9369c6a6d76777324121fe7a0
+commit ba7b3aa68e1b26f39ef772fa4e1f41ae26ec0859
+commit 181406e70fae3d957c6f5761a12931eb949425c9
+
+###############################################
+
+
+1. Added Kinesis Firehose and FireHoseRole resources in CF template
+2. Passing WebserverWaitHandle Base64 to the configure.sh script to send out signal from inside the script
+
+###
+Merged pull-request #6
+---
+###############################################
+1. Added few more outputs
+2. Standard logical resource naming convention
+3. Changes in  web/scripts/send-completion-email.php
+
+##############################################
+1. Changes in parameter section
+2. Template deployment for us-east-1 region  - passed (performed without ec2 key)
+##############################################
+1. resolved conflicts in kiban script
+2. CF template - Firehose name passed to configure.sh 

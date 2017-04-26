@@ -49,6 +49,26 @@ $(function(){
         }
     });
 
+    var subscribeBucket_output = $("#subscribeBucketMessage");
+    var subscribeModal = $("#subscribeBucketModal");
+    $("#subscribeBucketForm").ajaxForm({
+        target: subscribeBucket_output,
+        beforeSubmit: function(){
+            $("#subscribeBucketForm").hide();
+            subscribeBucket_output.prepend('<i class="fa fa-cog fa-spin fa-5x fa-fw text-center text-primary preProcessorCog"></i> Processing Request...');
+        },
+        success: function(subscribeBucketdata, statusText, xhr, $form) {
+            subscribeModal.on("hidden.bs.modal", function (e) {
+                if(subscribeBucketdata.indexOf("text-success") !== -1) {
+                    location.reload();
+                } else {
+                    $("#subscribeBucketForm").show();
+                    subscribeBucket_output.html("");
+                }
+            });
+        }
+    });
+
     var uploadObject_output = $("#uploadObjectMessage");
     var uploadForm = $("#uploadObjectForm");
     var uploadModal = $("#uploadObjectModal");

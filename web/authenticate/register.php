@@ -18,6 +18,8 @@ if(isset($_POST["inputLegit3"])){
     $password = sanitizeParameter($_POST["inputPassword3"]);
     $confirmpassword = sanitizeParameter($_POST["inputConfirmPassword3"]);
     print '<p class="text-danger">Not just yet, wheel is still spinning</p>';
+    // todo: registration processing
+    // abandoned after datalake 2nd status review --susheel 04/11/2017
 } else {
 
     $query = "select * from datalake.user where `username`='" . _ADMIN . "'";
