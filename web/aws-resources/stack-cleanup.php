@@ -5,7 +5,7 @@
         $aws = new AwsFactory();
         $cf_console = '
             <a href="https://'._REGION.'.console.aws.amazon.com/cloudformation/home?region='._REGION.'#/stack/detail?stackId='._STACK_ID.'" target="_blank">
-                CloudFormation console 
+                CloudFormation console <i class="fa fa-external-link-square"></i>
             </a>';
 
         $bucket = $aws->getS3Client();
@@ -13,14 +13,12 @@
 
         print '<p class="text-warning">Cleaning up s3://' . _BUCKET . ' bucket</p>';
         $s3cleanup = exec("aws s3 rb s3://" . _BUCKET . " --force");
-        sleep(5);
+        sleep(4);
         print '<p class="text-success">Bucket deleted</p><br>';
-
-        $result = $stack->deleteStack([
-            'StackName' => _STACK_NAME
-        ]);
-        print '<p class="text-success">Stack deletion initiated...</p>';
-        print '<p class="text-danger">Check '.$cf_console.' for deletion status</p>';
+        print '<p class="text-danger">Goto '.$cf_console.', and click \'Delete Stack\' under other options menu</p>';
+        print '<center>
+            <img src="../resources/images/delete_stack.png" class="img img-thumbnail img-responsive centered">
+        </center>';
     } catch(\Aws\S3\Exception\S3Exception $ex){
         print '<p class="text-danger">
             Cannot Delete bucket, Please use '.$cf_console.' to delete the stack. <br>Error: '.$ex->getAwsErrorCode().'
