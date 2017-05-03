@@ -200,7 +200,7 @@
                 ]);
 
                 $query = "INSERT 
-                  INTO datalake.buckets 
+                  INTO "._RDS_DATABASE.".buckets 
                   VALUES ('"._BUCKET."','".$statementId."')
                   ";
                 $result = $mysqlConnector->exec($query);
@@ -315,6 +315,10 @@
                 Zeppelin potal setup finished
             </p>';
         } elseif ($action == "portal-kibana-visualizations"){
+
+            $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/metadata-store -H \"Content-Type: application/json\" --data @/var/www/html/configurations/kibana/mappings/metadata-store-mapping.json");
+            $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/cloudtraillogs -H \"Content-Type: application/json\" --data @/var/www/html/configurations/kibana/mappings/cloudtraillogs-mapping.json");
+            $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/datalakedeliverystream -H \"Content-Type: application/json\" --data @/var/www/html/configurations/kibana/mappings/kinesis-firehose-mapping.json");
 
             $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/.kibana/index-pattern/metadata-store -H \"Content-Type: application/json\" --data @/var/www/html/configurations/kibana/indexes/metadata-store-index.json");
             $result = shell_exec("curl -XPUT https://"._ELASTIC_SEARCH_URL."/.kibana/index-pattern/cloudtraillogs -H \"Content-Type: application/json\" --data @/var/www/html/configurations/kibana/indexes/cloudtraillogs-index.json");

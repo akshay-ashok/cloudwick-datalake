@@ -13,11 +13,11 @@
  <em class="text-success">Content-Length</em>: PayloadSizeBytes
  
  {
-    <em class="text-success">"Data"</em>: blob, <em class="text-danger">//name="" required</em>
+    <em class="text-success">"Data"</em>: blob, <em class="text-danger">//required</em>
     <em class="text-success">"ExplicitHashKey"</em>: "string",
-    <em class="text-success">"PartitionKey"</em>: "string", <em class="text-danger">//name="" required</em>
+    <em class="text-success">"PartitionKey"</em>: "string", <em class="text-danger">//required</em>
     <em class="text-success">"SequenceNumberForOrdering"</em>: "string",
-    <em class="text-success">"StreamName"</em>: <em class="text-primary" style="font-weight:bold;">"'._KINESIS_STREAM_NAME.'"</em> <em class="text-danger">//name="" required</em>
+    <em class="text-success">"StreamName"</em>: <em class="text-primary" style="font-weight:bold;">"'._KINESIS_STREAM_NAME.'"</em> <em class="text-danger">//required</em>
  }
 </em></code></pre>';
         } else if($type == "sampleStream"){

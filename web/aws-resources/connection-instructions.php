@@ -1,6 +1,6 @@
 <?php
     include_once "../root/defaults.php";
-    sleep(1);
+
     if(isset($_GET)) {
         $sw = htmlspecialchars($_GET["sw"], ENT_QUOTES);
         $no_affiliation = '
@@ -10,11 +10,13 @@
                 ';
         $hide_loader_script = '
         <script type="text/javascript">
-          $(function(){
-              $(".imageItself").on("load",function (){
+			$(function(){
+              $(".imageItself").one("load",function (){
                 $(this).parent().find(".imagePreloader").hide();
-              });
-          })
+              }).each(function() {
+				  if(this.complete) $(this).load();
+		      });
+           });
         </script>
         ';
 
@@ -147,43 +149,46 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="rdsconn" class="col-sm-4 control-label">RDS Conn</label>
+                        <label for="rdsconn" class="col-sm-4 control-label">RDS Connection String</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="rdsconn" name="rdsconn" placeholder="RDS Connection String" required readonly value="jdbc:mysql://'._RDS_ENDPOINT.'/'._RDS_DATABASE.'">
+                            <input type="text" class="form-control" id="rdsconn" name="rdsconn" placeholder="RDS Connection String" required  value="jdbc:mysql://'._RDS_ENDPOINT.'/'._RDS_DATABASE.'">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="redconn" class="col-sm-4 control-label">Redshift Conn</label>
+                        <label for="rdsuser" class="col-sm-4 control-label">RDS Username</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="redconn" name="redconn"  placeholder="Redshift Connection String" required readonly value="jdbc:redshift://'._REDSHIFT_ENDPOINT.'/'._REDSHIFT_DATABASE.'">
+                            <input type="text" class="form-control" id="rdsuser" name="rdsuser" placeholder="RDS username" required  value="'._ADMIN.'">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rdspass" class="col-sm-4 control-label">RDS Password</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="rdspass" name="rdspass" placeholder="RDS Password" required  value="'._PASSWORD.'">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="tabletocopy" class="col-sm-4 control-label">Table to Copy</label>
                         <div class="col-sm-8">
-                            <select class="form-control" id="tabletocopy" name="tabletocopy" required>
-                                <option value=""></option>
-                            ';
-                            try {
-                                include_once("../root/ConnectionManager.php");
-                                $rdsConnector = (new ConnectionManager())->getRdsConnector();
-                                $query = "show tables";
-                                $result = $rdsConnector->query($query);
-                                if ($result->rowCount() > 0) {
-                                    while ($row = $result->fetch(PDO::FETCH_ASSOC) ){
-                                        $assoc = "Tables_in_"._RDS_DATABASE;
-                                        print '<option value="'.$row[$assoc].'">'.$row[$assoc].'</option>
-                                            ';
-                                    }
-                                } else {
-                                    //print '<option value="">No Tables in RDS</option>';
-                                }
-                            } catch (PDOException $ex) {
-                                printException($ex);
-                            }
-            print '
-                            </select>
+                            <input type="text" class="form-control" id="tabletocopy" name="tabletocopy" placeholder="RDS Table to be copied" required >
                             <small class="text-danger pull-right">*table must have a primary key for proper loading</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="redconn" class="col-sm-4 control-label">Redshift Connection String</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="redconn" name="redconn"  placeholder="Redshift Connection String" required readonly value="jdbc:redshift://'._REDSHIFT_ENDPOINT.'/'._REDSHIFT_DATABASE.'">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reduser" class="col-sm-4 control-label">Redshift Username</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="reduser" name="reduser" placeholder="Redshift username" required readonly value="'._ADMIN.'">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="redpass" class="col-sm-4 control-label">Redshift Password</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="redpass" name="redpass" placeholder="Redshift Password" required readonly value="'._PASSWORD.'">
                         </div>
                     </div>
                     <div class="form-group">

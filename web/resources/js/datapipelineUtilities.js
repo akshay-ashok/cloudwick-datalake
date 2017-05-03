@@ -1,4 +1,10 @@
 $(function(){
+    rdsconn = "";
+    redconn = "";
+    rdsuser = "";
+    rdspass = "";
+    reduser = "";
+    redpass = "";
     tablename = "";
     pipelineid = "";
     url = "../aws-resources/datapipeline.php";
@@ -12,6 +18,12 @@ $(function(){
         var timer = null;
         var interval = 15000;
         tablename = $("#tabletocopy").val();
+        rdsconn = $("#rdsconn").val();
+        rdsuser = $("#rdsuser").val();
+        rdspass = $("#rdspass").val();
+        redconn = $("#redconn").val();
+        reduser = $("#reduser").val();
+        redpass = $("#redpass").val();
         $("#datapipelineInit").hide();
         spinner.toggle();
 
@@ -33,7 +45,7 @@ $(function(){
                 output.append("<p class='text-success'><i class='fa fa-check-square-o'></i> Datapipeline created, Pipeline Id : <b>"+pid+"</b></p>");
                 $.ajax({
                     url: url,
-                    data: { action: "createPipelineDef", pipelineid:pipelineid, tablename:tablename}
+                    data: { action: "createPipelineDef", pipelineid:pipelineid, tablename:tablename, rdsconn:rdsconn, rdsuser:rdsuser, rdspass:rdspass, redconn:redconn, reduser:reduser, redpass:redpass}
                 }).done(function(createPipelineDef) {
                     output.append(createPipelineDef);
                     $.ajax({

@@ -41,7 +41,7 @@ function getCatalogedBuckets(){
     $connectionManager = new ConnectionManager();
     $mysqlConnector = $connectionManager->getMysqlConnector();
 
-    $query = "SELECT * FROM datalake.buckets";
+    $query = "SELECT * FROM "._RDS_DATABASE.".buckets";
     $result = $mysqlConnector->query($query);
     while($row = $result->fetch(PDO::FETCH_ASSOC)){
         $buckets[] = $row["bucketname"];

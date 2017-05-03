@@ -226,13 +226,13 @@
   ],
   "values": {
     "myRDSJdbcConnectStr": "jdbc:mysql://oldrdsconnectionstring/oldrdsdbname",
-    "myRDSUsername": "oldusername",
-    "*myRDSPassword": "oldpassword",
+    "myRDSUsername": "oldrdsusername",
+    "*myRDSPassword": "oldrdspassword",
     "myRDSTableName": "oldtablename",
     "myRedshiftJdbcConnectStr": "jdbc:redshift://oldredshiftconnectionstring/oldredshiftdbname",
     "myRedshiftTableName": "oldtablename",
-    "myRedshiftUsername": "oldusername",
-    "*myRedshiftPassword": "oldpassword",
+    "myRedshiftUsername": "oldredshiftusername",
+    "*myRedshiftPassword": "oldredshiftpassword",
     "myRDSRedshiftSecurityGrps": "default",
     "myS3StagingLoc": "s3://olds3stagingloc/pipeline",
     "myInsertMode": "OVERWRITE_EXISTING"
