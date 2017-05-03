@@ -9,7 +9,7 @@
 
     function addToDatabase($bucketname,$statementid,$mysqlConnector){
         $query = "INSERT 
-                  INTO datalake.buckets 
+                  INTO "._RDS_DATABASE.".buckets 
                   VALUES ('".$bucketname."','".$statementid."')
                   ";
         $result = $mysqlConnector->exec($query);
@@ -17,7 +17,7 @@
 
     function removeFromDatabase($bucketname,$statementid,$mysqlConnector){
         $query = "DELETE 
-                  FROM datalake.buckets 
+                  FROM "._RDS_DATABASE.".buckets 
                   WHERE bucketname = '".$bucketname."' AND statementid = '".$statementid."'
                   ";
         $result = $mysqlConnector->exec($query);

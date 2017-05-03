@@ -41,15 +41,23 @@
         } else if($action == "createPipelineDef" && !is_null($pipelineid)){
             try {
                 $tablename = (isset($_GET["tablename"])) ? htmlspecialchars($_GET["tablename"], ENT_QUOTES) : null;
-                if(!is_null($tablename) && !is_null($pipelineid)) {
+                $rdsconn = (isset($_GET["rdsconn"])) ? htmlspecialchars($_GET["rdsconn"], ENT_QUOTES) : null;
+                $rdsuser = (isset($_GET["rdsuser"])) ? htmlspecialchars($_GET["rdsuser"], ENT_QUOTES) : null;
+                $rdspass = (isset($_GET["rdspass"])) ? htmlspecialchars($_GET["rdspass"], ENT_QUOTES) : null;
+                $redconn = (isset($_GET["redconn"])) ? htmlspecialchars($_GET["redconn"], ENT_QUOTES) : null;
+                $reduser = (isset($_GET["reduser"])) ? htmlspecialchars($_GET["reduser"], ENT_QUOTES) : null;
+                $redpass = (isset($_GET["redpass"])) ? htmlspecialchars($_GET["redpass"], ENT_QUOTES) : null;
+                if(!is_null($tablename) && !is_null($pipelineid) && !is_null($rdsconn) && !is_null($rdsuser) && !is_null($rdspass) && !is_null($redconn) && !is_null($reduser) && !is_null($redpass)) {
                     $str = file_get_contents("../configurations/datapipeline/generic_defination.json");
 
                     $str = str_replace("oldworkergroup", _WORKER_GROUP_NAME, $str);
                     $str = str_replace("olds3stagingloc", _BUCKET, $str);
                     $str = str_replace("oldrdsconnectionstring", _RDS_ENDPOINT, $str);
                     $str = str_replace("oldrdsdbname", _RDS_DATABASE, $str);
-                    $str = str_replace("oldusername", _ADMIN, $str);
-                    $str = str_replace("oldpassword", _PASSWORD, $str);
+                    $str = str_replace("oldrdsusername", _ADMIN, $str);
+                    $str = str_replace("oldredshiftusername", _ADMIN, $str);
+                    $str = str_replace("oldrdspassword", _PASSWORD, $str);
+                    $str = str_replace("oldredshiftpassword", _PASSWORD, $str);
                     $str = str_replace("oldtablename", $tablename, $str);
                     $str = str_replace("oldredshiftconnectionstring", _REDSHIFT_ENDPOINT, $str);
                     $str = str_replace("oldredshiftdbname", _REDSHIFT_DATABASE, $str);
@@ -63,7 +71,7 @@
                     </p>';
                 } else {
                     print '<p class="text-danger">
-                        Please provide Table name and Pipeline ID
+                        Please provide all fields
                     </p>';
                 }
             } catch (Exception $ex){

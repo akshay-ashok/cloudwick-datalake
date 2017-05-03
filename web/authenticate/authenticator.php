@@ -16,7 +16,7 @@
         }
         try {
             $query = "select * 
-                      from datalake.user 
+                      from "._RDS_DATABASE.".user 
                       where 
                       `username`='" . $username . "' 
                       and 
@@ -52,16 +52,13 @@
         }
         try {
             $query = "select * 
-                      from datalake.user 
+                      from "._RDS_DATABASE.".user 
                       where 
                       `username`='" . $username . "'
                       ";
             $result = $mysqlConnector->query($query);
             if ($result->rowCount() > 0) {
                 $newpass = substr(md5(microtime()),4,12);
-                // to-do reset logic
-                // print '<div class="alert alert-warning">Logic isn\'t ready yet. Working on it.'.$newpass.'</div>';
-                // --susheel 04/07/17
                 $updateQuery = "UPDATE `datalake`.`user` 
                                 SET 
                                 `password` = '".md5($newpass)."' 
@@ -125,14 +122,14 @@
         }
         try {
             $query = "select * 
-                      from datalake.user 
+                      from "._RDS_DATABASE.".user 
                       where 
                       `username`='" . $username . "' and 
                       `password`='".$current_password."'
                       ";
             $result = $mysqlConnector->query($query);
             if ($result->rowCount() > 0) {
-                $updateQuery = "UPDATE `datalake`.`user` SET `password` = '".$new_password."' WHERE `username`='".$username."'";
+                $updateQuery = "UPDATE `"._RDS_DATABASE."`.`user` SET `password` = '".$new_password."' WHERE `username`='".$username."'";
                 $cp = $mysqlConnector->query($updateQuery);
                 if($cp->rowCount() > 0){
                     print '<div class="alert alert-success">

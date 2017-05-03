@@ -18,7 +18,11 @@ class ConnectionManager extends DBConnector
      * @return DBConnector
      */
     function getMysqlConnector(){
-        return new DBConnector("Mysql","mysql","localhost","3306",_ADMIN,_PASSWORD,"datalake");
+        // return new DBConnector("Mysql","mysql","localhost","3306",_ADMIN,_PASSWORD,"datalake");
+        // Updated after 3rd sync-up call with AWS, moving local database to RDS instead.
+        $rds_client = $this->getRdsConnector();
+
+        return $rds_client;
     }
 
     /**
