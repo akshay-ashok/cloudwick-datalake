@@ -51,22 +51,38 @@ mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDSHOST[0]}" "${RDS_DATABASE}" -e "
 mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDSHOST[0]}" "${RDS_DATABASE}" -e "CREATE TABLE IF NOT EXISTS ${RDS_DATABASE}.buckets(bucketname varchar(200),statementid varchar(200), PRIMARY KEY (bucketname));"
 mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDSHOST[0]}" "${RDS_DATABASE}" -e "INSERT INTO ${RDS_DATABASE}.user(username,password) VALUES ('${ADMIN_ID}',MD5('${PASSWORD}'));"
 
+
+if ! aws s3 cp s3://cloudwick.datalake.167270772459/multiAZ/instance.active instance.active --region us-east-2 --quiet
+then
 # Setup catalog lambda code
 wget -A.zip https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/lambdas/writetoES.zip; mkdir -p /var/www/html/lambes; unzip writetoES.zip -d /var/www/html/lambes; sed -ie "s|oldelasticsearchep|${ELASTICSEARCHEP}|g" /var/www/html/lambes/writetoES/lambda_function.py; rm -rf writetoES.zip;cd /var/www/html/lambes/writetoES;zip -r writetoESX.zip *;aws s3 cp writetoESX.zip s3://$BUCKET/lambdas/writetoESX.zip --region $REGION --sse AES256;
 
 /opt/aws/bin/cfn-signal -e 0 ${WAITCONDITION}
-
+echo "FirstRun-Lambda-signal-check"
+fi
 ##########WebApp configuration########################################
 wget -A.zip https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/web/datalake.zip; unzip datalake.zip -d /var/www/html; chmod 777 /var/www/html/home/welcome*;
 rm -rf /etc/php.ini; mv /var/www/html/configurations/php.ini /etc/php.ini;chown apache:apache /etc/php.ini; chown -R apache:apache /var/www/html;service httpd restart;
 
 
+if ! aws s3 cp s3://cloudwick.datalake.167270772459/multiAZ/instance.active instance.active --region us-east-2 --quiet
+then
 #attach iam role to redshift
 curl http://${IPADDRESS}/scripts/attach-iam-role-to-redshift.php;
-
+echo "FirstRun-RedshiftRoleModify-check"
+fi
 #Zeppelin configuration
 wget -A.tgz http://apache.claz.org/zeppelin/zeppelin-0.7.0/zeppelin-0.7.0-bin-all.tgz; mkdir -p /var/www/html/zeppelin; tar -xf zeppelin-0.7.0-bin-all.tgz -C /var/www/html/zeppelin; chown -R apache /var/www/html/zeppelin;/var/www/html/zeppelin/zeppelin-0.7.0-bin-all/bin/zeppelin-daemon.sh start
 
+
+if ! aws s3 cp s3://cloudwick.datalake.167270772459/multiAZ/instance.active instance.active --region us-east-2 --quiet
+then
+#Create ElasticSearch Indices
+curl -XPUT https://${ELASTICSEARCHEP}/metadata-store -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/metadata-store-mapping.json;
+curl -XPUT https://${ELASTICSEARCHEP}/cloudtraillogs -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/cloudtraillogs-mapping.json;
+curl -XPUT https://${ELASTICSEARCHEP}/datalakedeliverystream -H "Content-Type: application/json" --data @/var/www/html/configurations/kibana/mappings/kinesis-firehose-mapping.json;
+echo "FirstRun-ElasticsearchIndexCreation-check"
+fi
 
 ######TaskRunner#######################################################
 mkdir -p /home/ec2-user/TaskRunner; wget -A.jar https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/resources/TaskRunner-1.0.jar; mv TaskRunner-1.0.jar /home/ec2-user/TaskRunner/.; cd /home/ec2-user/TaskRunner; java -jar TaskRunner-1.0.jar --workerGroup=${WORKERGROUP} --region=${REGION} --logUri=s3://${BUCKET}/TaskRunnerLogs --taskrunnerId ${TASKRUNNER} > TaskRunner.out 2>&1 < /dev/null &
@@ -113,7 +129,17 @@ cloudtrailname="${CLOUDTRAIL}"
 
 EOT
 
-
 chown -R apache:apache /var/www/
 #Sending out email to the Administrator
-curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}&password=${PASSWORD}";
+if ! aws s3 cp s3://cloudwick.datalake.167270772459/multiAZ/instance.active instance.active --region us-east-2 --quiet
+then
+  curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}&password=${PASSWORD}";
+  echo "FirstRun-Email-check"
+else
+  curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}&password=${PASSWORD}";
+  echo "Failover-Email-check"
+fi
+##Autoscale sync section
+echo ${IPADDRESS} > /home/ec2-user/instance.active
+chown ec2-user:ec2-user /home/ec2-user/instance.active
+aws s3 cp /home/ec2-user/instance.active s3://$BUCKET/multiAZ/instance.active --region us-east-2

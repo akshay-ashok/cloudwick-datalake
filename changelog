@@ -78,3 +78,18 @@ Merged pull-request #6
 ##############################################
 1. resolved conflicts in kiban script
 2. CF template - Firehose name passed to configure.sh 
+
+
+##############################################
+1. CFN - Added Multi-AZ failover (with autoscale) for webserver instance
+(replace webserverinstance with launchconfig and webservergroup
+
+2. Modified configure.sh to accomodate the first-run and failover-run for
+Elasticsearch index creation,  Lambda function code modification, reshiftrole
+modification 
+
+Handling state management with file s3://${BUCKET}/multiAZ/instance.active
+
+3. Removed mysql database for local user management and replaced with RDS
+database
+4 Need fix on failover-email script -php 
