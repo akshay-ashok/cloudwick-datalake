@@ -1,6 +1,6 @@
 #!/bin/bash
 ##Cloudformation User data configuration script
-IPADDRESS=`curl ifconfig.co`
+IPADDRESS=`curl http://169.254.169.254/latest/meta-data/public-ipv4`
 ACCOUNT_ID="$1"
 REGION="$2"
 ADMIN_ID="$3"
