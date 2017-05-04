@@ -27,6 +27,13 @@ TASKRUNNER="datalaketaskrunner-${ACCOUNT_ID}-${STACKPART}"
 
 mkdir -p /var/www/html; chown -R apache:apache /var/www/html;
 aws configure set default.region ${REGION};
+
+#Instance tagging
+instanceid=`curl http://169.254.169.254/latest/meta-data/instance-id`
+aws ec2 create-tags --resources ${instanceid} --tags 'Key'="Name",'Value'="datalake-webserver-${ACCOUNT_ID}-${STACKPART}" --region ${REGION}
+aws ec2 create-tags --resources ${instanceid} --tags 'Key'="solution",'Value'="datalake-${ACCOUNT_ID}-${STACKPART}" --region ${REGION}
+
+
 setenforce 0;chkconfig httpd on;chkconfig mysqld on;
 RDSHOST=(${RDS_ENDPOINT//:/ })
 
