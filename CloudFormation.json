@@ -83,12 +83,6 @@
                   "Description"                 : "Number of nodes in the redshift cluster(=1 if single-node)",
                   "Type"                        : "Number",
                   "Default"                     : "1"
-                },
-                "KeyName"           : {
-                      "Description"           : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
-                      "Type"                  : "AWS::EC2::KeyPair::KeyName",
-                      "ConstraintDescription" : "Can contain only ASCII characters."
-
                 }
   },
 
@@ -949,7 +943,6 @@
           "IamInstanceProfile"                  : {"Ref" : "EC2WebserverIamProfile"},
           "InstanceType"                        : { "Ref" : "InstanceType" },
           "SecurityGroups"                      : [{  "Ref" : "VPCSecurityGroup"}],
-          "KeyName"                             : {"Ref" : "KeyName"},
           "UserData"            : { "Fn::Base64" : { "Fn::Join" : ["", [
             "#!/bin/bash -xe\n",
             "yum install -y aws-cfn-bootstrap\n",
