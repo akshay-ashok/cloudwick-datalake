@@ -77,7 +77,7 @@ Merged pull-request #6
 2. Template deployment for us-east-1 region  - passed (performed without ec2 key)
 ##############################################
 1. resolved conflicts in kiban script
-2. CF template - Firehose name passed to configure.sh 
+2. CF template - Firehose name passed to configure.sh
 
 
 ##############################################
@@ -86,10 +86,19 @@ Merged pull-request #6
 
 2. Modified configure.sh to accomodate the first-run and failover-run for
 Elasticsearch index creation,  Lambda function code modification, reshiftrole
-modification 
+modification
 
 Handling state management with file s3://${BUCKET}/multiAZ/instance.active
 
 3. Removed mysql database for local user management and replaced with RDS
 database
-4 Need fix on failover-email script -php 
+4 Need fix on failover-email script -php
+
+##############################################
+1. Moved WebServerInstance resource tagging from CFN to configure.sh - Reason: LaunchConfig does not support Tags
+2. Modified WebServerGroup: Replaced "AvailabilityZones" with "VPCZoneIdentifier" for launching webserver inside the datalake's public subnet group
+######
+3. Subnet additions - Total 2 private subnets(for RDS/Redshift) and 2 public subnets(for webserver multi-AZ autoscaling)
+4. Additions- NAT, EIP , Private Route Table and RouteTable Association
+5. Reintroduced - Name Tags
+6. configure.sh - Redshift role modify moved to post ini section    

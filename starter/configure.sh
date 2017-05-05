@@ -72,12 +72,7 @@ wget -A.zip https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-cust
 rm -rf /etc/php.ini; mv /var/www/html/configurations/php.ini /etc/php.ini;chown apache:apache /etc/php.ini; chown -R apache:apache /var/www/html;service httpd restart;
 
 
-if ! aws s3 cp s3://${BUCKET}/multiAZ/instance.active instance.active --region ${REGION} --quiet --sse AES256
-then
-#attach iam role to redshift
-curl http://${IPADDRESS}/scripts/attach-iam-role-to-redshift.php;
-echo "FirstRun-RedshiftRoleModify-check"
-fi
+
 #Zeppelin configuration
 wget -A.tgz http://apache.claz.org/zeppelin/zeppelin-0.7.0/zeppelin-0.7.0-bin-all.tgz; mkdir -p /var/www/html/zeppelin; tar -xf zeppelin-0.7.0-bin-all.tgz -C /var/www/html/zeppelin; chown -R apache /var/www/html/zeppelin;/var/www/html/zeppelin/zeppelin-0.7.0-bin-all/bin/zeppelin-daemon.sh start
 
@@ -137,6 +132,14 @@ cloudtrailname="${CLOUDTRAIL}"
 EOT
 
 chown -R apache:apache /var/www/
+
+if ! aws s3 cp s3://${BUCKET}/multiAZ/instance.active instance.active --region ${REGION} --quiet --sse AES256
+then
+#attach iam role to redshift
+curl http://${IPADDRESS}/scripts/attach-iam-role-to-redshift.php;
+echo "FirstRun-RedshiftRoleModify-check"
+fi
+
 #Sending out email to the Administrator
 if ! aws s3 cp s3://${BUCKET}/multiAZ/instance.active instance.active --region ${REGION} --quiet --sse AES256
 then
