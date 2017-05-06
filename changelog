@@ -101,4 +101,9 @@ database
 3. Subnet additions - Total 2 private subnets(for RDS/Redshift) and 2 public subnets(for webserver multi-AZ autoscaling)
 4. Additions- NAT, EIP , Private Route Table and RouteTable Association
 5. Reintroduced - Name Tags
-6. configure.sh - Redshift role modify moved to post ini section    
+6. configure.sh - Redshift role modify moved to post ini section
+
+
+##############################################
+1. Additions - VPC endpoint for private traffic to S3
+2. Modified CFN : Outputs

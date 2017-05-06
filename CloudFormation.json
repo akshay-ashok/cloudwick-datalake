@@ -310,6 +310,24 @@
         }
     },
 
+    "VPCS3Endpoint" : {
+      "Type" : "AWS::EC2::VPCEndpoint",
+      "Properties" : {
+              "PolicyDocument" : {
+              "Version":"2012-10-17",
+              "Statement":[{
+                "Effect":"Allow",
+                "Principal": "*",
+                "Action":["s3:*"],
+                "Resource":{ "Fn::Join": [ "", ["arn:aws:s3:::", {"Ref": "DataLakeS3Bucket"},"/*"]]}
+              }]
+              },
+              "RouteTableIds" : [ {"Ref" : "RouteTable1" }],
+              "ServiceName" : { "Fn::Join": [ "", [ "com.amazonaws.", { "Ref": "AWS::Region" }, ".s3" ] ] },
+              "VpcId" : {"Ref" : "VpcId"}
+                  }
+                },
+
     "VPCSecurityGroup" : {
           "Type"        : "AWS::EC2::SecurityGroup",
           "Properties"  : {
@@ -996,6 +1014,12 @@
 
   },
   "Outputs" : {
+                "VPCInfo":
+                {
+                  "Description"                : "VPC ID",
+                  "Value"                      : {"Ref" : "VpcId"}
+                },
+
                 "S3Bucket":
                 {
                   "Description"               : "S3 Bucket",
@@ -1012,12 +1036,6 @@
                 {
                   "Description"                : "Lambda Function",
                   "Value"                      : {"Ref" : "LambdafunctionES"}
-                },
-
-                "VPCInfo":
-                {
-                  "Description"                : "VPC ID",
-                  "Value"                      : {"Ref" : "VpcId"}
                 },
 
                 "PrivateSubnet1":
@@ -1056,12 +1074,6 @@
                   "Value"                       : { "Fn::GetAtt" : [ "RedshiftCluster", "Endpoint.Address" ] }
                 },
 
-                "RedshiftSecondaryRole":
-                {
-                  "Description"                 : "Redshift Secondary Role",
-                  "Value"                       : { "Ref" : "RedshiftSecondaryRole"}
-                },
-
                 "FirehoseDeliveryStream":
                 {
                   "Description"                 : "Firehose delivery stream",
@@ -1072,7 +1084,17 @@
                 {
                   "Description"                 : "CloudTrail",
                   "Value"                       : { "Ref" : "DatalakeCloudtrail"}
+                },
+
+                "Tags":
+                {
+                  "Description"                 : "Use this Tag for creating Resource Group",
+                  "Value"                       : {"Fn::Join": ["",["Key=\"solution\" ; Value=\"","datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] },"\""]] }
                 }
+
+
+
+
 
 
 
