@@ -1,0 +1,13 @@
+global:
+  marketplace-ami: false
+  owner: quickstart@amazon.com
+  #subjected to change
+  qsname: quickstart-aws-datalake
+  regions:
+    - us-east-1
+    - us-west-2
+  reporting: true
+tests:
+  defaults:
+    parameter_input: aws-datalake-defaults.json
+    template_file: aws-datalake-qs.template

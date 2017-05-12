@@ -102,8 +102,17 @@ database
 4. Additions- NAT, EIP , Private Route Table and RouteTable Association
 5. Reintroduced - Name Tags
 6. configure.sh - Redshift role modify moved to post ini section
+7. CFN template renaming
 
 
 ##############################################
 1. Additions - VPC endpoint for private traffic to S3
 2. Modified CFN : Outputs
+
+
+##################QUICKSTART ADDITIONS#######
+1. logical Name changes
+2. Mappings
+3. Git repo structure changes  - ci -> params file
+
+4. Need changes to directory naming for scripts -> (holds all other module directories)

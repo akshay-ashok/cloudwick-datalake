@@ -51,8 +51,6 @@ y
 y
 EOF
 
-FIRSTRUN = `mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDSHOST[0]}" "${RDS_DATABASE}" -e "SHOW TABLES LIKE 'user'" -sN`
-## if ${FIRSTRUN} == 'user' then its first run otherwise its failover run; you can skip the s3 uploading file part and reuse this ${FIRSTRUN} variable instead
 
 mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDSHOST[0]}" "${RDS_DATABASE}" -e "CREATE TABLE IF NOT EXISTS ${RDS_DATABASE}.user(username varchar(200),password varchar(200), PRIMARY KEY (username));"
 mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDSHOST[0]}" "${RDS_DATABASE}" -e "CREATE TABLE IF NOT EXISTS ${RDS_DATABASE}.buckets(bucketname varchar(200),statementid varchar(200), PRIMARY KEY (bucketname));"
