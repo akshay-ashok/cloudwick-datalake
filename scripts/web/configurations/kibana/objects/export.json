@@ -1,0 +1,149 @@
+[
+  {
+    "_id": "datalake-quickstart-metadata-dashboard",
+    "_type": "dashboard",
+    "_source": {
+      "title": "datalake-quickstart-metadata-dashboard",
+      "description": "",
+      "panelsJSON": "[{\"id\":\"metadata-files-per-day\",\"type\":\"visualization\",\"panelIndex\":1,\"size_x\":6,\"size_y\":8,\"col\":7,\"row\":1},{\"id\":\"medatadata-count-by-content-type\",\"type\":\"visualization\",\"panelIndex\":2,\"size_x\":6,\"size_y\":6,\"col\":1,\"row\":3},{\"id\":\"metadata-objects-indexed\",\"type\":\"visualization\",\"panelIndex\":4,\"size_x\":6,\"size_y\":2,\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":true}",
+      "uiStateJSON": "{\"P-1\":{\"vis\":{\"legendOpen\":false}}}",
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "datalake-quickstart-cloudtraillogs-dashboard",
+    "_type": "dashboard",
+    "_source": {
+      "title": "datalake-quickstart-cloudtraillogs-dashboard",
+      "description": "",
+      "panelsJSON": "[{\"id\":\"API-Activity-By-Region\",\"type\":\"visualization\",\"panelIndex\":1,\"size_x\":4,\"size_y\":2,\"col\":8,\"row\":1},{\"id\":\"API-Activity-by-service\",\"type\":\"visualization\",\"panelIndex\":2,\"size_x\":6,\"size_y\":6,\"col\":4,\"row\":3},{\"id\":\"API-calls-by-IP-address\",\"type\":\"visualization\",\"panelIndex\":3,\"size_x\":3,\"size_y\":7,\"col\":10,\"row\":3},{\"id\":\"API-calls-by-user\",\"type\":\"visualization\",\"panelIndex\":4,\"size_x\":3,\"size_y\":6,\"col\":1,\"row\":3},{\"id\":\"Total-API-calls\",\"type\":\"visualization\",\"panelIndex\":6,\"size_x\":6,\"size_y\":2,\"col\":1,\"row\":1}]",
+      "optionsJSON": "{\"darkTheme\":true}",
+      "uiStateJSON": "{\"P-3\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}},\"P-4\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}}",
+      "timeRestore": false,
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}}}]}"
+      }
+    }
+  },
+  {
+    "_id": "metadata-files-per-day",
+    "_type": "visualization",
+    "_source": {
+      "title": "metadata-files-per-day",
+      "visState": "{\"title\":\"metadata-files-per-day\",\"type\":\"area\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"smoothLines\":false,\"scale\":\"linear\",\"interpolate\":\"linear\",\"mode\":\"stacked\",\"times\":[],\"addTimeMarker\":false,\"defaultYExtents\":false,\"setYExtents\":false,\"yAxis\":{}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"createdDate\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"Files per day\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"metadata-store\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "medatadata-count-by-content-type",
+    "_type": "visualization",
+    "_source": {
+      "title": "medatadata-count-by-content-type",
+      "visState": "{\"title\":\"medatadata-count-by-content-type\",\"type\":\"pie\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"isDonut\":false},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"_type\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"metadata-store\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "metadata-objects-indexed",
+    "_type": "visualization",
+    "_source": {
+      "title": "metadata-objects-indexed",
+      "visState": "{\"title\":\"metadata-objects-indexed\",\"type\":\"metric\",\"params\":{\"handleNoResults\":true,\"fontSize\":60},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Total Objects in Data Lake\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"metadata-store\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "API-Activity-by-service",
+    "_type": "visualization",
+    "_source": {
+      "title": "API Activity by service",
+      "visState": "{\"title\":\"API Activity by service\",\"type\":\"histogram\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"scale\":\"linear\",\"mode\":\"stacked\",\"times\":[],\"addTimeMarker\":false,\"defaultYExtents\":false,\"setYExtents\":false,\"yAxis\":{}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"API Activity\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"eventSource.keyword\",\"size\":10,\"order\":\"desc\",\"orderBy\":\"_term\",\"customLabel\":\"Service\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"cloudtraillogs\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "API-Activity-By-Region",
+    "_type": "visualization",
+    "_source": {
+      "title": "API Activity By Region",
+      "visState": "{\"title\":\"API Activity By Region\",\"type\":\"pie\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"isDonut\":false},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"awsRegion.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"Activity By Region\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"cloudtraillogs\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "Total-API-calls",
+    "_type": "visualization",
+    "_source": {
+      "title": "Total API calls",
+      "visState": "{\"title\":\"Total API calls\",\"type\":\"metric\",\"params\":{\"handleNoResults\":true,\"fontSize\":60},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Total API activity\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{}",
+      "description": "",
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"cloudtraillogs\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "API-calls-by-user",
+    "_type": "visualization",
+    "_source": {
+      "title": "API calls by user",
+      "visState": "{\"title\":\"API calls by user\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"userIdentity.userName.keyword\",\"size\":10,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"API calls by USER\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"cloudtraillogs\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "API-event-by-Service",
+    "_type": "visualization",
+    "_source": {
+      "title": "API event by Service",
+      "visState": "{\"title\":\"API event by Service\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"eventSource.keyword\",\"size\":20,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"API event by Service\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"cloudtraillogs\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  },
+  {
+    "_id": "API-calls-by-IP-address",
+    "_type": "visualization",
+    "_source": {
+      "title": "API calls by IP address",
+      "visState": "{\"title\":\"API calls by IP address\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"sourceIPAddress.keyword\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\"}}],\"listeners\":{}}",
+      "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+      "description": "",
+      "kibanaSavedObjectMeta": {
+        "searchSourceJSON": "{\"index\":\"cloudtraillogs\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+      }
+    }
+  }
+]
