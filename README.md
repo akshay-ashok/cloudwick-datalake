@@ -26,7 +26,7 @@ You can launch this CloudFormation stack in the US East (N. Virginia) / US West 
 *   [Kibana](#) – kibana is a web interface for elasticsearch and provides visualization capabilities on top of the content indexed on an elasticsearch cluster.
 
 **Architecture** Deploying this Quick Start with default parameters for end-to-end deployment builds the following Data Lake environment in AWS cloud. 
-![Architecture Diagram](/images/aws-qs-dl-arch.jpg "Architecture Diagram")
+![Architecture Diagram](/images/aws-dl-qs-arch.jpg"Architecture Diagram")
 
 ### **Deployment Steps**
 
@@ -69,6 +69,6 @@ You can launch this CloudFormation stack in the US East (N. Virginia) / US West 
     ![S3 Explorer](/images/aws-qs-dl-s3-explorer.png "S3 Explorer")  
     b) AWS Kinesis
 6.  In Resources tab you can check all the AWS Resources used in data lake  
-    ![Resources](aws-qs-dl-resources.png "Resources")
+    ![Resources](/images/aws-qs-dl-resources.png"Resources")
 7.  In Visualize tab you can visualize data from the following sources  
     a) AWS S3 data using Zeppelin b) Streaming data using Kibana
