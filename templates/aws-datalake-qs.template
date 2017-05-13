@@ -151,6 +151,7 @@
                               "Partition": "aws",
                               "QuickStartS3URL": "https://s3.amazonaws.com"
                           }
+                        }
       },
   "Resources" : {
 
