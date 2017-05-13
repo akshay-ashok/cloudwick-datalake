@@ -1,5 +1,5 @@
 
-# [AWS Data Lake quick start](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=CWDLQuickstart&templateURL=https://s3-us-west-2.amazonaws.com/akshaypatil/aws-datalake/CloudFormation.json)
+# [AWS Data Lake quick start](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=CWDLQuickstart&templateURL=https://s3-us-west-2.amazonaws.com/akshaypatil/aws-datalake/aws-datalake-qs.template)
 
 This reference architecture provides a JSON template for deploying Data Lake Quick Start with [AWS CloudFormation](https://aws.amazon.com/cloudformation/).
 
