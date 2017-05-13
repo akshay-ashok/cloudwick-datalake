@@ -940,7 +940,7 @@
 
          "Repset"  :{
                      "commands" : {
-                                   "repoinstall" : {"command" : "rpm -Uvh https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/repo/latest.rpm"}
+                                   "repoinstall" : {"command" : "rpm -Uvh https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/scripts/repo/latest.rpm"}
                                    }
                    },
          "Install" : {
@@ -981,7 +981,7 @@
             "         --resource LaunchConfig ",
             "         --configsets Install ",
             "         --region ", { "Ref" : "AWS::Region" }, "\n",
-            "wget https://raw.githubusercontent.com/akshay-ashok/cloudwick-datalake/datalake-customize/starter/configure.sh;cat configure.sh | tr -d '\r' > configure_l.sh;chmod 777 configure_l.sh;./configure_l.sh ",
+            "wget https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/scripts/configure.sh;cat configure.sh | tr -d '\r' > configure_l.sh;chmod 777 configure_l.sh;./configure_l.sh ",
             {"Ref":"AWS::AccountId"}," ",{"Ref":"AWS::Region"}," ",{"Ref":"DatabaseUserName"}," ",{"Ref":"DatabaseUserPassword"}," ",{"Ref":"AdminEmailID"}," ",
             { "Fn::GetAtt": [ "RDSdb", "Endpoint.Address" ] }," ",
             { "Fn::GetAtt" : [ "RedshiftCluster", "Endpoint.Address" ] }," ",
