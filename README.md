@@ -26,6 +26,7 @@ You can launch this CloudFormation stack in the US East (N. Virginia) / US West 
 *   [Kibana](#) – kibana is a web interface for elasticsearch and provides visualization capabilities on top of the content indexed on an elasticsearch cluster.
 
 **Architecture** Deploying this Quick Start with default parameters for end-to-end deployment builds the following Data Lake environment in AWS cloud. 
+
 ![Architecture Diagram](/images/aws-dl-qs-arch.jpg "Architecture Diagram")
 
 ### **Deployment Steps**
@@ -47,12 +48,12 @@ You can launch this CloudFormation stack in the US East (N. Virginia) / US West 
     *   Administrator Name : AdminName
     *   Database Name: datalake
     *   Database User Name: admin
-    *   RDS database class: db.t2.small **[**Options: db.t2.micro, db.t2.medium, db..t2.large, db.m4.large, db.m4.xlarge, db.m4.2xlarge, db.m4.4xlarge, db.m4.10xlarge**]**
+    *   RDS database class: db.t2.small **[** Options: db.t2.micro, db.t2.medium, db..t2.large, db.m4.large, db.m4.xlarge, db.m4.2xlarge, db.m4.4xlarge, db.m4.10xlarge **]**
     *   RDS database storage: 5
-    *   Redshift cluster type: single-node **[**Options: multi-node**]**
-    *   Redshift node class: dc1.large **[**Options: dc1.large, dw.hs1.xlarge, dw1.xlarge, dw1.8xlarge, dw2.large, dw2.8xlarge**]**
+    *   Redshift cluster type: single-node **[** Options: multi-node **]**
+    *   Redshift node class: dc1.large **[** Options: dc1.large, dw.hs1.xlarge, dw1.xlarge, dw1.8xlarge, dw2.large, dw2.8xlarge **]**
     *   NumberOfNodes: 1
-    *   EC2 webserver class: m1.medium **[**Options: m1.large, m1.xlarge, m2.xlarge, m2.2xlarge, m2.4xlarge, m3.medium, m3.large, m3.xlarge, m3.2xlarge, c1.medium, c1.xlarge, c3.large, c3.xlarge, c3.2xlarge, c3.4xlarge, c3.8xlarge **]**
+    *   EC2 webserver class: m1.medium **[** Options: m1.large, m1.xlarge, m2.xlarge, m2.2xlarge, m2.4xlarge, m3.medium, m3.large, m3.xlarge, m3.2xlarge, c1.medium, c1.xlarge, c3.large, c3.xlarge, c3.2xlarge, c3.4xlarge, c3.8xlarge **]**
 6.  On the **Options** page choose Tags, Permissions and Advanced Options if required you can leave it default.
 7.  On the **Review page** check all the details and acknowledge CloudFormation and create.
 8.  Monitor the status of the stack. When the status is **CREATE_COMPLETE**, the deployment is complete.
@@ -61,14 +62,20 @@ You can launch this CloudFormation stack in the US East (N. Virginia) / US West 
 
 1.  Once the deployment is completed Email ID provided while creating stack will receive a link with login ID and Password.
 2.  Go to your email, check for datalake email and click on the link it will take you to the page below.  
+
     ![Login page](/images/aws-qs-dl-login.png "Login page")
+    
 3.  Login with the credentials.
 4.  From the data lake home page you can Manage Data, check resources and visualize data.
 5.  Under Data Management there are two options to manage data  
     a) AWS S3  
+    
     ![S3 Explorer](/images/aws-qs-dl-s3-explorer.png "S3 Explorer")  
+    
     b) AWS Kinesis
 6.  In Resources tab you can check all the AWS Resources used in data lake  
+
     ![Resources](/images/aws-qs-dl-resources.png "Resources")
+    
 7.  In Visualize tab you can visualize data from the following sources  
     a) AWS S3 data using Zeppelin b) Streaming data using Kibana
