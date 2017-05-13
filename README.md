@@ -18,3 +18,6 @@ You can launch this CloudFormation stack in the US East (N. Virginia) / US West 
 
 4. Repository for required software packages and services
 5. PHP project for performing backend processing and web user interface
+
+### Quick Start Reference Architecture
+![Quick Start Data lake Architecture](https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/images/aws-dl-qs-arch.jpg)
