@@ -94,7 +94,7 @@
                 "QSS3BucketName": {
                   "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
                   "ConstraintDescription": "AWS Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
-                  "Default": "akshaypatil",
+                  "Default": "quickstart-reference",
                   "Description": "S3 bucket name for the AWS Quick Start assets.AWS Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
                   "Type": "String"
               },
@@ -109,8 +109,7 @@
                 "KeyPairName": {
                         "Description"           : "Name of an existing EC2 KeyPair to enable SSH access to the NAT instance",
                         "Type"                  : "AWS::EC2::KeyPair::KeyName",
-                        "ConstraintDescription" : "Can contain only ASCII characters.",
-                        "Default"               : "akshay-patil-east1"
+                        "ConstraintDescription" : "Can contain only ASCII characters."
                   },
 
                 "AvailabilityZones": {
