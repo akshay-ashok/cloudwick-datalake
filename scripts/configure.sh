@@ -3,8 +3,8 @@
 IPADDRESS=`curl http://169.254.169.254/latest/meta-data/public-ipv4`
 ACCOUNT_ID="$1"
 REGION="$2"
-ADMIN_ID="$3"
-PASSWORD="$4"
+ADMIN_ID=`cat /tmp/dl-auth.file | grep -ie "DatabaseUserName" | awk -F"|" '{print $2}'`
+PASSWORD=`cat /tmp/dl-auth.file | grep -ie "DatabaseUserPassword" | awk -F"|" '{print $2}'`
 EMAIL_ID="$5"
 RDS_ENDPOINT="$6"
 REDSHIFT_ENDPOINT="$7"
@@ -24,6 +24,7 @@ CLOUDTRAIL="${20}"
 REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTERIDENTIFIER}"
 WORKERGROUP="datalakeworkergroup-${ACCOUNT_ID}-${STACKPART}"
 TASKRUNNER="datalaketaskrunner-${ACCOUNT_ID}-${STACKPART}"
+
 
 mkdir -p /var/www/html; chown -R apache:apache /var/www/html;
 aws configure set default.region ${REGION};
