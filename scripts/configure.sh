@@ -31,6 +31,7 @@ aws configure set default.region ${REGION};
 
 #Instance tagging
 instanceid=`curl http://169.254.169.254/latest/meta-data/instance-id`
+publicdns=`curl http://169.254.169.254/latest/meta-data/public-hostname`
 aws ec2 create-tags --resources ${instanceid} --tags 'Key'="Name",'Value'="datalake-webserver-${ACCOUNT_ID}-${STACKPART}" --region ${REGION}
 aws ec2 create-tags --resources ${instanceid} --tags 'Key'="solution",'Value'="datalake-${ACCOUNT_ID}-${STACKPART}" --region ${REGION}
 
@@ -142,10 +143,10 @@ fi
 #Sending out email to the Administrator
 if ! aws s3 cp s3://${BUCKET}/multiAZ/instance.active instance.active --region ${REGION} --quiet --sse AES256
 then
-  curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}&password=${PASSWORD}";
+  curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${publicdns}&password=${PASSWORD}&redeploy=no";
   echo "FirstRun-Email-check"
 else
-  curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${IPADDRESS}&password=${PASSWORD}";
+  curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${publicdns}&password=${PASSWORD}&redeploy=yes";
   echo "Failover-Email-check"
 fi
 ##Autoscale sync section
