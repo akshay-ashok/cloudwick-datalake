@@ -1,5 +1,6 @@
 global:
   marketplace-ami: false
+<<<<<<< HEAD
   owner: quickstart-eng@amazon.com
   qsname: quickstart-data-lake-cloudwick
   regions:
@@ -25,3 +26,16 @@ tests:
   quickstart-data-lake-cloudwickt2:
     parameter_input: quickstart-data-lake-cloudwick-example-params2.json
     template_file: quickstart-data-lake-cloudwick-example2.template
+=======
+  owner: quickstart@amazon.com
+  #subjected to change
+  qsname: quickstart-aws-datalake
+  regions:
+    - us-east-1
+    - us-west-2
+  reporting: true
+tests:
+  defaults:
+    parameter_input: aws-datalake-defaults.json
+    template_file: aws-datalake-qs.template
+>>>>>>> 0575f0ed06c66e42f3835453c588024bf11c5eb5
