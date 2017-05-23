@@ -55,7 +55,7 @@
                   "MinLength"                   : "8",
                   "MaxLength"                   : "16",
                   "AllowedPattern"              : "[a-zA-Z]*[A-Z]+[a-zA-Z0-9]*",
-                  "ConstraintDescription"       : "DB Password must start with a letter,contain atleast one upper case letter & no special characters(Min=8;Max=20 AlphaNumerics)"
+                  "ConstraintDescription"       : "DB Password must start with a letter,contain atleast one upper case letter, one number  & no special characters(Min=8;Max=20 AlphaNumerics)"
                 },
                 "RDSClass" : {
                   "Default"                     : "db.t2.small",
@@ -245,34 +245,37 @@
                     }
                 }
             },
-
-    "VPCSecurityGroup" : {
-          "Type"        : "AWS::EC2::SecurityGroup",
-          "Properties"  : {
-             "GroupDescription"       : "Security group for RDS DB Instance.",
-             "VpcId": {
-                        "Fn::GetAtt": [
-                            "VPCStack",
-                            "Outputs.VPCID"
+    "SecurityGroupStack": {
+                "Type": "AWS::CloudFormation::Stack",
+                "Properties": {
+                    "TemplateURL": {
+                        "Fn::Join": [
+                            "/",
+                            [
+                                {
+                                    "Fn::FindInMap": [
+                                        "AWSInfoRegionMap",
+                                        {
+                                            "Ref": "AWS::Region"
+                                        },
+                                        "QuickStartS3URL"
+                                    ]
+                                },
+                                {
+                                    "Ref": "QSS3BucketName"
+                                },
+                                {
+                                    "Ref": "QSS3KeyPrefix"
+                                },
+                                "templates/qs-security-groups.template"
+                            ]
                         ]
                     },
-             "SecurityGroupIngress" : [
-                              { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "0.0.0.0/0" },
-                              { "IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0" },
-                              { "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" },
-                              { "IpProtocol" : "tcp", "FromPort" : "3306", "ToPort" : "3306", "CidrIp" : "0.0.0.0/0" },
-                              { "IpProtocol" : "tcp", "FromPort" : "5439", "ToPort" : "5439", "CidrIp" : "0.0.0.0/0" },
-                              { "IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "CidrIp" : "0.0.0.0/0" },
-                              { "IpProtocol" : "tcp", "FromPort" : "8282", "ToPort" : "8282", "CidrIp" : "0.0.0.0/0" },
-                              { "IpProtocol" : "icmp", "FromPort" : "-1", "ToPort" : "-1", "CidrIp" : "0.0.0.0/0" }
-                            ],
-             "SecurityGroupEgress"    : [ {"CidrIp": "0.0.0.0/0","IpProtocol": "-1"} ],
-             "Tags" : [
-               {"Key" : "solution", "Value" : {"Fn::Join" : [ "",[ "datalake-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  },
-               {"Key" : "Name", "Value" : {"Fn::Join" : [ "",[ "datalake-sg-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]}  }
-             ]
-          }
-      },
+                    "Parameters" : {
+                      "VPC" : {"Fn::GetAtt": ["VPCStack", "Outputs.VPCID"]}
+                    }
+                }
+            },
 
     "RDSdbSubnetGroup" : {
         "Type"          : "AWS::RDS::DBSubnetGroup",
@@ -294,7 +297,7 @@
           "MasterUserPassword"        : { "Ref"   : "DatabaseUserPassword" },
           "StorageType"               : "gp2",
           "DBSubnetGroupName"         : { "Ref"   : "RDSdbSubnetGroup" },
-          "VPCSecurityGroups"         : [ { "Ref" : "VPCSecurityGroup" } ],
+          "VPCSecurityGroups"         : [ {"Fn::GetAtt": ["SecurityGroupStack", "Outputs.RDSSecurityGroup"]} ],
           "PubliclyAccessible"        : "true",
           "MultiAZ"                   : "true",
           "DBInstanceIdentifier"      : {"Fn::Join" : [ "",[ "datalake-rds-",{ "Ref":"AWS::AccountId" },"-",{"Fn::Select": ["4",{"Fn::Split": ["-",{ "Fn::Select" : [ "2",{ "Fn::Split": ["/",{"Ref": "AWS::StackId"} ] } ] } ] } ] } ]]},
@@ -327,7 +330,7 @@
             "ClusterType"                 : { "Ref" : "RedshiftClusterType" },
             "NumberOfNodes"               : { "Fn::If"  : [ "IsMultiNodeCluster", {"Ref" : "NumberOfNodes"}, {"Ref" : "AWS::NoValue"}]},
             "ClusterParameterGroupName"   : { "Ref"     : "RedshiftClusterParameterGroup" },
-            "VpcSecurityGroupIds"         : [ { "Ref"   : "VPCSecurityGroup" }] ,
+            "VpcSecurityGroupIds"         : [ {"Fn::GetAtt": ["SecurityGroupStack", "Outputs.RedshiftSecurityGroup"]}] ,
             "ClusterSubnetGroupName"      : { "Ref" : "RedshiftClusterSubnetGroup" }
                     }
         },
@@ -758,8 +761,6 @@
                                                                        }
                                                                      }
 
-
-
                                                          ]
                                      }
 
@@ -829,7 +830,7 @@
 
        "AWS::CloudFormation::Init" : {
          "configSets" : {
-           "Install" : [ "Repset", "Install" ]
+           "Install" : [ "Repset", "Install", "Fileset" ]
          },
 
          "Repset"  :{
@@ -837,6 +838,22 @@
                                    "repoinstall" : {"command" : "rpm -Uvh https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/scripts/repo/latest.rpm"}
                                    }
                    },
+         "Fileset" : {
+                      "files" : {
+                        "/tmp/dl-auth.file": {
+                    "content": {
+                        "Fn::Join": [
+                            "",
+                            [ "DatabaseUserName|"    ,{"Ref":"DatabaseUserName"},"\n",
+                              "DatabaseUserPassword|",{"Ref":"DatabaseUserPassword"},"\n"
+                            ]
+                                  ]
+                      },
+                    "mode": "000440",
+                    "owner": "root",
+                    "group": "root"
+         }}},
+
          "Install" : {
          "packages" : {
                        "yum" : {
@@ -865,7 +882,7 @@
           "ImageId"                             : { "Fn::FindInMap" : [ "AWSAMItoRegionMap", { "Ref" : "AWS::Region" }, "Name"]},
           "IamInstanceProfile"                  : {"Ref" : "EC2WebserverIamProfile"},
           "InstanceType"                        : { "Ref" : "InstanceType" },
-          "SecurityGroups"                      : [{  "Ref" : "VPCSecurityGroup"}],
+          "SecurityGroups"                      : [{"Fn::GetAtt": ["SecurityGroupStack", "Outputs.WebserverSecurityGroup"]}],
           "UserData"            : { "Fn::Base64" : { "Fn::Join" : ["", [
             "#!/bin/bash -xe\n",
             "yum install -y aws-cfn-bootstrap\n",
@@ -876,7 +893,7 @@
             "         --configsets Install ",
             "         --region ", { "Ref" : "AWS::Region" }, "\n",
             "wget https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/scripts/configure.sh;cat configure.sh | tr -d '\r' > configure_l.sh;chmod 777 configure_l.sh;./configure_l.sh ",
-            {"Ref":"AWS::AccountId"}," ",{"Ref":"AWS::Region"}," ",{"Ref":"DatabaseUserName"}," ",{"Ref":"DatabaseUserPassword"}," ",{"Ref":"AdminEmailID"}," ",
+            {"Ref":"AWS::AccountId"}," ",{"Ref":"AWS::Region"}," ",{"Ref":"AdminEmailID"}," ",
             { "Fn::GetAtt": [ "RDSdb", "Endpoint.Address" ] }," ",
             { "Fn::GetAtt" : [ "RedshiftCluster", "Endpoint.Address" ] }," ",
             { "Fn::GetAtt": [ "RedshiftSecondaryRole", "Arn" ] }," ",{"Ref":"RDSdb"}," ",{"Ref":"DatabaseName"}," ",{"Ref":"RedshiftCluster"}," ",{"Ref":"DatabaseName"}," ",
