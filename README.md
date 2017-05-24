@@ -81,4 +81,3 @@ You can launch this CloudFormation stack in the US East (N. Virginia) / US West 
     
 7.  In Visualize tab you can visualize data from the following sources  
     a) AWS S3 data using Zeppelin b) Streaming data using Kibana
->>>>>>> 0575f0ed06c66e42f3835453c588024bf11c5eb5
