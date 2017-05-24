@@ -181,10 +181,18 @@
 
 
   "Mappings"  : {
-              "AWSAMItoRegionMap" : {
-                                  "us-east-1"      : {"Name" :  "ami-7a3dd76c"},
-                                  "us-west-2"      : {"Name" :  "ami-8a72cdea"}
-                            },
+              "AWSAMItoRegionMap" :
+              {
+                "AMI": {
+                        "AMLXPVM": "amazon/amzn-ami-pv-2016.09.1.20170119-x86_64-ebs"
+                        },
+                "us-east-1": {
+                        "AMLXPVM" :  "ami-7a3dd76c"
+                      },
+                "us-west-2": {
+                        "AMLXPVM" :  "ami-8a72cdea"
+                      }
+              },
 
               "RDSEngineVersionMapping" : {
                 "mysql"                       : { "latest" : "5.7"}
@@ -879,7 +887,7 @@
                  }
             },
        "Properties": {
-          "ImageId"                             : { "Fn::FindInMap" : [ "AWSAMItoRegionMap", { "Ref" : "AWS::Region" }, "Name"]},
+          "ImageId"                             : { "Fn::FindInMap" : [ "AWSAMItoRegionMap", { "Ref" : "AWS::Region" }, "AMLXPVM"]},
           "IamInstanceProfile"                  : {"Ref" : "EC2WebserverIamProfile"},
           "InstanceType"                        : { "Ref" : "InstanceType" },
           "SecurityGroups"                      : [{"Fn::GetAtt": ["SecurityGroupStack", "Outputs.WebserverSecurityGroup"]}],
