@@ -12,6 +12,10 @@
         "ParameterValue": "m1.medium"
     },
     {
+        "ParameterKey": "NATInstanceType",
+        "ParameterValue": "t2.micro"
+    },
+    {
         "ParameterKey": "DatabaseName",
         "ParameterValue": "awsdatalake"
     },
@@ -42,5 +46,9 @@
     {
         "ParameterKey": "NumberOfNodes",
         "ParameterValue": "1"
+    },
+    {
+        "ParameterKey": "KeyPairName",
+        "ParameterValue": "$[alfred_getkeypair]"
     }
 ]
