@@ -21,6 +21,9 @@ STACKNAME="${15}"
 WAITCONDITION="${16}"
 STREAMNAME="${17}"
 CLOUDTRAIL="${18}"
+QuickStartS3URL="${19}"
+QSS3BucketName="${20}"
+QSS3KeyPrefix="${21}"
 REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTERIDENTIFIER}"
 WORKERGROUP="datalakeworkergroup-${ACCOUNT_ID}-${STACKPART}"
 TASKRUNNER="datalaketaskrunner-${ACCOUNT_ID}-${STACKPART}"
@@ -62,13 +65,13 @@ mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDSHOST[0]}" "${RDS_DATABASE}" -e "
 if ! aws s3 cp s3://${BUCKET}/multiAZ/instance.active instance.active --region ${REGION} --quiet --sse AES256
 then
 # Setup catalog lambda code
-wget -A.zip https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/scripts/lambdas/writetoES.zip; mkdir -p /var/www/html/lambes; unzip writetoES.zip -d /var/www/html/lambes; sed -ie "s|oldelasticsearchep|${ELASTICSEARCHEP}|g" /var/www/html/lambes/writetoES/lambda_function.py; rm -rf writetoES.zip;cd /var/www/html/lambes/writetoES;zip -r writetoESX.zip *;aws s3 cp writetoESX.zip s3://$BUCKET/lambdas/writetoESX.zip --region $REGION --sse AES256;
+wget -A.zip ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/scripts/lambdas/writetoES.zip; mkdir -p /var/www/html/lambes; unzip writetoES.zip -d /var/www/html/lambes; sed -ie "s|oldelasticsearchep|${ELASTICSEARCHEP}|g" /var/www/html/lambes/writetoES/lambda_function.py; rm -rf writetoES.zip;cd /var/www/html/lambes/writetoES;zip -r writetoESX.zip *;aws s3 cp writetoESX.zip s3://$BUCKET/lambdas/writetoESX.zip --region $REGION --sse AES256;
 
 /opt/aws/bin/cfn-signal -e 0 ${WAITCONDITION}
 echo "FirstRun-Lambda-signal-check"
 fi
 ##########WebApp configuration########################################
-wget -A.zip https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/scripts/web/datalake.zip; unzip datalake.zip -d /var/www/html; chmod 777 /var/www/html/home/welcome*;
+wget -A.zip ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/scripts/web/datalake.zip; unzip datalake.zip -d /var/www/html; chmod 777 /var/www/html/home/welcome*;
 rm -rf /etc/php.ini; mv /var/www/html/configurations/php.ini /etc/php.ini;chown apache:apache /etc/php.ini; chown -R apache:apache /var/www/html;service httpd restart;
 
 
@@ -87,7 +90,7 @@ echo "FirstRun-ElasticsearchIndexCreation-check"
 fi
 
 ######TaskRunner#######################################################
-mkdir -p /home/ec2-user/TaskRunner; wget -A.jar https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/scripts/resources/TaskRunner-1.0.jar; mv TaskRunner-1.0.jar /home/ec2-user/TaskRunner/.; cd /home/ec2-user/TaskRunner; java -jar TaskRunner-1.0.jar --workerGroup=${WORKERGROUP} --region=${REGION} --logUri=s3://${BUCKET}/TaskRunnerLogs --taskrunnerId ${TASKRUNNER} > TaskRunner.out 2>&1 < /dev/null &
+mkdir -p /home/ec2-user/TaskRunner; wget -A.jar ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/scripts/resources/TaskRunner-1.0.jar; mv TaskRunner-1.0.jar /home/ec2-user/TaskRunner/.; cd /home/ec2-user/TaskRunner; java -jar TaskRunner-1.0.jar --workerGroup=${WORKERGROUP} --region=${REGION} --logUri=s3://${BUCKET}/TaskRunnerLogs --taskrunnerId ${TASKRUNNER} > TaskRunner.out 2>&1 < /dev/null &
 
 
 cat <<EOT >> /var/www/html/root/datalake.ini

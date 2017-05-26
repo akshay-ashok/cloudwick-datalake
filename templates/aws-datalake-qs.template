@@ -201,11 +201,11 @@
               "AWSInfoRegionMap": {
                           "us-east-1": {
                               "Partition": "aws",
-                              "QuickStartS3URL": "https://s3.amazonaws.com"
+                              "QuickStartS3URL": "https://s3-us-west-2.amazonaws.com"
                           },
                           "us-west-2": {
                               "Partition": "aws",
-                              "QuickStartS3URL": "https://s3.amazonaws.com"
+                              "QuickStartS3URL": "https://s3-us-west-2.amazonaws.com"
                           }
                         }
       },
@@ -843,7 +843,7 @@
 
          "Repset"  :{
                      "commands" : {
-                                   "repoinstall" : {"command" : "rpm -Uvh https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/scripts/repo/latest.rpm"}
+                                   "repoinstall" : {"command" : { "Fn::Join": ["",["rpm -Uvh"," ",{ "Fn::FindInMap": ["AWSInfoRegionMap", {"Ref": "AWS::Region"},"QuickStartS3URL"]},"/",{"Ref": "QSS3BucketName"},"/",{"Ref": "QSS3KeyPrefix"},"/scripts/repo/latest.rpm"]]} }
                                    }
                    },
          "Fileset" : {
@@ -891,6 +891,7 @@
           "IamInstanceProfile"                  : {"Ref" : "EC2WebserverIamProfile"},
           "InstanceType"                        : { "Ref" : "InstanceType" },
           "SecurityGroups"                      : [{"Fn::GetAtt": ["SecurityGroupStack", "Outputs.WebserverSecurityGroup"]}],
+          "KeyName":{"Ref":"KeyPairName"},
           "UserData"            : { "Fn::Base64" : { "Fn::Join" : ["", [
             "#!/bin/bash -xe\n",
             "yum install -y aws-cfn-bootstrap\n",
@@ -900,14 +901,15 @@
             "         --resource LaunchConfig ",
             "         --configsets Install ",
             "         --region ", { "Ref" : "AWS::Region" }, "\n",
-            "wget https://github.com/akshay-ashok/cloudwick-datalake/raw/datalake-customize/scripts/configure.sh;cat configure.sh | tr -d '\r' > configure_l.sh;chmod 777 configure_l.sh;./configure_l.sh ",
+            "wget "," ",{"Fn::FindInMap": ["AWSInfoRegionMap", {"Ref": "AWS::Region"},"QuickStartS3URL"]},"/",{"Ref": "QSS3BucketName"},"/",{"Ref": "QSS3KeyPrefix"},"/","scripts/configure.sh;cat configure.sh | tr -d '\r' > configure_l.sh;chmod 777 configure_l.sh;./configure_l.sh ",
             {"Ref":"AWS::AccountId"}," ",{"Ref":"AWS::Region"}," ",{"Ref":"AdminEmailID"}," ",
             { "Fn::GetAtt": [ "RDSdb", "Endpoint.Address" ] }," ",
             { "Fn::GetAtt" : [ "RedshiftCluster", "Endpoint.Address" ] }," ",
             { "Fn::GetAtt": [ "RedshiftSecondaryRole", "Arn" ] }," ",{"Ref":"RDSdb"}," ",{"Ref":"DatabaseName"}," ",{"Ref":"RedshiftCluster"}," ",{"Ref":"DatabaseName"}," ",
             {"Fn::GetAtt" : ["ElasticsearchDomain","DomainEndpoint"]}," ",
             {"Ref":"DataLakeS3Bucket"}," ",{"Ref":"AWS::StackId"}," ",{"Fn::Select": ["4",{"Fn::Split": ["-",{"Fn::Select" : [ "2",{"Fn::Split": ["/",{"Ref": "AWS::StackId"}]}]}]}]}," ",
-            {"Ref":"AWS::StackName"}," ",{"Fn::Base64":{"Ref" : "WebserverWaitHandle"}}," ",{"Ref":"DatalakeFirehoseStream"}," ",{"Ref" : "DatalakeCloudtrail"}," \n"
+            {"Ref":"AWS::StackName"}," ",{"Fn::Base64":{"Ref" : "WebserverWaitHandle"}}," ",{"Ref":"DatalakeFirehoseStream"}," ",{"Ref" : "DatalakeCloudtrail"}," ",
+            {"Fn::FindInMap": ["AWSInfoRegionMap", {"Ref": "AWS::Region"},"QuickStartS3URL"]}," ",{"Ref": "QSS3BucketName"}," ",{"Ref": "QSS3KeyPrefix"},"\n"
                   ]]}},
 
            "BlockDeviceMappings" : [
