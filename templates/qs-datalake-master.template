@@ -1,0 +1,377 @@
+{
+  "AWSTemplateFormatVersion"  : "2010-09-09",
+  "Description"               : "Data lake quick start deployment template",
+  "Parameters"                : {
+
+                "AdministratorName" : {
+                  "Description"           : "Admin name",
+                  "Type"                  : "String",
+                  "ConstraintDescription" : "Can contain only ASCII characters.",
+                  "Default"               : "AdminName"
+                },
+                "AdminEmailID"          : {
+                  "Description"           : "Admin email id - email will be sent to this address on stack completion with further instructions( check inbox/spam in about 15-20mins)",
+                  "Type"                  : "String",
+                  "AllowedPattern"        : "^[a-z0-9]+(\\.[_a-z0-9]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,15})$",
+                  "ConstraintDescription" : "Can contain only ASCII characters."
+
+                },
+                "InstanceType"      : {
+                      "Description"           : "EC2 WebServer instance type for datalake web portal",
+                      "Type"                  : "String",
+                      "Default"               : "m1.medium",
+                      "AllowedValues"         : [ "m1.medium", "m1.large", "m1.xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge", "m3.medium", "m3.large", "m3.xlarge", "m3.2xlarge", "c1.medium", "c1.xlarge", "c3.large", "c3.xlarge", "c3.2xlarge", "c3.4xlarge", "c3.8xlarge"],
+                      "ConstraintDescription" : "Must be a valid EC2 instance type"
+                },
+                "NATInstanceType"      : {
+                      "Description"           : "Amazon EC2 instance type for the NAT instances. This is used only if the region does not support NAT gateways",
+                      "Type"                  : "String",
+                      "Default"               : "t2.micro",
+                      "AllowedValues"         : [ "t2.nano", "t2.micro", "t2.small", "t2.medium", "t2.large", "m3.medium", "m3.large", "m4.large" ],
+                      "ConstraintDescription" : "Must be a valid EC2 instance type"
+                },
+                "DatabaseName": {
+                  "Default"                     : "awsdatalakeqs",
+                  "Description"                 : "DB Name must start with a letter & no special characters(MinLength=4;MaxLength=20)",
+                  "Type"                        : "String",
+                  "MinLength"                   : "4",
+                  "MaxLength"                   : "16",
+                  "AllowedPattern"              : "[a-zA-Z][a-zA-Z0-9]*",
+                  "ConstraintDescription"       : "DB name must start with a letter & no special characters(Min=4;Max=20 AlphaNumerics)"
+                },
+                "DatabaseUserName": {
+                  "Default"                     : "admin",
+                  "Description"                 : "DB Username must start with a letter & no special characters(MinLength=4;MaxLength=20)",
+                  "Type"                        : "String",
+                  "MinLength"                   : "4",
+                  "MaxLength"                   : "16",
+                  "AllowedPattern"              : "[a-zA-Z][a-zA-Z0-9]*",
+                  "ConstraintDescription"       : "DB Username must start with a letter & no special characters(Min=4;Max=20 AlphaNumerics)"
+                },
+                "DatabaseUserPassword": {
+                  "Description"                 : "DB Password must start with a letter,contain atleast one upper case letter & no special characters(MinLength=8;MaxLength=20)",
+                  "Type"                        : "String",
+                  "NoEcho"                      : "true",
+                  "MinLength"                   : "8",
+                  "MaxLength"                   : "16",
+                  "AllowedPattern"              : "[a-zA-Z]*[A-Z]+[a-zA-Z0-9]*",
+                  "ConstraintDescription"       : "DB Password must start with a letter,contain atleast one upper case letter, one number  & no special characters(Min=8;Max=20 AlphaNumerics)"
+                },
+                "RDSClass" : {
+                  "Default"                     : "db.t2.small",
+                  "Description"                 : "Database instance class",
+                  "Type"                        : "String",
+                  "AllowedValues"               : [ "db.t2.micro", "db.t2.small", "db.t2.medium", "db.t2.large", "db.m4.large", "db.m4.xlarge", "db.m4.2xlarge", "db.m4.4xlarge", "db.m4.10xlarge" ],
+                  "ConstraintDescription"       : "must select a valid RDS database class."
+                },
+                "RDSAllocatedStorage" : {
+                  "Default"                     : "5",
+                  "Description"                 : "Size of the database(Gb) Range: 5~1024Gb",
+                  "Type"                        : "Number",
+                  "MinValue"                    : "5",
+                  "MaxValue"                    : "1024",
+                  "ConstraintDescription"       : "RDSAllocatedStorage must be between 5 and 1024Gb."
+                },
+                "RedshiftNodeType" : {
+                  "Default"                     : "dc1.large",
+                  "Description"                 : "Redshift node type",
+                  "Type"                        : "String",
+                  "AllowedValues"               : [ "dc1.large", "dw.hs1.xlarge","dw1.xlarge", "dw1.8xlarge", "dw2.large", "dw2.8xlarge"],
+                  "ConstraintDescription"       : "must select a valid Redshift node type."
+                },
+                "RedshiftClusterType" : {
+                  "Default"                     : "single-node",
+                  "Description"                 : "Redshift instance type",
+                  "Type"                        : "String",
+                  "AllowedValues"               : [ "single-node", "multi-node"],
+                  "ConstraintDescription"       : "must select a valid Redshift cluster type."
+                },
+                "NumberOfNodes" : {
+                  "Description"                 : "Number of nodes in the redshift cluster(=1 if single-node)",
+                  "Type"                        : "Number",
+                  "Default"                     : "1"
+                },
+                "QSS3BucketName": {
+                  "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
+                  "ConstraintDescription": "AWS Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+                  "Default": "quickstart-reference",
+                  "Description": "S3 bucket name for the AWS Quick Start assets.AWS Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+                  "Type": "String"
+              },
+                "QSS3KeyPrefix": {
+                    "AllowedPattern": "^[0-9a-zA-Z-]+(/[0-9a-zA-Z-]+)*$",
+                    "ConstraintDescription": "AWS Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/). It cannot start or end with forward slash (/) because they are automatically appended.",
+                    "Default": "datalake-latest",
+                    "Description": "S3 key prefix for the AWS Quick Start assets.AWS Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/). It cannot start or end with forward slash (/) because they are automatically appended.",
+                    "Type": "String"
+                },
+
+                "KeyPairName": {
+                        "Description"           : "Name of an existing EC2 KeyPair to enable SSH access to the NAT instance",
+                        "Type"                  : "AWS::EC2::KeyPair::KeyName",
+                        "ConstraintDescription" : "Can contain only ASCII characters."
+                  },
+
+                "AvailabilityZones": {
+                      "Description": "List of Availability Zones to use for the subnets in the VPC(Minimum 2 AZs required). Note: The logical order is preserved.",
+                      "Type": "List<AWS::EC2::AvailabilityZone::Name>"
+                  },
+                "NoOfAzs"         : {
+                      "Description": "Number of Availability Zones to use in the VPC. This must match your selections in the list of Availability Zones parameter.",
+                      "Type"      : "String",
+                      "Default"    : "2"
+                  }
+
+  },
+
+  "Metadata" : {
+    "AWS::CloudFormation::Interface" : {
+    "ParameterGroups" : [
+                  {
+                    "Label" : { "default" : "Adminstrator Configuration" },
+                    "Parameters" : [ "AdministratorName", "AdminEmailID"]
+                  },
+                  {
+                    "Label" : { "default":"Database Configuration" },
+                    "Parameters" : [ "DatabaseName", "DatabaseUserName", "DatabaseUserPassword" ]
+                  },
+                  {
+                    "Label" : { "default":"RDS Configuration" },
+                    "Parameters" : [ "RDSClass", "RDSAllocatedStorage" ]
+                  },
+                  {
+                    "Label" : { "default":"RedShift Configuration" },
+                    "Parameters" : [ "RedshiftClusterType" , "RedshiftNodeType", "NumberOfNodes" ]
+                  },
+                  {
+                    "Label" : { "default":"Quickstart Bucket Configuration" },
+                    "Parameters" : [ "QSS3BucketName" , "QSS3KeyPrefix" ]
+                  },
+                  {
+                    "Label" : { "default" : "Availability Zone Configuration" },
+                    "Parameters" : [ "AvailabilityZones", "NoOfAzs"]
+                  },
+                  {
+                    "Label" : { "default" : "Amazon EC2 Configuration" },
+                    "Parameters" : [ "KeyPairName", "NATInstanceType", "InstanceType" ]
+                  }
+    ],
+    "ParameterLabels" : {
+                    "AdministratorName"        : { "default" : "Administrator Name" },
+                    "AdminEmailID"             : { "default" : "Administrator Email"},
+                    "DatabaseUserName"         : { "default" : "Database User Name"},
+                    "DatabaseUserPassword"     : { "default" : "Database User Password"},
+                    "DatabaseName"             : { "default" : "Database Name"},
+                    "RDSClass"                 : { "default" : "RDS database type"},
+                    "RDSAllocatedStorage"      : { "default" : "RDS database storage"},
+                    "RedshiftClusterType"      : { "default" : "Redshift cluster type"},
+                    "RedshiftNodeType"         : { "default" : "Redshift node type"},
+                    "InstanceType"             : { "default" : "EC2 webserver type"},
+                    "NoOfAzs"                  : { "default" : "Number of AvailabilityZones"},
+                    "NATInstanceType"          : { "default" : "NAT Instance type"}
+    }
+  }
+},
+   "Conditions" : {
+                "IsMultiNodeCluster" : {
+                  "Fn::Equals" : [{ "Ref" : "RedshiftClusterType" }, "multi-node" ]
+                }
+    },
+
+
+
+  "Mappings"  : {
+              "AWSAMItoRegionMap" : {
+                                  "us-east-1"      : {"Name" :  "ami-7a3dd76c"},
+                                  "us-west-2"      : {"Name" :  "ami-8a72cdea"}
+                            },
+
+              "RDSEngineVersionMapping" : {
+                "mysql"                       : { "latest" : "5.7"}
+                            },
+
+              "AWSInfoRegionMap": {
+                          "us-east-1": {
+                              "Partition": "aws",
+                              "QuickStartS3URL": "https://s3.amazonaws.com"
+                          },
+                          "us-west-2": {
+                              "Partition": "aws",
+                              "QuickStartS3URL": "https://s3.amazonaws.com"
+                          }
+                        }
+      },
+  "Resources" : {
+
+    "VPCStack": {
+                "Type": "AWS::CloudFormation::Stack",
+                "Properties": {
+                    "TemplateURL": {
+                        "Fn::Join": [
+                            "/",
+                            [
+                                {
+                                    "Fn::FindInMap": [
+                                        "AWSInfoRegionMap",
+                                        {
+                                            "Ref": "AWS::Region"
+                                        },
+                                        "QuickStartS3URL"
+                                    ]
+                                },
+                                {
+                                    "Ref": "QSS3BucketName"
+                                },
+                                {
+                                    "Ref": "QSS3KeyPrefix"
+                                },
+                                "submodules/quickstart-aws-vpc/templates/aws-vpc.template"
+                            ]
+                        ]
+                    },
+                    "Parameters": {
+                        "AvailabilityZones": {
+                            "Fn::Join": [
+                                ",",
+                                {
+                                    "Ref": "AvailabilityZones"
+                                }
+                            ]
+                        },
+                        "KeyPairName": {
+                            "Ref": "KeyPairName"
+                        },
+                        "NumberOfAZs": { "Ref" : "NoOfAzs" }
+                    }
+                }
+            },
+    "SecurityGroupStack": {
+                "Type": "AWS::CloudFormation::Stack",
+                "Properties": {
+                    "TemplateURL": {
+                        "Fn::Join": [
+                            "/",
+                            [
+                                {
+                                    "Fn::FindInMap": [
+                                        "AWSInfoRegionMap",
+                                        {
+                                            "Ref": "AWS::Region"
+                                        },
+                                        "QuickStartS3URL"
+                                    ]
+                                },
+                                {
+                                    "Ref": "QSS3BucketName"
+                                },
+                                {
+                                    "Ref": "QSS3KeyPrefix"
+                                },
+                                "templates/qs-security-groups.template"
+                            ]
+                        ]
+                    },
+                    "Parameters" : {
+                      "VPC" : {"Fn::GetAtt": ["VPCStack", "Outputs.VPCID"]}
+                    }
+                }
+            },
+
+
+            "DatalakeResourceStack": {
+                        "Type": "AWS::CloudFormation::Stack",
+                        "Properties": {
+                            "TemplateURL": {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Fn::FindInMap": [
+                                                "AWSInfoRegionMap",
+                                                {
+                                                    "Ref": "AWS::Region"
+                                                },
+                                                "QuickStartS3URL"
+                                            ]
+                                        },
+                                        {
+                                            "Ref": "QSS3BucketName"
+                                        },
+                                        {
+                                            "Ref": "QSS3KeyPrefix"
+                                        },
+                                        "templates/qs-datalake-resources.template"
+                                    ]
+                                ]
+                            },
+                            "Parameters" : {
+
+
+                              "SubnetId1" : {"Fn::GetAtt": ["VPCStack", "Outputs.PrivateSubnet1AID"]},
+                              "SubnetId2" : {"Fn::GetAtt": ["VPCStack", "Outputs.PrivateSubnet2AID"]},
+                              "DBName"                    : {"Ref": "DatabaseName"},
+                              "AllocatedStorage"          : { "Ref"   : "RDSAllocatedStorage" },
+                              "DBInstanceClass"           : { "Ref"   : "RDSClass" },
+                              "MasterUsername"            : { "Ref"   : "DatabaseUserName" } ,
+                              "MasterUserPassword"        : { "Ref"   : "DatabaseUserPassword" },
+                              "RDSVpcSecurityGroups"        : {"Fn::GetAtt": ["SecurityGroupStack", "Outputs.RDSSecurityGroup"]},
+
+                              "NodeType"                    : { "Ref" : "RedshiftNodeType" },
+                              "ClusterType"                 : { "Ref" : "RedshiftClusterType" },
+                              "NumberOfNodes"               : {"Ref" : "NumberOfNodes"},
+                              "RedshiftVpcSecurityGroupIds" : {"Fn::GetAtt": ["SecurityGroupStack", "Outputs.RedshiftSecurityGroup"]} ,
+
+                              "VPCZoneIdentifier1"         : {"Fn::GetAtt": ["VPCStack", "Outputs.PublicSubnet1ID"]},
+                              "VPCZoneIdentifier2"         : {"Fn::GetAtt": ["VPCStack", "Outputs.PublicSubnet2ID"]},
+                              "InstanceType"               : { "Ref" : "InstanceType" },
+                              "WebserverSecurityGroups"    : {"Fn::GetAtt": ["SecurityGroupStack", "Outputs.WebserverSecurityGroup"]} ,
+                              "AdminEmailID"               : {"Ref":"AdminEmailID"},
+                              "QSS3BucketName"             : {"Ref":"QSS3BucketName"},
+                              "QSS3KeyPrefix"              : {"Ref":"QSS3KeyPrefix"}
+
+                            }
+                        }
+                    }
+
+
+
+
+
+
+
+  },
+  "Outputs" : {
+                "VPCInfo":
+                {
+                  "Description"                : "VPC ID",
+                  "Value"                      : {"Fn::GetAtt": ["VPCStack", "Outputs.VPCID"]}
+                },
+
+                "PrivateSubnet1":
+                {
+                  "Description"                : "Private Subnet ID",
+                  "Value"                      : {"Fn::GetAtt": ["VPCStack", "Outputs.PrivateSubnet1AID"]}
+                },
+
+                "PrivateSubnet2":
+                {
+                  "Description"                : "Private Subnet ID",
+                  "Value"                      : {"Fn::GetAtt": ["VPCStack", "Outputs.PrivateSubnet2AID"]}
+                },
+
+                "PublicSubnet1":
+                {
+                  "Description"                : "Public Subnet ID",
+                  "Value"                      : {"Fn::GetAtt": ["VPCStack", "Outputs.PublicSubnet1ID"]}
+                },
+
+                "PublicSubnet2":
+                {
+                  "Description"                : "Public Subnet ID",
+                  "Value"                      : {"Fn::GetAtt": ["VPCStack", "Outputs.PublicSubnet2ID"]}
+                }
+
+
+
+  }
+}
