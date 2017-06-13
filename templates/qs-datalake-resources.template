@@ -716,14 +716,9 @@
 
        "AWS::CloudFormation::Init" : {
          "configSets" : {
-           "Install" : [ "Repset", "Install", "Fileset" ]
+           "Install" : [ "Install", "Fileset" ]
          },
 
-         "Repset"  :{
-                     "commands" : {
-                                   "repoinstall" : {"command" : { "Fn::Join": ["",["rpm -Uvh"," ",{ "Fn::FindInMap": ["AWSInfoRegionMap", {"Ref": "AWS::Region"},"QuickStartS3URL"]},"/",{"Ref": "QSS3BucketName"},"/",{"Ref": "QSS3KeyPrefix"},"/scripts/repo/latest.rpm"]]} }
-                                   }
-                   },
          "Fileset" : {
                       "files" : {
                         "/tmp/dl-auth.file": {
@@ -772,13 +767,14 @@
           "UserData"            : { "Fn::Base64" : { "Fn::Join" : ["", [
             "#!/bin/bash -xe\n",
             "yum install -y aws-cfn-bootstrap\n",
+            "wget "," ",{"Fn::FindInMap": ["AWSInfoRegionMap",{"Ref": "AWS::Region"}, "QuickStartS3URL"]},"/",{ "Ref": "QSS3BucketName"},"/",{ "Ref": "QSS3KeyPrefix"},"/scripts/repo/dlpackages.repo -O /etc/yum.repos.d/dlpackages.repo\n",
             "yum clean all\n",
             "/opt/aws/bin/cfn-init ",
             "         --stack ", { "Ref" : "AWS::StackName" },
             "         --resource LaunchConfig ",
             "         --configsets Install ",
             "         --region ", { "Ref" : "AWS::Region" }, "\n",
-            "wget "," ",{"Fn::FindInMap": ["AWSInfoRegionMap", {"Ref": "AWS::Region"},"QuickStartS3URL"]},"/",{"Ref": "QSS3BucketName"},"/",{"Ref": "QSS3KeyPrefix"},"/","scripts/configure.sh;cat configure.sh | tr -d '\r' > configure_l.sh;chmod 777 configure_l.sh;./configure_l.sh ",
+            "wget "," ",{"Fn::FindInMap": ["AWSInfoRegionMap", {"Ref": "AWS::Region"},"QuickStartS3URL"]},"/",{ "Ref": "QSS3BucketName"},"/",{ "Ref": "QSS3KeyPrefix"},"/scripts/configure.sh;cat configure.sh | tr -d '\r' > configure_l.sh;chmod 777 configure_l.sh;./configure_l.sh ",
             {"Ref":"AWS::AccountId"}," ",{"Ref":"AWS::Region"}," ",{"Ref":"AdminEmailID"}," ",
             { "Fn::GetAtt": [ "RDSdb", "Endpoint.Address" ] }," ",
             { "Fn::GetAtt" : [ "RedshiftCluster", "Endpoint.Address" ] }," ",
