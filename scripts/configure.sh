@@ -38,8 +38,8 @@ publicdns=`curl http://169.254.169.254/latest/meta-data/public-hostname`
 aws ec2 create-tags --resources ${instanceid} --tags 'Key'="Name",'Value'="datalake-webserver-${ACCOUNT_ID}-${STACKPART}" --region ${REGION}
 aws ec2 create-tags --resources ${instanceid} --tags 'Key'="solution",'Value'="datalake-${ACCOUNT_ID}-${STACKPART}" --region ${REGION}
 
-setenforce 0
-chkconfig httpd on && chkconfig mysqld on
+setenforce 0 && echo "Completed disabling the SELINUX"
+chkconfig httpd on && chkconfig mysqld on && echo "Completed chkconfig on Mysql and httpd startup"
 
 aws datapipeline create-default-roles
 
@@ -55,12 +55,15 @@ y
 y
 EOF
 
+
 mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDS_ENDPOINT}" "${RDS_DATABASE}" -e "CREATE TABLE IF NOT EXISTS ${RDS_DATABASE}.user(username varchar(200),password varchar(200), PRIMARY KEY (username));"
 mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDS_ENDPOINT}" "${RDS_DATABASE}" -e "CREATE TABLE IF NOT EXISTS ${RDS_DATABASE}.buckets(bucketname varchar(200),statementid varchar(200), PRIMARY KEY (bucketname));"
 mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDS_ENDPOINT}" "${RDS_DATABASE}" -e "INSERT INTO ${RDS_DATABASE}.user(username,password) VALUES ('${ADMIN_ID}',MD5('${PASSWORD}'));"
 
+
 if ! aws s3 cp s3://${BUCKET}/multiAZ/instance.active instance.active --region ${REGION} --quiet --sse AES256
 then
+
 # Setup catalog lambda code
 wget -A.zip ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/scripts/lambdas/writetoES.zip; mkdir -p /var/www/html/lambes; unzip writetoES.zip -d /var/www/html/lambes; sed -ie "s|oldelasticsearchep|${ELASTICSEARCHEP}|g" /var/www/html/lambes/writetoES/lambda_function.py; rm -rf writetoES.zip;cd /var/www/html/lambes/writetoES;zip -r writetoESX.zip *;aws s3 cp writetoESX.zip s3://$BUCKET/lambdas/writetoESX.zip --region $REGION --sse AES256;
 
@@ -87,6 +90,7 @@ fi
 
 ######TaskRunner#######################################################
 mkdir -p /home/ec2-user/TaskRunner; wget -A.jar ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/scripts/resources/TaskRunner-1.0.jar; mv TaskRunner-1.0.jar /home/ec2-user/TaskRunner/.; cd /home/ec2-user/TaskRunner; java -jar TaskRunner-1.0.jar --workerGroup=${WORKERGROUP} --region=${REGION} --logUri=s3://${BUCKET}/TaskRunnerLogs --taskrunnerId ${TASKRUNNER} > TaskRunner.out 2>&1 < /dev/null &
+
 
 cat <<EOT >> /var/www/html/root/datalake.ini
 [defaults]
@@ -132,12 +136,14 @@ EOT
 
 chown -R apache:apache /var/www/
 
+
 if ! aws s3 cp s3://${BUCKET}/multiAZ/instance.active instance.active --region ${REGION} --quiet --sse AES256
 then
 #attach iam role to redshift
 curl http://${IPADDRESS}/scripts/attach-iam-role-to-redshift.php;
 echo "FirstRun-RedshiftRoleModify-check"
 fi
+
 
 #Sending out email to the Administrator
 if ! aws s3 cp s3://${BUCKET}/multiAZ/instance.active instance.active --region ${REGION} --quiet --sse AES256
