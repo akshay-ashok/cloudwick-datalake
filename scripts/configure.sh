@@ -1,4 +1,5 @@
 #!/bin/bash -e
+
 ##Cloudformation User data configuration script
 IPADDRESS=`curl http://169.254.169.254/latest/meta-data/public-ipv4`
 ACCOUNT_ID="$1"
@@ -28,9 +29,8 @@ REDSHIFTARN="arn:aws:redshift:${REGION}:${ACCOUNT_ID}:cluster:${REDSHIFT_CLUSTER
 WORKERGROUP="datalakeworkergroup-${ACCOUNT_ID}-${STACKPART}"
 TASKRUNNER="datalaketaskrunner-${ACCOUNT_ID}-${STACKPART}"
 
-
-mkdir -p /var/www/html; chown -R apache:apache /var/www/html;
-aws configure set default.region ${REGION};
+mkdir -p /var/www/html; chown -R apache:apache /var/www/html
+aws configure set default.region ${REGION}
 
 #Instance tagging
 instanceid=`curl http://169.254.169.254/latest/meta-data/instance-id`
@@ -38,11 +38,10 @@ publicdns=`curl http://169.254.169.254/latest/meta-data/public-hostname`
 aws ec2 create-tags --resources ${instanceid} --tags 'Key'="Name",'Value'="datalake-webserver-${ACCOUNT_ID}-${STACKPART}" --region ${REGION}
 aws ec2 create-tags --resources ${instanceid} --tags 'Key'="solution",'Value'="datalake-${ACCOUNT_ID}-${STACKPART}" --region ${REGION}
 
+setenforce 0
+chkconfig httpd on && chkconfig mysqld on
 
-setenforce 0;chkconfig httpd on;chkconfig mysqld on;
-RDSHOST=(${RDS_ENDPOINT//:/ })
-
-aws datapipeline create-default-roles;
+aws datapipeline create-default-roles
 
 #Mysql configuration
 /usr/bin/mysql_secure_installation<<EOF
@@ -56,11 +55,9 @@ y
 y
 EOF
 
-
-mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDSHOST[0]}" "${RDS_DATABASE}" -e "CREATE TABLE IF NOT EXISTS ${RDS_DATABASE}.user(username varchar(200),password varchar(200), PRIMARY KEY (username));"
-mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDSHOST[0]}" "${RDS_DATABASE}" -e "CREATE TABLE IF NOT EXISTS ${RDS_DATABASE}.buckets(bucketname varchar(200),statementid varchar(200), PRIMARY KEY (bucketname));"
-mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDSHOST[0]}" "${RDS_DATABASE}" -e "INSERT INTO ${RDS_DATABASE}.user(username,password) VALUES ('${ADMIN_ID}',MD5('${PASSWORD}'));"
-
+mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDS_ENDPOINT}" "${RDS_DATABASE}" -e "CREATE TABLE IF NOT EXISTS ${RDS_DATABASE}.user(username varchar(200),password varchar(200), PRIMARY KEY (username));"
+mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDS_ENDPOINT}" "${RDS_DATABASE}" -e "CREATE TABLE IF NOT EXISTS ${RDS_DATABASE}.buckets(bucketname varchar(200),statementid varchar(200), PRIMARY KEY (bucketname));"
+mysql -u ${ADMIN_ID} -p${PASSWORD} --host "${RDS_ENDPOINT}" "${RDS_DATABASE}" -e "INSERT INTO ${RDS_DATABASE}.user(username,password) VALUES ('${ADMIN_ID}',MD5('${PASSWORD}'));"
 
 if ! aws s3 cp s3://${BUCKET}/multiAZ/instance.active instance.active --region ${REGION} --quiet --sse AES256
 then
@@ -70,15 +67,14 @@ wget -A.zip ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/scripts/lambda
 /opt/aws/bin/cfn-signal -e 0 ${WAITCONDITION}
 echo "FirstRun-Lambda-signal-check"
 fi
+
+
 ##########WebApp configuration########################################
 wget -A.zip ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/scripts/web/datalake.zip; unzip datalake.zip -d /var/www/html; chmod 777 /var/www/html/home/welcome*;
 rm -rf /etc/php.ini; mv /var/www/html/configurations/php.ini /etc/php.ini;chown apache:apache /etc/php.ini; chown -R apache:apache /var/www/html;service httpd restart;
 
-
-
 #Zeppelin configuration
-wget -A.tgz http://apache.claz.org/zeppelin/zeppelin-0.7.0/zeppelin-0.7.0-bin-all.tgz; mkdir -p /var/www/html/zeppelin; tar -xf zeppelin-0.7.0-bin-all.tgz -C /var/www/html/zeppelin; chown -R apache /var/www/html/zeppelin;/var/www/html/zeppelin/zeppelin-0.7.0-bin-all/bin/zeppelin-daemon.sh start
-
+wget -A.tgz http://apache.claz.org/zeppelin/zeppelin-0.7.2/zeppelin-0.7.2-bin-all.tgz; mkdir -p /var/www/html/zeppelin; tar -xf zeppelin-0.7.2-bin-all.tgz -C /var/www/html/zeppelin; chown -R apache /var/www/html/zeppelin;/var/www/html/zeppelin/zeppelin-0.7.2-bin-all/bin/zeppelin-daemon.sh start
 
 if ! aws s3 cp s3://${BUCKET}/multiAZ/instance.active instance.active --region ${REGION} --quiet --sse AES256
 then
@@ -91,7 +87,6 @@ fi
 
 ######TaskRunner#######################################################
 mkdir -p /home/ec2-user/TaskRunner; wget -A.jar ${QuickStartS3URL}/${QSS3BucketName}/${QSS3KeyPrefix}/scripts/resources/TaskRunner-1.0.jar; mv TaskRunner-1.0.jar /home/ec2-user/TaskRunner/.; cd /home/ec2-user/TaskRunner; java -jar TaskRunner-1.0.jar --workerGroup=${WORKERGROUP} --region=${REGION} --logUri=s3://${BUCKET}/TaskRunnerLogs --taskrunnerId ${TASKRUNNER} > TaskRunner.out 2>&1 < /dev/null &
-
 
 cat <<EOT >> /var/www/html/root/datalake.ini
 [defaults]
@@ -134,6 +129,7 @@ cloudtrailname="${CLOUDTRAIL}"
 
 EOT
 
+
 chown -R apache:apache /var/www/
 
 if ! aws s3 cp s3://${BUCKET}/multiAZ/instance.active instance.active --region ${REGION} --quiet --sse AES256
@@ -152,6 +148,7 @@ else
   curl http://${IPADDRESS}/scripts/send-completion-email.php --data "region=${REGION}&username=${ADMIN_ID}&email=${EMAIL_ID}&ip=${publicdns}&password=${PASSWORD}&redeploy=yes";
   echo "Failover-Email-check"
 fi
+
 ##Autoscale sync section
 echo ${IPADDRESS} > /home/ec2-user/instance.active
 chown ec2-user:ec2-user /home/ec2-user/instance.active
