@@ -1,0 +1,54 @@
+[
+    {
+        "ParameterKey": "AdministratorName",
+        "ParameterValue": "AdminName"
+    },
+    {
+        "ParameterKey": "AdminEmailID",
+        "ParameterValue": "aws.datalake@cloudwick.com"
+    },
+    {
+        "ParameterKey": "InstanceType",
+        "ParameterValue": "m1.large"
+    },
+    {
+        "ParameterKey": "NATInstanceType",
+        "ParameterValue": "t2.small"
+    },
+    {
+        "ParameterKey": "DatabaseName",
+        "ParameterValue": "awsdatalake001"
+    },
+    {
+        "ParameterKey": "DatabaseUserName",
+        "ParameterValue": "awsdladmin001"
+    },
+    {
+        "ParameterKey": "DatabaseUserPassword",
+        "ParameterValue": "$[alfred_genpass_8]"
+    },
+    {
+        "ParameterKey": "RDSClass",
+        "ParameterValue": "db.t2.micro"
+    },
+    {
+        "ParameterKey": "RDSAllocatedStorage",
+        "ParameterValue": "5"
+    },
+    {
+        "ParameterKey": "RedshiftNodeType",
+        "ParameterValue": "dc1.large"
+    },
+    {
+        "ParameterKey": "RedshiftClusterType",
+        "ParameterValue": "multi-node"
+    },
+    {
+        "ParameterKey": "NumberOfNodes",
+        "ParameterValue": "2"
+    },
+    {
+        "ParameterKey": "KeyPairName",
+        "ParameterValue": "$[alfred_getkeypair]"
+    }
+]
